@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>FTM Photography & Management — London Studio</title>
+  <meta name="description" content="FTM Photography & Management — Premium London photography studio specialising in fashion, beauty, product and corporate photography. Book your shoot today."/>
+  <meta name="keywords" content="photography studio London, fashion photography London, product photography London, beauty photography, corporate photography, photo studio hire London, FTM photography"/>
+  <meta name="author" content="FTM Photography & Management"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="google-site-verification" content="srC7Z0gv3pQIdiqSK9mJsBDinbAmozA36T94i2HTRv8"/>
+  <link rel="canonical" href="https://ftmmanagement.space/"/>
+  <!-- Open Graph -->
+  <meta property="og:title" content="FTM Photography & Management — London Studio"/>
+  <meta property="og:description" content="Premium London photography studio specialising in fashion, beauty, product and corporate photography."/>
+  <meta property="og:url" content="https://ftmmanagement.space/"/>
+  <meta property="og:type" content="website"/>
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:    #ffffff;
+      --off:      #fdfbf8;
+      --b100:     #f8f5f0;
+      --b200:     #f0ebe2;
+      --b300:     #e4ddd2;
+      --b400:     #d4cbbf;
+      --ink:      #18181a;
+      --ink70:    #4a4a4e;
+      --ink40:    #97979c;
+      --ink20:    #d0cfc9;
+      --line:     #e8e3dc;
+      --serif:    'DM Serif Display', Georgia, serif;
+      --display:  'Syne', system-ui, sans-serif;
+      --sans:     'Inter', system-ui, sans-serif;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--white); color: var(--ink); overflow-x: hidden; }
+    ::selection { background: var(--b300); }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--b100); }
+    ::-webkit-scrollbar-thumb { background: var(--b400); }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      height: 80px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      transition: background .35s var(--ease), border-color .35s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.light {
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-bottom-color: var(--line);
+    }
+    /* over dark hero — white text */
+    nav.over-hero .nav-logo { }
+    nav.over-hero .nav-links a { color: rgba(255,255,255,0.7); }
+    nav.over-hero .nav-links a:hover { color: var(--white); }
+    nav.over-hero .nav-book { color: var(--white); border-color: rgba(255,255,255,0.5); }
+    nav.over-hero .nav-book:hover { background: var(--white); color: var(--ink); border-color: var(--white); }
+    nav.over-hero .ham span { background: var(--white); }
+    nav.light .nav-logo { }
+    nav.light .nav-links a { color: var(--ink70); }
+    nav.light .nav-links a:hover { color: var(--ink); }
+    nav.light .nav-book { color: var(--ink); border-color: var(--ink); }
+    nav.light .nav-book:hover { background: var(--ink); color: var(--white); }
+    nav.light .ham span { background: var(--ink); }
+
+    .nav-logo {
+      display: flex; align-items: center;
+      text-decoration: none;
+      transition: opacity .25s, background .35s, padding .35s;
+      flex-shrink: 0;
+      border-radius: 8px;
+      padding: 4px 8px;
+    }
+    .nav-logo:hover { opacity: .75; }
+    .nav-logo img {
+      height: 58px;
+      width: auto;
+      display: block;
+    }
+    /* Invert logo to white over dark hero */
+    nav.over-hero .nav-logo img {
+      filter: invert(1) brightness(1.2);
+    }
+    nav.light .nav-logo img {
+      filter: none;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 10.5px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7); text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-book {
+      font-size: 10.5px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--white); border: 1px solid rgba(255,255,255,0.5);
+      padding: 9px 22px; text-decoration: none; white-space: nowrap;
+      transition: all .2s; background: transparent;
+    }
+    .nav-book:hover { background: var(--white); color: var(--ink); border-color: var(--white); }
+    .ham { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .ham span { display: block; width: 22px; height: 1px; background: var(--white); transition: background .3s; }
+
+    /* mobile nav */
+    .mob {
+      display: none; position: fixed; inset: 0; z-index: 299;
+      background: var(--white); flex-direction: column;
+      align-items: center; justify-content: center; gap: 28px;
+    }
+    .mob.open { display: flex; }
+    .mob a { font-family: var(--serif); font-size: 36px; font-weight: 300; color: var(--ink); text-decoration: none; transition: color .2s; }
+    .mob a:hover { color: var(--ink40); }
+    .mob-x { position: absolute; top: 22px; right: 48px; background: none; border: none; font-size: 22px; color: var(--ink40); cursor: pointer; }
+
+    /* ─── HERO SLIDER ─── */
+    .hero {
+      position: relative; height: 88vh; min-height: 580px;
+      overflow: hidden;
+    }
+
+    /* Slides */
+    .slides { position: absolute; inset: 0; }
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s var(--ease);
+    }
+    .slide.active { opacity: 1; z-index: 1; }
+    .slide.prev { opacity: 0; z-index: 0; }
+
+    /* Slide category label uses Syne for impact */
+    .slide-category {
+      font-family: var(--display) !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.01em !important;
+    }
+
+    /* Each slide background — simulated studio photography scenes */
+    .slide-1 {
+      background:
+        linear-gradient(160deg, #1a1512 0%, #2c2018 40%, #0d0a08 100%);
+    }
+    .slide-2 {
+      background:
+        linear-gradient(135deg, #f5f1ec 0%, #e8e0d4 50%, #d4c8b8 100%);
+    }
+    .slide-3 {
+      background:
+        linear-gradient(150deg, #111214 0%, #1e2228 50%, #090a0c 100%);
+    }
+    .slide-4 {
+      background:
+        linear-gradient(145deg, #f0ede8 0%, #e4ddd2 40%, #cfc5b8 100%);
+    }
+
+    /* Decorative visual elements on each slide */
+    .slide-art {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .slide-1 .slide-art::before {
+      content: '';
+      position: absolute; top: 10%; right: 5%;
+      width: 55vw; height: 80vh;
+      background: radial-gradient(ellipse at 60% 40%, rgba(180,140,90,0.18) 0%, transparent 65%);
+    }
+    .slide-1 .slide-big-word {
+      font-family: var(--serif); font-size: 28vw; font-weight: 200; line-height: 1;
+      color: rgba(255,255,255,0.03); user-select: none; letter-spacing: -.04em;
+      position: absolute; bottom: -4vw; right: -2vw;
+    }
+    .slide-2 .slide-art::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.7) 0%, transparent 60%),
+        linear-gradient(90deg, rgba(240,235,226,0.4) 0%, transparent 60%);
+    }
+    .slide-2 .slide-big-word {
+      font-family: var(--serif); font-size: 26vw; font-weight: 200; line-height: 1;
+      color: rgba(24,24,26,0.04); user-select: none; letter-spacing: -.04em;
+      position: absolute; bottom: -3vw; left: -2vw;
+    }
+    .slide-3 .slide-art::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 30%, rgba(160,180,220,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, rgba(100,120,160,0.1) 0%, transparent 50%);
+    }
+    .slide-3 .slide-big-word {
+      font-family: var(--serif); font-size: 24vw; font-weight: 200; line-height: 1;
+      color: rgba(255,255,255,0.04); user-select: none; letter-spacing: -.04em;
+      position: absolute; top: -2vw; left: -1vw;
+    }
+    .slide-4 .slide-art::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 75% 50%, rgba(255,255,255,0.9) 0%, transparent 55%),
+        linear-gradient(270deg, rgba(240,235,226,0.5) 0%, transparent 60%);
+    }
+    .slide-4 .slide-big-word {
+      font-family: var(--serif); font-size: 28vw; font-weight: 200; line-height: 1;
+      color: rgba(24,24,26,0.04); user-select: none; letter-spacing: -.04em;
+      position: absolute; bottom: -4vw; right: -2vw;
+    }
+
+    /* Overlay gradient (bottom) */
+    .slide-overlay {
+      position: absolute; inset: 0; z-index: 2;
+      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.1) 40%, transparent 70%);
+    }
+    .slide-2 .slide-overlay,
+    .slide-4 .slide-overlay {
+      background: linear-gradient(to top, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.05) 40%, transparent 70%);
+    }
+
+    /* Slide label (bottom left) */
+    .slide-label {
+      position: absolute; bottom: 80px; left: 56px; z-index: 3;
+    }
+    .slide-category {
+      font-family: var(--serif); font-size: clamp(32px, 4vw, 56px); font-weight: 200;
+      color: var(--white); letter-spacing: .02em; line-height: 1.1;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .7s var(--ease) .3s, transform .7s var(--ease) .3s;
+    }
+    .slide.active .slide-category { opacity: 1; transform: none; }
+    .slide-2 .slide-category,
+    .slide-4 .slide-category { color: var(--ink); }
+
+    /* Hero nav arrows */
+    .hero-prev, .hero-next {
+      position: absolute; top: 50%; z-index: 10;
+      transform: translateY(-50%);
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all .25s;
+    }
+    .hero-prev { left: 28px; }
+    .hero-next { right: 28px; }
+    .hero-prev:hover, .hero-next:hover { background: rgba(255,255,255,0.18); }
+    .hero-prev svg, .hero-next svg { width: 18px; height: 18px; stroke: var(--white); fill: none; stroke-width: 1.5; }
+
+    /* Hero dots */
+    .hero-dots {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 8px;
+    }
+    .hero-dot {
+      width: 28px; height: 2px;
+      background: rgba(255,255,255,0.35);
+      border: none; cursor: pointer;
+      transition: all .3s;
+    }
+    .hero-dot.on { background: var(--white); width: 48px; }
+
+    /* Scroll hint */
+    .hero-scroll {
+      position: absolute; bottom: 24px; right: 56px; z-index: 10;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 9px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.45);
+    }
+    .hero-scroll-line { width: 1px; height: 32px; background: linear-gradient(to bottom, rgba(255,255,255,.4), transparent); }
+
+    /* Side social */
+    .hero-social {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      z-index: 10; display: flex; flex-direction: column;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-left: 1px solid rgba(255,255,255,0.12);
+    }
+    .hs-link {
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; transition: background .2s;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hs-link:last-child { border-bottom: none; }
+    .hs-link:hover { background: rgba(255,255,255,0.15); }
+    .hs-link svg { width: 14px; height: 14px; stroke: rgba(255,255,255,.65); fill: none; stroke-width: 1.5; }
+
+    /* ─── TICKER ─── */
+    .ticker {
+      overflow: hidden; border-bottom: 1px solid var(--line);
+      padding: 12px 0; background: var(--white);
+    }
+    .ticker-inner { display: flex; white-space: nowrap; animation: tick 32s linear infinite; }
+    .ticker-inner span { font-size: 10px; font-weight: 400; letter-spacing: .28em; text-transform: uppercase; color: var(--ink40); padding: 0 28px; }
+    .ticker-inner span::after { content: '·'; padding-left: 28px; opacity: .4; }
+    @keyframes tick { to { transform: translateX(-50%); } }
+
+    /* ─── SECTIONS ─── */
+    .sec { padding: 104px 56px; }
+    .slabel { font-size: 9.5px; font-weight: 500; letter-spacing: .35em; text-transform: uppercase; color: var(--ink40); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+    .slabel::before { content: ''; width: 20px; height: 1px; background: var(--ink40); }
+    .stitle { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 700; line-height: 1.0; letter-spacing: -.01em; color: var(--ink); margin-bottom: 16px; }
+    .stitle em { font-style: normal; font-family: var(--serif); font-weight: 400; font-size: 1.08em; letter-spacing: .01em; }
+    .sbody { font-size: 13.5px; font-weight: 300; line-height: 1.9; color: var(--ink70); max-width: 520px; }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--white); border-bottom: 1px solid var(--line); }
+    .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: center; }
+    .about-visual {
+      position: relative;
+      aspect-ratio: 4/5;
+      background: var(--b100);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-visual::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.25) 100%);
+    }
+    .about-letter { display: none; }
+    .about-float {
+      position: absolute; bottom: -16px; right: -16px;
+      background: var(--white); border: 1px solid var(--line);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.07);
+      padding: 22px 28px; z-index: 2;
+    }
+    .af-n { font-family: var(--display); font-size: 44px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); line-height: 1; }
+    .af-l { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink40); margin-top: 5px; }
+    .about-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--line); margin-top: 40px; }
+    .ast { background: var(--white); padding: 20px 16px; }
+    .ast-n { font-family: var(--display); font-size: 30px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+    .ast-l { font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink40); margin-top: 5px; }
+
+    /* ─── SERVICES ─── */
+    #services { background: var(--b100); border-bottom: 1px solid var(--line); }
+    .svc-head { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 56px; padding-bottom: 44px; border-bottom: 1px solid var(--line); }
+    .svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); }
+    .svc-card { background: var(--b100); padding: 44px 36px; transition: background .25s; position: relative; overflow: hidden; }
+    .svc-card:hover { background: var(--white); }
+    .svc-card::before { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 2px; background: var(--ink); transition: width .4s var(--ease); }
+    .svc-card:hover::before { width: 100%; }
+    .svc-card-n { font-family: var(--serif); font-size: 48px; font-weight: 200; color: var(--b300); line-height: 1; margin-bottom: 24px; }
+    .svc-card-title { font-family: var(--display); font-size: 18px; font-weight: 700; letter-spacing: -.01em; color: var(--ink); margin-bottom: 12px; }
+    .svc-card-desc { font-size: 13px; font-weight: 300; color: var(--ink70); line-height: 1.8; margin-bottom: 20px; }
+    .svc-card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .stag { font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink40); padding: 3px 9px; border: 1px solid var(--line); background: var(--white); }
+
+    /* ─── GALLERY ─── */
+    #gallery { background: var(--white); border-bottom: 1px solid var(--line); }
+    .gallery-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+    .gallery-filters { display: flex; gap: 6px; }
+    .gf { padding: 7px 16px; font-size: 10.5px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; border: 1px solid var(--line); background: var(--white); color: var(--ink40); cursor: pointer; transition: all .2s; }
+    .gf.on, .gf:hover { background: var(--ink); border-color: var(--ink); color: var(--white); }
+    /* uniform 3-column grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+    .gi {
+      overflow: hidden; position: relative; cursor: pointer;
+      background: var(--ink);
+      aspect-ratio: 1 / 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity .3s;
+    }
+    .gi img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform .6s var(--ease);
+    }
+    .gi:hover img { transform: scale(1.05); }
+    .gi-inner { display: none; }
+    .gi-letter { display: none; }
+    .gi::before { display: none; }
+    .gi-overlay {
+      position: absolute; inset: 0; z-index: 2;
+      background: rgba(10,10,12,0.6);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 14px 16px;
+      opacity: 0; transition: opacity .35s var(--ease);
+    }
+    .gi:hover .gi-overlay { opacity: 1; }
+    .gi-cap { font-family: var(--display); font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--white); margin-bottom: 3px; }
+    .gi-sub { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+
+    /* ─── DEALS ─── */
+    #deals { background: var(--b100); border-bottom: 1px solid var(--line); }
+    .deals-head { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: end; margin-bottom: 52px; padding-bottom: 44px; border-bottom: 1px solid var(--line); }
+    .deals-note { font-size: 13px; font-weight: 300; color: var(--ink70); line-height: 1.9; }
+    .ptabs { display: flex; border-bottom: 1px solid var(--line); margin-bottom: 48px; }
+    .ptab { padding: 11px 24px; font-size: 10.5px; font-weight: 400; letter-spacing: .16em; text-transform: uppercase; color: var(--ink40); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; transition: all .2s; }
+    .ptab.on { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
+    .ppanel { display: none; }
+    .ppanel.on { display: block; }
+    .pkg-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); }
+    .pkg { background: var(--white); padding: 44px 32px; display: flex; flex-direction: column; transition: background .2s; }
+    .pkg:hover { background: var(--off); }
+    .pkg.dark { background: var(--ink); }
+    .pkg.dark:hover { background: #22222a; }
+    .pkg-badge { font-size: 9px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--ink40); margin-bottom: 18px; min-height: 13px; }
+    .pkg.dark .pkg-badge { color: rgba(255,255,255,.3); }
+    .pkg-pill { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink); background: var(--b200); padding: 4px 12px; margin-bottom: 18px; }
+    .pkg-name { font-family: var(--display); font-size: 20px; font-weight: 700; letter-spacing: -.01em; color: var(--ink); }
+    .pkg.dark .pkg-name { color: var(--white); }
+    .pkg-price { font-family: var(--display); font-size: 48px; font-weight: 800; color: var(--ink); line-height: 1; margin: 6px 0 2px; letter-spacing: -.02em; }
+    .pkg.dark .pkg-price { color: rgba(255,255,255,.88); }
+    .pkg-price sup { font-size: 20px; vertical-align: super; }
+    .pkg-unit { font-size: 10.5px; letter-spacing: .1em; color: var(--ink40); margin-bottom: 24px; }
+    .pkg.dark .pkg-unit { color: rgba(255,255,255,.3); }
+    .pkg-hr { height: 1px; background: var(--line); margin-bottom: 24px; }
+    .pkg.dark .pkg-hr { background: rgba(255,255,255,.1); }
+    .pkg-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 9px; margin-bottom: 32px; }
+    .pkg-feats li { font-size: 12.5px; font-weight: 300; color: var(--ink70); padding-left: 14px; position: relative; line-height: 1.5; }
+    .pkg.dark .pkg-feats li { color: rgba(255,255,255,.55); }
+    .pkg-feats li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 1px; background: var(--b400); }
+    .pkg.dark .pkg-feats li::before { background: rgba(255,255,255,.25); }
+    .pkg-btn { display: block; text-align: center; padding: 13px; font-size: 10.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--line); color: var(--ink); transition: all .2s; }
+    .pkg-btn:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+    .pkg.dark .pkg-btn { border-color: rgba(255,255,255,.2); color: var(--white); }
+    .pkg.dark .pkg-btn:hover { background: rgba(255,255,255,.12); }
+    .addons-bar { margin-top: 40px; border: 1px solid var(--line); background: var(--white); display: grid; grid-template-columns: repeat(3,1fr); }
+    .addon { padding: 18px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .addon:nth-child(3n) { border-right: none; }
+    .addon:nth-last-child(-n+3) { border-bottom: none; }
+    .addon-n { font-size: 12.5px; font-weight: 300; color: var(--ink70); }
+    .addon-p { font-family: var(--serif); font-size: 15px; font-weight: 400; color: var(--ink); padding-left: 16px; white-space: nowrap; }
+
+    /* ─── TESTIMONIALS ─── */
+    #testimonials { background: var(--white); border-bottom: 1px solid var(--line); padding: 104px 56px; }
+    .test-head { text-align: center; margin-bottom: 60px; }
+    .test-head .stitle { text-align: center; }
+    .test-slider { overflow: hidden; }
+    .test-track { display: flex; transition: transform .65s var(--ease); }
+    .test-slide { min-width: 100%; padding: 0 140px; text-align: center; }
+    .test-q { font-family: var(--serif); font-size: clamp(20px, 2.5vw, 30px); font-weight: 400; font-style: italic; color: var(--ink); line-height: 1.6; margin-bottom: 36px; }
+    .test-author { font-size: 11px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--ink); }
+    .test-role { font-size: 11px; color: var(--ink40); margin-top: 4px; letter-spacing: .08em; }
+    .test-controls { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 44px; }
+    .test-btn { width: 36px; height: 36px; border: 1px solid var(--line); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .2s; }
+    .test-btn:hover { border-color: var(--ink); }
+    .test-btn svg { width: 13px; height: 13px; stroke: var(--ink70); fill: none; stroke-width: 2; }
+    .test-dots { display: flex; gap: 7px; }
+    .tdot { width: 5px; height: 5px; border-radius: 50%; background: var(--b400); border: none; cursor: pointer; transition: all .2s; }
+    .tdot.on { background: var(--ink); transform: scale(1.3); }
+
+    /* ─── CLIENTS ─── */
+    #clients { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 72px 56px; }
+    .clients-label { text-align: center; margin-bottom: 52px; }
+    .clients-label .stitle { font-size: clamp(26px, 3vw, 40px); }
+    .clients-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .client {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      height: 100px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px 20px;
+      background: var(--white);
+      transition: background .25s var(--ease);
+      overflow: hidden;
+    }
+    .client:hover { background: var(--b100); }
+    .client img {
+      max-width: 100%; max-height: 52px;
+      width: auto; height: auto;
+      object-fit: contain;
+      filter: grayscale(100%) opacity(0.55);
+      transition: filter .3s var(--ease), transform .3s var(--ease);
+      display: block;
+    }
+    .client:hover img {
+      filter: grayscale(0%) opacity(1);
+      transform: scale(1.06);
+    }
+    @media (max-width: 1100px) {
+      .clients-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--white); }
+    .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: start; }
+    .contact-info { padding-top: 6px; }
+    .cdeets { margin-top: 44px; }
+    .cdi { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .cdi:first-child { border-top: 1px solid var(--line); }
+    .cdi-icon { width: 34px; height: 34px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cdi-icon svg { width: 13px; height: 13px; stroke: var(--ink70); fill: none; stroke-width: 1.5; }
+    .cdi-l { font-size: 9px; font-weight: 600; letter-spacing: .25em; text-transform: uppercase; color: var(--ink40); margin-bottom: 3px; }
+    .cdi-v { font-size: 13px; font-weight: 300; color: var(--ink); line-height: 1.6; }
+    .socs { display: flex; gap: 7px; margin-top: 32px; }
+    .soc { width: 34px; height: 34px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all .2s; }
+    .soc:hover { background: var(--ink); border-color: var(--ink); }
+    .soc svg { width: 13px; height: 13px; stroke: var(--ink70); fill: none; stroke-width: 1.5; }
+    .soc:hover svg { stroke: var(--white); }
+    .cform { background: var(--b100); border: 1px solid var(--line); padding: 44px; }
+    .cform-title { font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 4px; }
+    .cform-sub { font-size: 12px; font-weight: 300; color: var(--ink40); margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+    .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .fg { margin-bottom: 14px; }
+    .fg label { display: block; font-size: 9px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--ink40); margin-bottom: 7px; }
+    .fg input, .fg select, .fg textarea { width: 100%; padding: 12px 14px; background: var(--white); border: 1px solid var(--line); font-family: var(--sans); font-size: 12.5px; font-weight: 300; color: var(--ink); outline: none; appearance: none; transition: border-color .2s; }
+    .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--ink70); }
+    .fg textarea { height: 100px; resize: none; }
+    .fg select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2397979c' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px; cursor: pointer; }
+    .fsub { width: 100%; padding: 14px; background: var(--ink); color: var(--white); font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; border: none; cursor: pointer; margin-top: 4px; transition: opacity .2s; }
+    .fsub:hover { opacity: .75; }
+    .fnote { font-size: 10.5px; font-weight: 300; color: var(--ink40); text-align: center; margin-top: 10px; }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--b100); border-top: 1px solid var(--line); padding: 68px 56px 36px; }
+    .ft-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+    .ft-brand { font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); margin-bottom: 10px; }
+    .ft-desc { font-size: 12px; font-weight: 300; color: var(--ink40); line-height: 1.8; margin-bottom: 20px; max-width: 240px; }
+    .ft-divider { width: 24px; height: 1px; background: var(--b400); }
+    .ft-col-h { font-size: 9px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--ink40); margin-bottom: 18px; }
+    .ft-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .ft-links a { font-size: 12.5px; font-weight: 300; color: var(--ink70); text-decoration: none; transition: color .2s; }
+    .ft-links a:hover { color: var(--ink); }
+    .ft-bottom { padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .ft-copy { font-size: 11px; font-weight: 300; color: var(--ink40); }
+    .ft-legal { display: flex; gap: 18px; }
+    .ft-legal a { font-size: 11px; font-weight: 300; color: var(--ink40); text-decoration: none; transition: color .2s; }
+    .ft-legal a:hover { color: var(--ink); }
+
+    /* ─── REVEAL ─── */
+    .rv { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .rv.in { opacity: 1; transform: none; }
+    .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; }
+    .d3 { transition-delay: .3s; } .d4 { transition-delay: .4s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      nav { padding: 0 32px; }
+      .nav-links, .nav-book { display: none; }
+      .ham { display: flex; }
+      .mob-x { right: 32px; }
+      .sec { padding: 80px 32px; }
+      #testimonials { padding: 80px 32px; }
+      #clients { padding: 60px 32px; }
+      .clients-grid { grid-template-columns: repeat(3, 1fr); }
+      footer { padding: 60px 32px 32px; }
+      .about-wrap { grid-template-columns: 1fr; gap: 48px; }
+      .about-float { right: -8px; }
+      .about-stats { grid-template-columns: repeat(2,1fr); }
+      .svc-head { grid-template-columns: 1fr; gap: 24px; }
+      .svc-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+      .deals-head { grid-template-columns: 1fr; gap: 24px; }
+      .pkg-grid { grid-template-columns: 1fr; }
+      .addons-bar { grid-template-columns: 1fr 1fr; }
+      .test-slide { padding: 0 32px; }
+      .contact-wrap { grid-template-columns: 1fr; gap: 52px; }
+      .ft-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .ft-bottom { flex-direction: column; gap: 10px; }
+      .hero-prev { left: 12px; }
+      .hero-next { right: 44px; }
+      .hero-social { display: none; }
+      .gallery-head { flex-direction: column; align-items: flex-start; gap: 20px; }
+    }
+    @media (max-width: 640px) {
+      .sec { padding: 60px 20px; }
+      #testimonials, #clients { padding: 60px 20px; }
+      nav { padding: 0 20px; }
+      footer { padding: 52px 20px 28px; }
+      .slide-label { left: 24px; bottom: 60px; }
+      .svc-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .frow { grid-template-columns: 1fr; }
+      .cform { padding: 28px 20px; }
+      .ft-top { grid-template-columns: 1fr; }
+      .addons-bar { grid-template-columns: 1fr; }
+      .addon:nth-child(3n) { border-right: none; }
+      .test-slide { padding: 0 12px; }
+      .clients-grid { grid-template-columns: repeat(3, 1fr); }
+      .client { height: 76px; padding: 12px 14px; }
+      .rt-grid { grid-template-columns: repeat(2, 1fr); }
+      .rt-services { grid-template-columns: 1fr 1fr; }
+      .rt-svc:nth-child(even) { border-right: none; }
+      .rt-svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+    }
+
+    /* ─── RETOUCH SECTION ─── */
+    #retouch { background: var(--b100); }
+    .rt-intro {
+      display: flex; flex-wrap: wrap; gap: 20px 48px;
+      align-items: flex-end; margin-bottom: 40px;
+    }
+    .rt-intro > div:first-child { flex: 1 1 300px; }
+    .rt-intro > p { flex: 1 1 280px; max-width: 460px; }
+    .rt-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ink); color: var(--white);
+      font-family: var(--display); font-size: 9px; font-weight: 600;
+      letter-spacing: .22em; text-transform: uppercase;
+      padding: 8px 16px; margin-bottom: 20px;
+    }
+    .rt-badge::before {
+      content: ''; width: 5px; height: 5px;
+      background: #c9a96e; border-radius: 50%;
+    }
+    /* 3-column uniform grid */
+    .rt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin-bottom: 40px;
+    }
+    .rt-item {
+      position: relative; overflow: hidden;
+      background: var(--b200);
+      aspect-ratio: 4 / 3;
+      cursor: pointer;
+    }
+    .rt-item img {
+      display: block; width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform .6s var(--ease), filter .4s;
+      filter: grayscale(5%);
+    }
+    .rt-item:hover img {
+      transform: scale(1.04);
+      filter: grayscale(0%);
+    }
+    .rt-item-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 50%);
+      opacity: 0; transition: opacity .35s var(--ease);
+      display: flex; align-items: flex-end; padding: 14px 16px;
+    }
+    .rt-item:hover .rt-item-overlay { opacity: 1; }
+    .rt-item-label {
+      font-family: var(--display); font-size: 11px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--white);
+    }
+    .rt-item-sub {
+      font-size: 10px; font-weight: 300; letter-spacing: .08em;
+      color: rgba(255,255,255,0.65); margin-top: 2px;
+    }
+
+    /* Compact services strip */
+    .rt-services {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--line); background: var(--white);
+    }
+    .rt-svc {
+      padding: 22px 20px;
+      border-right: 1px solid var(--line);
+    }
+    .rt-svc:last-child { border-right: none; }
+    .rt-svc-icon { display: none; }
+    .rt-svc-name {
+      font-family: var(--display); font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .rt-svc-desc {
+      font-size: 12px; line-height: 1.6; color: var(--ink70);
+    }
+
+    @media (max-width: 1100px) {
+      .rt-grid { grid-template-columns: repeat(2, 1fr); }
+      .rt-services { grid-template-columns: repeat(2, 1fr); }
+      .rt-svc:nth-child(2) { border-right: none; }
+      .rt-svc:nth-child(3) { border-top: 1px solid var(--line); }
+      .rt-svc:nth-child(4) { border-top: 1px solid var(--line); border-right: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="nav" class="over-hero">
+  <a href="#home" class="nav-logo">
+    <img src="LOGO-C.png" alt="FTM Photography & Management">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#retouch">Retouch</a></li>
+    <li><a href="#deals">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-book">Book Online</a>
+  <button class="ham" id="ham"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- mobile -->
+<div class="mob" id="mob">
+  <button class="mob-x" id="mobX">✕</button>
+  <a href="#about"    onclick="closeMob()">About</a>
+  <a href="#services" onclick="closeMob()">Services</a>
+  <a href="#gallery"  onclick="closeMob()">Gallery</a>
+  <a href="#retouch"  onclick="closeMob()">Retouch</a>
+  <a href="#deals"    onclick="closeMob()">Pricing</a>
+  <a href="#contact"  onclick="closeMob()">Contact</a>
+</div>
+
+<!-- ── HERO SLIDER ── -->
+<section class="hero" id="home">
+
+  <div class="slides" id="slides">
+    <!-- Slide 1: Fashion Photography -->
+    <div class="slide slide-1 active" style="background-image:url('slider/1.jpg');background-size:cover;background-position:center top;">
+      <div class="slide-overlay"></div>
+      <div class="slide-label">
+        <div class="slide-category">Fashion Photography</div>
+      </div>
+    </div>
+    <!-- Slide 2: Product Photography -->
+    <div class="slide slide-2" style="background-image:url('slider/4.jpg');background-size:cover;background-position:center;">
+      <div class="slide-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.15) 40%,transparent 70%);"></div>
+      <div class="slide-label">
+        <div class="slide-category" style="color:#fff;">Product &amp; Advertising Photography</div>
+      </div>
+    </div>
+    <!-- Slide 3: Studio -->
+    <div class="slide slide-3" style="background-image:url('slider/6.jpg');background-size:cover;background-position:center;">
+      <div class="slide-overlay"></div>
+      <div class="slide-label">
+        <div class="slide-category">London Studio Hire</div>
+      </div>
+    </div>
+    <!-- Slide 4: Clothing Photography -->
+    <div class="slide slide-4" style="background-image:url('slider/2.jpg');background-size:cover;background-position:center;">
+      <div class="slide-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.1) 40%,transparent 70%);"></div>
+      <div class="slide-label">
+        <div class="slide-category" style="color:#fff;">Clothing &amp; E-Commerce Photography</div>
+      </div>
+    </div>
+    <!-- Slide 5: Editorial Fashion -->
+    <div class="slide slide-1" style="background-image:url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1920&q=85');background-size:cover;background-position:center top;">
+      <div class="slide-overlay"></div>
+      <div class="slide-label">
+        <div class="slide-category">Editorial Fashion</div>
+      </div>
+    </div>
+    <!-- Slide 6: Luxury Brand -->
+    <div class="slide slide-2" style="background-image:url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1920&q=85');background-size:cover;background-position:center;">
+      <div class="slide-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.15) 40%,transparent 70%);"></div>
+      <div class="slide-label">
+        <div class="slide-category" style="color:#fff;">Luxury Brand Campaigns</div>
+      </div>
+    </div>
+    <!-- Slide 7: Lifestyle & Portrait -->
+    <div class="slide slide-3" style="background-image:url('https://images.unsplash.com/photo-1493863641943-9b68992a8d07?auto=format&fit=crop&w=1920&q=85');background-size:cover;background-position:center;">
+      <div class="slide-overlay"></div>
+      <div class="slide-label">
+        <div class="slide-category">Lifestyle &amp; Portrait</div>
+      </div>
+    </div>
+    <!-- Slide 8: Style & Beauty -->
+    <div class="slide slide-4" style="background-image:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=85');background-size:cover;background-position:center top;">
+      <div class="slide-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.1) 40%,transparent 70%);"></div>
+      <div class="slide-label">
+        <div class="slide-category" style="color:#fff;">Style &amp; Beauty</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrows -->
+  <button class="hero-prev" onclick="slidePrev()">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="hero-next" onclick="slideNext()">
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <!-- Dots -->
+  <div class="hero-dots" id="heroDots">
+    <button class="hero-dot on" onclick="slideTo(0)"></button>
+    <button class="hero-dot" onclick="slideTo(1)"></button>
+    <button class="hero-dot" onclick="slideTo(2)"></button>
+    <button class="hero-dot" onclick="slideTo(3)"></button>
+    <button class="hero-dot" onclick="slideTo(4)"></button>
+    <button class="hero-dot" onclick="slideTo(5)"></button>
+    <button class="hero-dot" onclick="slideTo(6)"></button>
+    <button class="hero-dot" onclick="slideTo(7)"></button>
+  </div>
+
+  <!-- Side socials -->
+  <div class="hero-social">
+    <a href="#" class="hs-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="#" class="hs-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+    <a href="#" class="hs-link" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    <a href="#" class="hs-link" aria-label="Pinterest"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.76 1.22-5.17 1.22-5.17s-.31-.62-.31-1.55c0-1.45.84-2.53 1.89-2.53.89 0 1.32.67 1.32 1.47 0 .9-.57 2.24-.87 3.48-.25 1.04.52 1.88 1.54 1.88 1.85 0 3.09-2.37 3.09-5.18 0-2.14-1.44-3.64-3.49-3.64-2.38 0-3.78 1.79-3.78 3.63 0 .72.28 1.49.62 1.91.07.08.08.15.06.23-.06.27-.2.85-.23.97-.04.15-.13.18-.29.11-1.08-.5-1.75-2.09-1.75-3.36 0-2.73 1.98-5.24 5.72-5.24 3 0 5.34 2.14 5.34 5 0 2.98-1.88 5.37-4.48 5.37-.88 0-1.7-.46-1.98-1l-.54 2.01c-.2.75-.73 1.69-1.09 2.26.82.25 1.69.39 2.59.39 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg></a>
+  </div>
+
+  <div class="hero-scroll"><div class="hero-scroll-line"></div><span>Scroll</span></div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>Fashion Photography</span><span>Product Shoots</span><span>Clothing Photography</span><span>Studio Hire</span><span>Editorial</span><span>E-Commerce</span><span>Brand Campaigns</span><span>Portfolio Shoots</span>
+    <span>Fashion Photography</span><span>Product Shoots</span><span>Clothing Photography</span><span>Studio Hire</span><span>Editorial</span><span>E-Commerce</span><span>Brand Campaigns</span><span>Portfolio Shoots</span>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section class="sec" id="about">
+  <div class="about-wrap">
+    <div class="rv">
+      <div class="about-visual" style="background-image:url('Beauty/009.jpg');background-size:cover;background-position:center top;">
+        <div class="about-float">
+          <div class="af-n">10+</div>
+          <div class="af-l">Years of Excellence</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="slabel rv">Our Studio</p>
+      <h2 class="stitle rv d1">A London Studio Built<br>on <em>Craft &amp; Light</em></h2>
+      <p class="sbody rv d2">FTM Photography &amp; Management is a premier London-based photography studio specialising in fashion, clothing, product, and advertising photography. We work with brands, designers, and businesses to create images that elevate — from individual shoots to full campaign productions.</p>
+      <div class="about-stats rv d3">
+        <div class="ast"><div class="ast-n">500+</div><div class="ast-l">Shoots Done</div></div>
+        <div class="ast"><div class="ast-n">80+</div><div class="ast-l">Brand Clients</div></div>
+        <div class="ast"><div class="ast-n">10+</div><div class="ast-l">Years Active</div></div>
+        <div class="ast"><div class="ast-n">4K</div><div class="ast-l">Resolution</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section class="sec" id="services">
+  <div class="svc-head">
+    <div>
+      <p class="slabel rv">What We Shoot</p>
+      <h2 class="stitle rv d1">Our <em>Services</em></h2>
+    </div>
+    <p class="sbody rv d2">From single product shots to full fashion campaigns — every service delivered with precision, creativity, and a professional crew.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card rv">
+      <div class="svc-card-n">01</div>
+      <div class="svc-card-title">Fashion Photography</div>
+      <p class="svc-card-desc">High-end fashion and editorial photography for brands, designers, and publications. Lookbooks, campaigns, and runway coverage.</p>
+      <div class="svc-card-tags"><span class="stag">Editorial</span><span class="stag">Lookbook</span><span class="stag">Campaign</span></div>
+    </div>
+    <div class="svc-card rv d1">
+      <div class="svc-card-n">02</div>
+      <div class="svc-card-title">Product &amp; Advertising</div>
+      <p class="svc-card-desc">Meticulous product photography that makes your brand shine — studio, lifestyle, and 360° shots with advanced retouching.</p>
+      <div class="svc-card-tags"><span class="stag">Studio</span><span class="stag">Lifestyle</span><span class="stag">360°</span></div>
+    </div>
+    <div class="svc-card rv d2">
+      <div class="svc-card-n">03</div>
+      <div class="svc-card-title">Clothing &amp; E-Commerce</div>
+      <p class="svc-card-desc">Clean, consistent, and conversion-optimised clothing photography — flat lay, on-model, and mannequin styles for online retail.</p>
+      <div class="svc-card-tags"><span class="stag">Flat Lay</span><span class="stag">On-Model</span><span class="stag">E-Commerce</span></div>
+    </div>
+    <div class="svc-card rv">
+      <div class="svc-card-n">04</div>
+      <div class="svc-card-title">Portfolio Shoots</div>
+      <p class="svc-card-desc">Professional portfolio shoots for aspiring creatives — headshots, composites, and zed cards built to impress agencies and clients.</p>
+      <div class="svc-card-tags"><span class="stag">Headshots</span><span class="stag">Zed Card</span><span class="stag">Composites</span></div>
+    </div>
+    <div class="svc-card rv d1">
+      <div class="svc-card-n">05</div>
+      <div class="svc-card-title">Brand Consultancy</div>
+      <p class="svc-card-desc">Strategic visual brand direction for businesses. Creative direction, campaign strategy, and social content creation under one roof.</p>
+      <div class="svc-card-tags"><span class="stag">Creative Direction</span><span class="stag">Social Content</span></div>
+    </div>
+    <div class="svc-card rv d2">
+      <div class="svc-card-n">06</div>
+      <div class="svc-card-title">Studio Hire</div>
+      <p class="svc-card-desc">Fully equipped London photography studio available for hire — professional lighting rigs, backdrops, changing facilities, and crew.</p>
+      <div class="svc-card-tags"><span class="stag">Full Day</span><span class="stag">Half Day</span><span class="stag">Crew Available</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section class="sec" id="gallery">
+  <div class="gallery-head rv">
+    <div>
+      <p class="slabel">Our Work</p>
+      <h2 class="stitle">Featured <em>Gallery</em></h2>
+    </div>
+    <div class="gallery-filters">
+      <button class="gf on" data-cat="all"       onclick="setGf(this)">All</button>
+      <button class="gf"    data-cat="beauty"     onclick="setGf(this)">Beauty</button>
+      <button class="gf"    data-cat="corporate"  onclick="setGf(this)">Corporate</button>
+      <button class="gf"    data-cat="fashion"    onclick="setGf(this)">Fashion</button>
+      <button class="gf"    data-cat="portrait"   onclick="setGf(this)">Portrait</button>
+      <button class="gf"    data-cat="product"    onclick="setGf(this)">Product</button>
+    </div>
+  </div>
+  <div class="gallery-grid" id="galleryGrid">
+
+    <!-- ── BEAUTY (8) ── -->
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/001.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Portrait &amp; makeup</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/002.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Skin &amp; light</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/003.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Studio session</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/005.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Close-up editorial</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/006.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Glamour shoot</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/009.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Natural light</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/010.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">High fashion</div></div>
+    </div>
+    <div class="gi" data-cat="beauty">
+      <img src="Beauty/011.jpg" alt="Beauty" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Beauty</div><div class="gi-sub">Campaign image</div></div>
+    </div>
+
+    <!-- ── CORPORATE (7) ── -->
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/001.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Executive portrait</div></div>
+    </div>
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/005.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Business headshot</div></div>
+    </div>
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/007.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Professional profile</div></div>
+    </div>
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/008.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Brand identity</div></div>
+    </div>
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/012.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Team shoot</div></div>
+    </div>
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/014.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Linkedin profile</div></div>
+    </div>
+    <div class="gi" data-cat="corporate">
+      <img src="cooperate/015.jpg" alt="Corporate" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Corporate</div><div class="gi-sub">Office session</div></div>
+    </div>
+
+    <!-- ── FASHION (4) ── -->
+    <div class="gi" data-cat="fashion">
+      <img src="fashion/004.jpg" alt="Fashion" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Fashion</div><div class="gi-sub">Editorial campaign</div></div>
+    </div>
+    <div class="gi" data-cat="fashion">
+      <img src="fashion/011.jpg" alt="Fashion" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Fashion</div><div class="gi-sub">Lookbook shoot</div></div>
+    </div>
+    <div class="gi" data-cat="fashion">
+      <img src="fashion/013.jpg" alt="Fashion" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Fashion</div><div class="gi-sub">Designer collection</div></div>
+    </div>
+    <div class="gi" data-cat="fashion">
+      <img src="fashion/014.jpg" alt="Fashion" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Fashion</div><div class="gi-sub">Brand campaign</div></div>
+    </div>
+
+    <!-- ── PORTRAIT (4) ── -->
+    <div class="gi" data-cat="portrait">
+      <img src="potrait/001.jpg" alt="Portrait" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Portrait</div><div class="gi-sub">Studio headshot</div></div>
+    </div>
+    <div class="gi" data-cat="portrait">
+      <img src="potrait/005.jpg" alt="Portrait" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Portrait</div><div class="gi-sub">Natural light</div></div>
+    </div>
+    <div class="gi" data-cat="portrait">
+      <img src="potrait/007.jpg" alt="Portrait" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Portrait</div><div class="gi-sub">Character study</div></div>
+    </div>
+    <div class="gi" data-cat="portrait">
+      <img src="potrait/009.jpg" alt="Portrait" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Portrait</div><div class="gi-sub">Editorial style</div></div>
+    </div>
+
+    <!-- ── PRODUCT (8) ── -->
+    <div class="gi" data-cat="product">
+      <img src="product/001.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">Studio pack shot</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/003.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">E-commerce shoot</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/004.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">Lifestyle imagery</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/005.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">Retail catalogue</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/009.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">Brand campaign</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/010.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">White background</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/017.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">Detail shot</div></div>
+    </div>
+    <div class="gi" data-cat="product">
+      <img src="product/018.jpg" alt="Product" loading="lazy">
+      <div class="gi-overlay"><div class="gi-cap">Product</div><div class="gi-sub">Creative flat lay</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── RETOUCH ── -->
+<section class="sec" id="retouch">
+
+  <!-- Intro header -->
+  <div class="rt-intro">
+    <div>
+      <div class="rt-badge rv">Post-Production Studio</div>
+      <h2 class="stitle rv d1">Professional <em>Retouching</em><br>&amp; Post-Production</h2>
+    </div>
+    <p class="sbody rv d2">Every image we shoot gets expert post-production treatment — from precision skin retouching and colour grading to full compositing and creative manipulation. The result: flawless, publication-ready photographs that elevate your brand.</p>
+  </div>
+
+  <!-- Retouch image grid -->
+  <div class="rt-grid rv">
+
+    <div class="rt-item">
+      <img src="retouch/AF-1.jpg" alt="Portrait Retouching" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Portrait Retouching</div>
+          <div class="rt-item-sub">Skin, shadow & tonal refinement</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/Tia-1.jpg" alt="Beauty Retouching" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Beauty Retouching</div>
+          <div class="rt-item-sub">High-end skin & detail work</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/Skin-1.jpg" alt="Skin Retouching" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Skin Retouching</div>
+          <div class="rt-item-sub">Frequency separation & texture</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/beauty-1.jpg" alt="Beauty & Glamour" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Beauty &amp; Glamour</div>
+          <div class="rt-item-sub">Editorial-grade finishing</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/Nadine-1.jpg" alt="Fashion Retouching" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Fashion Retouching</div>
+          <div class="rt-item-sub">Wardrobe, shape & colour</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/Nadine-2.jpg" alt="Colour Grading" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Colour Grading</div>
+          <div class="rt-item-sub">Cinematic tone & mood</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/earth&water-1.jpg" alt="Creative Compositing" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Creative Compositing</div>
+          <div class="rt-item-sub">Scene & atmosphere manipulation</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/earth&water-2.jpg" alt="Background Replacement" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Background Replacement</div>
+          <div class="rt-item-sub">Clean cuts & seamless blends</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rt-item">
+      <img src="retouch/Tia-2.jpg" alt="Full Campaign Retouching" loading="lazy">
+      <div class="rt-item-overlay">
+        <div>
+          <div class="rt-item-label">Full Campaign Retouching</div>
+          <div class="rt-item-sub">Consistent look across every image</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Services strip -->
+  <div class="rt-services rv">
+    <div class="rt-svc">
+      <svg class="rt-svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="5"/><path d="M3 21c0-4.418 4.03-8 9-8s9 3.582 9 8"/></svg>
+      <div class="rt-svc-name">Portrait & Skin</div>
+      <div class="rt-svc-desc">Frequency separation, blemish removal, and natural skin smoothing that retains real texture and depth.</div>
+    </div>
+    <div class="rt-svc">
+      <svg class="rt-svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      <div class="rt-svc-name">Colour Grading</div>
+      <div class="rt-svc-desc">Cinematic, editorial, or clean commercial grades. Consistent tonal language applied across entire shoot series.</div>
+    </div>
+    <div class="rt-svc">
+      <svg class="rt-svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <div class="rt-svc-name">Compositing</div>
+      <div class="rt-svc-desc">Background replacement, sky swaps, object removal, and creative multi-layer composites for campaign imagery.</div>
+    </div>
+    <div class="rt-svc">
+      <svg class="rt-svc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <div class="rt-svc-name">Product Editing</div>
+      <div class="rt-svc-desc">Label alignment, colour correction, ghost mannequin, shadow creation, and white-background cleaning for e-commerce.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── DEALS / PRICING ── -->
+<section class="sec" id="deals">
+  <div class="deals-head">
+    <div>
+      <p class="slabel rv">Photoshoot Deals</p>
+      <h2 class="stitle rv d1">Portfolio <em>Packages</em></h2>
+    </div>
+    <p class="deals-note rv d2">Every package includes a full luxury studio experience — from consultation to final retouched images. Choose the deal that suits you best.</p>
+  </div>
+
+  <!-- Portfolio Deals -->
+  <div class="pkg-grid">
+
+    <div class="pkg">
+      <div class="pkg-badge">Deal 1</div>
+      <div class="pkg-name">Portfolio Shoot</div>
+      <div class="pkg-price"><sup>£</sup>920</div>
+      <div class="pkg-unit">Full studio experience</div>
+      <div class="pkg-hr"></div>
+      <ul class="pkg-feats">
+        <li>Personal introductory consultation</li>
+        <li>Hair styling included</li>
+        <li>Makeup by top makeup artists</li>
+        <li>2 outfit changes</li>
+        <li>40 photos taken</li>
+        <li>Personal viewing of your images</li>
+        <li>2 retouched images</li>
+        <li>Drinks served throughout</li>
+      </ul>
+      <a href="#contact" class="pkg-btn">Book Now</a>
+    </div>
+
+    <div class="pkg dark">
+      <div class="pkg-pill">Most Popular</div>
+      <div class="pkg-badge" style="color:rgba(255,255,255,0.6);background:transparent;border:1px solid rgba(255,255,255,0.2);margin-bottom:8px;">Deal 2</div>
+      <div class="pkg-name">Portfolio Shoot</div>
+      <div class="pkg-price"><sup>£</sup>999</div>
+      <div class="pkg-unit">Full studio experience</div>
+      <div class="pkg-hr"></div>
+      <ul class="pkg-feats">
+        <li>Personal introductory consultation</li>
+        <li>Hair styling included</li>
+        <li>Makeup by top makeup artists</li>
+        <li>3 outfit changes</li>
+        <li>60 photos taken</li>
+        <li>Personal viewing of your images</li>
+        <li>4 retouched images</li>
+        <li>Drinks served throughout</li>
+      </ul>
+      <a href="#contact" class="pkg-btn">Book Now</a>
+    </div>
+
+    <div class="pkg">
+      <div class="pkg-badge">Deal 3</div>
+      <div class="pkg-name">Portfolio Shoot</div>
+      <div class="pkg-price"><sup>£</sup>1,100</div>
+      <div class="pkg-unit">Full studio experience</div>
+      <div class="pkg-hr"></div>
+      <ul class="pkg-feats">
+        <li>Personal introductory consultation</li>
+        <li>Hair styling included</li>
+        <li>Makeup by top makeup artists</li>
+        <li>4 outfit changes</li>
+        <li>80 photos taken</li>
+        <li>Personal viewing of your images</li>
+        <li>6 retouched images</li>
+        <li>Drinks served throughout</li>
+      </ul>
+      <a href="#contact" class="pkg-btn">Book Now</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section id="testimonials">
+  <div class="test-head rv">
+    <p class="slabel" style="display:flex;justify-content:center">Client Voices</p>
+    <h2 class="stitle">What Our Clients <em>Say</em></h2>
+  </div>
+  <div class="test-slider">
+    <div class="test-track" id="testTrack">
+      <div class="test-slide">
+        <p class="test-q">"FTM transformed our brand imagery entirely. The team brought a level of creativity and professionalism we had not experienced before. Our campaign outperformed every benchmark."</p>
+        <div class="test-author">Isabelle Laurent</div>
+        <div class="test-role">Creative Director, Maison Laurent</div>
+      </div>
+      <div class="test-slide">
+        <p class="test-q">"The product photography exceeded all expectations — delivered swiftly and retouched beautifully. Our online conversion rate increased by 34% within the first month."</p>
+        <div class="test-author">David Chen</div>
+        <div class="test-role">Founder, Atelier Nordique</div>
+      </div>
+      <div class="test-slide">
+        <p class="test-q">"We've used FTM for three seasons of clothing photography now. Consistent quality, fast turnaround, and they always understand the aesthetic we're going for."</p>
+        <div class="test-author">Priya Sharma</div>
+        <div class="test-role">Head of E-Commerce, Studio Nine London</div>
+      </div>
+    </div>
+  </div>
+  <div class="test-controls">
+    <button class="test-btn" onclick="tPrev()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="test-dots">
+      <button class="tdot on" onclick="tGo(0)"></button>
+      <button class="tdot" onclick="tGo(1)"></button>
+      <button class="tdot" onclick="tGo(2)"></button>
+    </div>
+    <button class="test-btn" onclick="tNext()"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</section>
+
+<!-- ── CLIENTS ── -->
+<section id="clients">
+  <div class="clients-label rv">
+    <p class="slabel" style="display:flex;justify-content:center;margin-bottom:10px;">Our Clients</p>
+    <h2 class="stitle" style="text-align:center;">Brands We've <em>Worked With</em></h2>
+  </div>
+  <div class="clients-grid rv">
+    <div class="client"><img src="Client Logos/bbc.jpg" alt="BBC" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/ITV.png" alt="ITV" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/2009 asos logo script_new.jpg" alt="ASOS" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/BARCLAYS.jpg" alt="Barclays" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/mac-cosmetics-logo.jpg" alt="MAC Cosmetics" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/Toni&Guy.gif" alt="Toni & Guy" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/blackberry.png" alt="Blackberry" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/subway.png" alt="Subway" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/METRO.jpg" alt="Metro" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/Pearson.jpg" alt="Pearson" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/paramount_logo.jpg" alt="Paramount" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/disneyGirl.gif" alt="Disney" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/Nectarlogo.jpg" alt="Nectar" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/Leapfrog.png" alt="Leapfrog" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/Orelia.png" alt="Orelia" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/macquarie.png" alt="Macquarie" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/pride_magazine_logo.jpg" alt="Pride Magazine" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/thomasPinkLogo.gif" alt="Thomas Pink" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/britishheartfoundation.png" alt="British Heart Foundation" loading="lazy"></div>
+    <div class="client"><img src="Client Logos/Sportingindex.gif" alt="Sporting Index" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="sec" id="contact">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <p class="slabel rv">Book a Shoot</p>
+      <h2 class="stitle rv d1">Let's Create<br><em>Something Great</em></h2>
+      <p class="sbody rv d2">Whether you're a brand, a retailer, or an individual looking for a portfolio shoot — we'd love to hear from you. All enquiries responded to within 24 hours.</p>
+      <div class="cdeets rv d3">
+        <div class="cdi">
+          <div class="cdi-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="cdi-l">Studio Location</div><div class="cdi-v">London, United Kingdom<br>By appointment only</div></div>
+        </div>
+        <div class="cdi">
+          <div class="cdi-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><div class="cdi-l">Email</div><div class="cdi-v">admin@ftmmanagement.space</div></div>
+        </div>
+        <div class="cdi">
+          <div class="cdi-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div><div class="cdi-l">Instagram</div><div class="cdi-v">@ftmphotographymanagement</div></div>
+        </div>
+      </div>
+      <div class="socs rv d4">
+        <a href="#" class="soc"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="#" class="soc"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="mailto:admin@ftmmanagement.space" class="soc"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
+      </div>
+    </div>
+    <div class="rv d1">
+      <div class="cform">
+        <div class="cform-title">Send an Enquiry</div>
+        <div class="cform-sub">Responses within 24 hours</div>
+        <form name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you">
+          <input type="hidden" name="form-name" value="enquiry"/>
+          <p style="display:none;"><input name="bot-field"/></p>
+          <div class="frow">
+            <div class="fg"><label>First Name</label><input type="text" name="first-name" placeholder="Your first name" required/></div>
+            <div class="fg"><label>Last Name</label><input type="text" name="last-name" placeholder="Your last name" required/></div>
+          </div>
+          <div class="fg"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required/></div>
+          <div class="fg">
+            <label>Service Required</label>
+            <select name="service">
+              <option value="">Select a service...</option>
+              <option>Fashion Photography</option>
+              <option>Product Photography</option>
+              <option>Clothing / E-Commerce</option>
+              <option>Portfolio Shoot</option>
+              <option>Studio Hire</option>
+              <option>Brand Consultancy</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Budget</label>
+            <select name="budget">
+              <option value="">Select budget...</option>
+              <option>Under £300</option>
+              <option>£300 – £600</option>
+              <option>£600 – £1,200</option>
+              <option>£1,200 – £3,000</option>
+              <option>£3,000+</option>
+            </select>
+          </div>
+          <div class="fg"><label>Message</label><textarea name="message" placeholder="Tell us about your project..."></textarea></div>
+          <button type="submit" class="fsub">Send Enquiry</button>
+          <p class="fnote">Your details are never shared with third parties.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-brand">FTM · Photography &amp; Management</div>
+      <p class="ft-desc">Premium photography studio based in London — fashion, product, clothing, and advertising photography.</p>
+      <div class="ft-divider"></div>
+    </div>
+    <div>
+      <div class="ft-col-h">Services</div>
+      <ul class="ft-links">
+        <li><a href="#services">Fashion Photography</a></li>
+        <li><a href="#services">Product Photography</a></li>
+        <li><a href="#services">Clothing &amp; E-Commerce</a></li>
+        <li><a href="#services">Portfolio Shoots</a></li>
+        <li><a href="#services">Studio Hire</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Studio</div>
+      <ul class="ft-links">
+        <li><a href="#about">About FTM</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#deals">Pricing</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#contact">Book Online</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Contact</div>
+      <ul class="ft-links">
+        <li><a href="mailto:admin@ftmmanagement.space">Email Us</a></li>
+        <li><a href="#">London, UK</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-copy">© 2026 FTM Photography &amp; Management. All rights reserved.</p>
+    <div class="ft-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── HERO SLIDER ── */
+  const slideEls  = document.querySelectorAll('.slide');
+  const dotEls    = document.querySelectorAll('.hero-dot');
+  let current     = 0;
+  let autoTimer;
+
+  function slideTo(n) {
+    slideEls[current].classList.remove('active');
+    slideEls[current].classList.add('prev');
+    dotEls[current].classList.remove('on');
+    setTimeout(() => slideEls[current].classList.remove('prev'), 1300);
+    current = (n + slideEls.length) % slideEls.length;
+    slideEls[current].classList.add('active');
+    dotEls[current].classList.add('on');
+    // nav colour
+    const darkSlides = [0, 2]; // slides 1 & 3 are dark
+    const nav = document.getElementById('nav');
+    if (!nav.classList.contains('light')) {
+      nav.classList.toggle('over-hero', true);
+    }
+  }
+  function slideNext() { clearInterval(autoTimer); slideTo(current + 1); startAuto(); }
+  function slidePrev() { clearInterval(autoTimer); slideTo(current - 1); startAuto(); }
+  function startAuto() { autoTimer = setInterval(() => slideTo(current + 1), 5000); }
+  startAuto();
+
+  /* ── NAV ── */
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => {
+    if (scrollY > 80) {
+      nav.classList.add('light');
+      nav.classList.remove('over-hero');
+    } else {
+      nav.classList.remove('light');
+      nav.classList.add('over-hero');
+    }
+  });
+
+  /* ── MOBILE ── */
+  document.getElementById('ham').onclick = () => {
+    document.getElementById('mob').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  document.getElementById('mobX').onclick = closeMob;
+  function closeMob() {
+    document.getElementById('mob').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── GALLERY FILTER ── */
+  function setGf(btn) {
+    document.querySelectorAll('.gf').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('#galleryGrid .gi').forEach(item => {
+      if (cat === 'all' || item.dataset.cat === cat) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
+  /* ── PRICING TABS ── */
+  function ptab(id, btn) {
+    document.querySelectorAll('.ppanel').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('on'));
+    document.getElementById('pp-' + id).classList.add('on');
+    btn.classList.add('on');
+  }
+
+  /* ── TESTIMONIALS ── */
+  let tC = 0;
+  const tTrack = document.getElementById('testTrack');
+  const tDots  = document.querySelectorAll('.tdot');
+  function tGo(n) {
+    tC = (n + 3) % 3;
+    tTrack.style.transform = `translateX(-${tC * 100}%)`;
+    tDots.forEach((d,i) => d.classList.toggle('on', i === tC));
+  }
+  function tNext() { tGo(tC + 1); }
+  function tPrev() { tGo(tC - 1); }
+  setInterval(tNext, 6500);
+
+  /* ── SCROLL REVEAL ── */
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.rv').forEach(el => ro.observe(el));
+
+  /* ── FORM ── */
+  function sendForm(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.fsub');
+    btn.textContent = 'Sending...'; btn.style.opacity = '.5';
+    setTimeout(() => {
+      btn.textContent = '✓ Sent — we\'ll be in touch within 24 hours';
+      btn.style.opacity = '1';
+      setTimeout(() => { btn.textContent = 'Send Enquiry'; e.target.reset(); }, 4000);
+    }, 1200);
+  }
+
+  /* ── SMOOTH SCROLL ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
