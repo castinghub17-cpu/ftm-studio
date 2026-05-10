@@ -87,7 +87,6 @@ async function handleCheckout(request, env) {
     params.append('line_items[0][price_data][product_data][name]',   pkg.name);
     params.append('line_items[0][price_data][unit_amount]',          String(pkg.price));
     params.append('line_items[0][quantity]',                         '1');
-    params.append('automatic_payment_methods[enabled]',              'true');
     params.append('success_url', `${origin}/success`);
     params.append('cancel_url',  `${origin}/#deals`);
 
