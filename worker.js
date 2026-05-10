@@ -82,32 +82,21 @@ async function handleCheckout(request, env) {
     // Mode
     params.append('mode', 'payment');
 
-    // Line item
-    params.append('line_items[0][price_data][currency]',                  'gbp');
-    params.append('line_items[0][price_data][product_data][name]',        pkg.name);
-    params.append('line_items[0][price_data][product_data][description]', pkg.description);
-    params.append('line_items[0][price_data][unit_amount]',               String(pkg.price));
-    params.append('line_items[0][quantity]',                              '1');
-
-    // Shows all payment methods enabled in your Stripe dashboard
-    // (Cards, Klarna, Clearpay, PayPal — enable in Stripe → Settings → Payment methods)
-    params.append('automatic_payment_methods[enabled]',             'true');
-    params.append('automatic_payment_methods[allow_redirects]',     'always');
-
-    // Collect billing address (required for Klarna & Clearpay)
-    params.append('billing_address_collection', 'required');
-
-    // Redirect URLs
-    params.append('success_url', `${origin}/success?session_id={CHECKOUT_SESSION_ID}`);
+    // Line item — kept minimal for maximum compatibility
+    params.append('line_items[0][price_data][currency]',             'gbp');
+    params.append('line_items[0][price_data][product_data][name]',   pkg.name);
+    params.append('line_items[0][price_data][unit_amount]',          String(pkg.price));
+    params.append('line_items[0][quantity]',                         '1');
+    params.append('automatic_payment_methods[enabled]',              'true');
+    params.append('success_url', `${origin}/success`);
     params.append('cancel_url',  `${origin}/#deals`);
 
     // Call Stripe API
     const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method:  'POST',
       headers: {
-        'Authorization':  `Bearer ${env.STRIPE_SECRET_KEY}`,
-        'Content-Type':   'application/x-www-form-urlencoded',
-        'Stripe-Version': '2024-06-20',
+        'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+        'Content-Type':  'application/x-www-form-urlencoded',
       },
       body: params.toString(),
     });
