@@ -430,10 +430,16 @@
     .pkg.dark .pkg-feats li { color: rgba(255,255,255,.55); }
     .pkg-feats li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 1px; background: var(--b400); }
     .pkg.dark .pkg-feats li::before { background: rgba(255,255,255,.25); }
-    .pkg-btn { display: block; text-align: center; padding: 13px; font-size: 10.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--line); color: var(--ink); transition: all .2s; }
+    .pkg-btn { display: block; width: 100%; text-align: center; padding: 13px; font-size: 10.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--line); color: var(--ink); transition: all .2s; background: transparent; font-family: var(--sans); cursor: pointer; }
     .pkg-btn:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
     .pkg.dark .pkg-btn { border-color: rgba(255,255,255,.2); color: var(--white); }
     .pkg.dark .pkg-btn:hover { background: rgba(255,255,255,.12); }
+    .pkg-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    /* Payment method badges */
+    .pkg-pay-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; }
+    .pay-badge { font-size: 8.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink40); background: var(--b200); padding: 3px 7px; border-radius: 2px; white-space: nowrap; }
+    .pkg.dark .pay-badge { color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); }
     .addons-bar { margin-top: 40px; border: 1px solid var(--line); background: var(--white); display: grid; grid-template-columns: repeat(3,1fr); }
     .addon { padding: 18px 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
     .addon:nth-child(3n) { border-right: none; }
@@ -1209,7 +1215,13 @@
         <li>2 retouched images</li>
         <li>Drinks served throughout</li>
       </ul>
-      <a href="#contact" class="pkg-btn">Book Now</a>
+      <button class="pkg-btn" data-pkg="deal-1" onclick="startCheckout('deal-1', this)">Book &amp; Pay Online</button>
+      <div class="pkg-pay-note">
+        <span class="pay-badge">Card</span>
+        <span class="pay-badge">Klarna</span>
+        <span class="pay-badge">Clearpay</span>
+        <span class="pay-badge">PayPal</span>
+      </div>
     </div>
 
     <div class="pkg dark">
@@ -1229,7 +1241,13 @@
         <li>4 retouched images</li>
         <li>Drinks served throughout</li>
       </ul>
-      <a href="#contact" class="pkg-btn">Book Now</a>
+      <button class="pkg-btn" data-pkg="deal-2" onclick="startCheckout('deal-2', this)">Book &amp; Pay Online</button>
+      <div class="pkg-pay-note">
+        <span class="pay-badge">Card</span>
+        <span class="pay-badge">Klarna</span>
+        <span class="pay-badge">Clearpay</span>
+        <span class="pay-badge">PayPal</span>
+      </div>
     </div>
 
     <div class="pkg">
@@ -1248,7 +1266,13 @@
         <li>6 retouched images</li>
         <li>Drinks served throughout</li>
       </ul>
-      <a href="#contact" class="pkg-btn">Book Now</a>
+      <button class="pkg-btn" data-pkg="deal-3" onclick="startCheckout('deal-3', this)">Book &amp; Pay Online</button>
+      <div class="pkg-pay-note">
+        <span class="pay-badge">Card</span>
+        <span class="pay-badge">Klarna</span>
+        <span class="pay-badge">Clearpay</span>
+        <span class="pay-badge">PayPal</span>
+      </div>
     </div>
 
   </div>
@@ -1352,9 +1376,16 @@
       <div class="cform">
         <div class="cform-title">Send an Enquiry</div>
         <div class="cform-sub">Responses within 24 hours</div>
-        <form name="enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you">
-          <input type="hidden" name="form-name" value="enquiry"/>
-          <p style="display:none;"><input name="bot-field"/></p>
+        <form name="enquiry" onsubmit="sendForm(event)">
+          <!-- Web3Forms — sends emails to admin@ftmmanagement.space -->
+          <!-- ACTION REQUIRED: Replace YOUR_WEB3FORMS_KEY below.
+               Get a free key in 30 seconds at: https://web3forms.com/
+               Enter admin@ftmmanagement.space → copy the access key. -->
+          <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY"/>
+          <input type="hidden" name="subject"    value="New Enquiry — FTM Studio"/>
+          <input type="hidden" name="from_name"  value="FTM Studio Website"/>
+          <!-- Spam filter -->
+          <input type="checkbox" name="botcheck" style="display:none;"/>
           <div class="frow">
             <div class="fg"><label>First Name</label><input type="text" name="first-name" placeholder="Your first name" required/></div>
             <div class="fg"><label>Last Name</label><input type="text" name="last-name" placeholder="Your last name" required/></div>
@@ -1531,16 +1562,43 @@
   }, { threshold: 0.07, rootMargin: '0px 0px -36px 0px' });
   document.querySelectorAll('.rv').forEach(el => ro.observe(el));
 
-  /* ── FORM ── */
-  function sendForm(e) {
+  /* ── CONTACT FORM (Web3Forms → emails admin@ftmmanagement.space) ── */
+  async function sendForm(e) {
     e.preventDefault();
-    const btn = e.target.querySelector('.fsub');
-    btn.textContent = 'Sending...'; btn.style.opacity = '.5';
-    setTimeout(() => {
-      btn.textContent = '✓ Sent — we\'ll be in touch within 24 hours';
+    const form    = e.target;
+    const btn     = form.querySelector('.fsub');
+    const origTxt = btn.textContent;
+
+    btn.textContent = 'Sending…';
+    btn.style.opacity = '.55';
+    btn.disabled = true;
+
+    const payload = Object.fromEntries(new FormData(form));
+
+    try {
+      const res  = await fetch('https://api.web3forms.com/submit', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        btn.textContent   = '✓ Sent — we\'ll be in touch within 24 hours';
+        btn.style.opacity = '1';
+        btn.disabled      = false;
+        form.reset();
+        setTimeout(() => { btn.textContent = origTxt; }, 6000);
+      } else {
+        throw new Error(json.message || 'Submission failed');
+      }
+    } catch (err) {
+      console.error('Form error:', err);
+      btn.textContent   = 'Error — please email admin@ftmmanagement.space';
       btn.style.opacity = '1';
-      setTimeout(() => { btn.textContent = 'Send Enquiry'; e.target.reset(); }, 4000);
-    }, 1200);
+      btn.disabled      = false;
+      setTimeout(() => { btn.textContent = origTxt; }, 5000);
+    }
   }
 
   /* ── SMOOTH SCROLL ── */
@@ -1550,6 +1608,50 @@
       if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     STRIPE CHECKOUT
+     When a customer clicks "Book & Pay Online" on a package card, this calls
+     the Cloudflare Worker (/create-checkout), gets a Stripe Checkout URL, and
+     redirects the customer to Stripe's hosted payment page.
+
+     On Stripe's page the customer can pay with:
+       • Credit / Debit Card
+       • Klarna (Buy now, pay later)
+       • Clearpay / Afterpay (Buy now, pay later)
+
+     IMPORTANT: You must enable Klarna and Clearpay in your Stripe Dashboard:
+       Stripe Dashboard → Settings → Payment methods → toggle ON
+  ───────────────────────────────────────────────────────────────────────── */
+  async function startCheckout(packageId, btn) {
+    const origText = btn.textContent;
+    btn.disabled   = true;
+    btn.textContent = 'Redirecting to payment…';
+
+    try {
+      const res = await fetch('/create-checkout', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ packageId }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || 'No checkout URL returned');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Could not start checkout. Please try again or email us at admin@ftmmanagement.space');
+      btn.disabled    = false;
+      btn.textContent = origText;
+    }
+  }
+
 </script>
 </body>
 </html>
