@@ -1,0 +1,20 @@
+# FTM Studio — Cloudflare Workers config
+# Push to GitHub → Cloudflare auto-deploys via Pages/Workers
+
+name = "ftm-studio"
+main = "worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Static assets — Cloudflare serves index.html, images, etc. automatically
+[assets]
+directory = "./"
+binding   = "ASSETS"
+
+# Environment variables — DO NOT put your secret key here!
+# Add STRIPE_SECRET_KEY in:
+#   Cloudflare Dashboard → Workers & Pages → ftm-studio → Settings → Variables & Secrets
+# Set it as a SECRET (encrypted), not a plain variable.
+
+# Optional: custom domain (already set up via Cloudflare)
+# routes = [{ pattern = "ftmmanagement.space/*", zone_name = "ftmmanagement.space" }]
