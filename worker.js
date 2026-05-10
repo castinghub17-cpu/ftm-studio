@@ -83,23 +83,19 @@ async function handleCheckout(request, env) {
     params.append('mode', 'payment');
 
     // Line item
-    params.append('line_items[0][price_data][currency]',                     'gbp');
-    params.append('line_items[0][price_data][product_data][name]',           pkg.name);
-    params.append('line_items[0][price_data][product_data][description]',    pkg.description);
-    params.append('line_items[0][price_data][product_data][images][0]',      'https://ftmmanagement.space/slider/1.jpg');
-    params.append('line_items[0][price_data][unit_amount]',                  String(pkg.price));
-    params.append('line_items[0][quantity]',                                 '1');
+    params.append('line_items[0][price_data][currency]',                  'gbp');
+    params.append('line_items[0][price_data][product_data][name]',        pkg.name);
+    params.append('line_items[0][price_data][product_data][description]', pkg.description);
+    params.append('line_items[0][price_data][unit_amount]',               String(pkg.price));
+    params.append('line_items[0][quantity]',                              '1');
 
-    // Let Stripe show all payment methods enabled in your dashboard
-    // (Cards, Klarna, Clearpay/Afterpay — enable these in:
-    //  Stripe Dashboard → Settings → Payment methods)
-    params.append('automatic_payment_methods[enabled]', 'true');
+    // Shows all payment methods enabled in your Stripe dashboard
+    // (Cards, Klarna, Clearpay, PayPal — enable in Stripe → Settings → Payment methods)
+    params.append('automatic_payment_methods[enabled]',             'true');
+    params.append('automatic_payment_methods[allow_redirects]',     'always');
 
     // Collect billing address (required for Klarna & Clearpay)
     params.append('billing_address_collection', 'required');
-
-    // Collect phone number
-    params.append('phone_number_collection[enabled]', 'true');
 
     // Redirect URLs
     params.append('success_url', `${origin}/success?session_id={CHECKOUT_SESSION_ID}`);
