@@ -18,3 +18,4 @@ binding   = "ASSETS"
 
 # Optional: custom domain (already set up via Cloudflare)
 # routes = [{ pattern = "ftmmanagement.space/*", zone_name = "ftmmanagement.space" }]
+
