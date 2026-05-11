@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking Form — FTM Management and Studios</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:     #18181a;
+      --ink70:   #4a4a50;
+      --ink40:   #97979c;
+      --b100:    #f8f5f0;
+      --b200:    #f0ebe2;
+      --line:    #e8e3dc;
+      --white:   #ffffff;
+      --display: 'Syne', system-ui, sans-serif;
+      --sans:    'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--b100);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    /* ── SCREEN NAV ── */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: var(--display); font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .nav-back { font-size: 10.5px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--ink40); text-decoration: none; transition: color .2s; display: flex; align-items: center; gap: 8px; }
+    .nav-back:hover { color: var(--ink); }
+    .nav-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .btn-download { background: var(--ink); color: var(--white); border: none; padding: 10px 24px; font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; cursor: pointer; transition: opacity .2s; }
+    .btn-download:hover { opacity: .75; }
+
+    /* ── FORM WRAPPER ── */
+    .page-wrap { max-width: 860px; margin: 40px auto; padding: 0 24px 80px; }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 52px 56px;
+    }
+
+    /* ── HEADER ── */
+    .form-header { text-align: center; border-bottom: 2px solid var(--ink); padding-bottom: 24px; margin-bottom: 24px; }
+    .form-header h1 { font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); margin-bottom: 4px; }
+    .form-header p { font-size: 11px; letter-spacing: .1em; color: var(--ink40); text-transform: uppercase; }
+
+    /* ── INTRO TEXT ── */
+    .intro-text { font-size: 12px; font-weight: 300; color: var(--ink70); line-height: 1.85; text-align: center; margin-bottom: 28px; }
+    .intro-text strong { font-weight: 600; color: var(--ink); }
+
+    /* ── SECTION TITLE ── */
+    .sec-title { font-family: var(--display); font-size: 10px; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: var(--white); background: var(--ink); padding: 6px 14px; display: inline-block; margin-bottom: 20px; margin-top: 28px; }
+
+    /* ── DEALS GRID ── */
+    .deals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); margin-bottom: 8px; }
+    .deal-box { background: var(--white); padding: 20px 18px; }
+    .deal-box.highlight { background: var(--ink); }
+    .deal-name { font-family: var(--display); font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); margin-bottom: 6px; }
+    .deal-box.highlight .deal-name { color: var(--white); }
+    .deal-price { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 10px; line-height: 1; }
+    .deal-box.highlight .deal-price { color: var(--white); }
+    .deal-feats { list-style: none; }
+    .deal-feats li { font-size: 11.5px; font-weight: 300; color: var(--ink70); padding: 3px 0; border-bottom: 1px solid var(--line); }
+    .deal-feats li:last-child { border-bottom: none; }
+    .deal-box.highlight .deal-feats li { color: rgba(255,255,255,0.7); border-bottom-color: rgba(255,255,255,0.1); }
+    .deal-select { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
+    .deal-select input[type="radio"] { width: 14px; height: 14px; accent-color: var(--ink); cursor: pointer; }
+    .deal-select label { font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--ink40); cursor: pointer; }
+    .deal-box.highlight .deal-select label { color: rgba(255,255,255,0.5); }
+
+    /* ── FIELDS ── */
+    .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .fields-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 9.5px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ink40); }
+    .field input, .field select, .field textarea {
+      border: 1px solid var(--line);
+      background: var(--b100);
+      padding: 10px 12px;
+      font-family: var(--sans);
+      font-size: 13px; font-weight: 300;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--ink); background: var(--white); }
+    .field textarea { resize: vertical; min-height: 72px; }
+
+    /* ── PAYMENT TYPE ── */
+    .pay-types { display: flex; gap: 24px; margin: 8px 0; }
+    .pay-type { display: flex; align-items: center; gap: 7px; }
+    .pay-type input { width: 14px; height: 14px; accent-color: var(--ink); cursor: pointer; }
+    .pay-type label { font-size: 12px; font-weight: 400; color: var(--ink70); cursor: pointer; }
+
+    /* ── NOTE BOX ── */
+    .note-box { background: var(--b100); border-left: 3px solid var(--ink); padding: 14px 18px; margin: 20px 0; }
+    .note-box p { font-size: 11.5px; font-weight: 400; color: var(--ink70); line-height: 1.8; }
+    .note-box strong { color: var(--ink); font-weight: 600; }
+
+    /* ── INFO SECTION ── */
+    .info-section { margin-top: 8px; }
+    .info-section p { font-size: 12px; font-weight: 300; color: var(--ink70); line-height: 1.85; margin-bottom: 10px; }
+    .info-section strong { font-weight: 600; color: var(--ink); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+
+    /* ── AGREEMENT ── */
+    .agreement { background: var(--b100); border: 1px solid var(--line); padding: 20px 24px; margin-top: 28px; margin-bottom: 28px; }
+    .agreement p { font-size: 12px; font-weight: 400; color: var(--ink); line-height: 1.8; text-align: center; font-style: italic; }
+
+    /* ── SIGNATURE GRID ── */
+    .sig-grid { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 20px; margin-top: 20px; }
+    .sig-field { display: flex; flex-direction: column; gap: 5px; }
+    .sig-field label { font-size: 9.5px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ink40); }
+    .sig-field input { border: none; border-bottom: 1px solid var(--ink); background: transparent; padding: 8px 0; font-family: var(--sans); font-size: 13px; font-weight: 300; color: var(--ink); outline: none; width: 100%; }
+
+    /* ── FOOTER ── */
+    .form-footer { text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .form-footer p { font-size: 11px; font-weight: 300; color: var(--ink40); line-height: 1.8; }
+    .form-footer a { color: var(--ink); text-decoration: none; }
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* ── PRINT / PDF STYLES ── */
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      nav, .btn-download, .page-wrap > .print-note { display: none !important; }
+      body { background: white; }
+      .page-wrap { max-width: 100%; margin: 0; padding: 0; }
+      .form-card { border: none; padding: 24px 32px; }
+      .deal-box.highlight { background: #18181a !important; }
+      .deal-box.highlight * { color: white !important; }
+      .field input, .field select { background: white !important; }
+      .note-box { background: #f8f5f0 !important; }
+      .agreement { background: #f8f5f0 !important; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .form-card { padding: 28px 20px; }
+      .deals-grid { grid-template-columns: 1fr; }
+      .fields-grid { grid-template-columns: 1fr; }
+      .fields-grid.three { grid-template-columns: 1fr 1fr; }
+      .sig-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-logo">FTM Studios</a>
+  <div class="nav-actions">
+    <a href="/" class="nav-back">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </a>
+    <button class="btn-download" onclick="window.print()">Download / Print PDF</button>
+  </div>
+</nav>
+
+<!-- ── FORM ── -->
+<div class="page-wrap">
+<div class="form-card">
+
+  <!-- HEADER -->
+  <div class="form-header">
+    <h1>FTM Management and Studios</h1>
+    <p>Photo Session Booking &amp; Appointment Confirmation</p>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro-text">
+    This is a confirmation of your photo session appointment, as arranged for you by your agency.<br>
+    Any changes are to be made by <strong>FTM Management and Studios</strong> directly at least 3 working days (72 hours) prior to your appointment.<br>
+    You must call the Studio at least 3 working days prior to your appointment to confirm your session.<br>
+    Please ensure that you arrive at the studio at least <strong>15 to 30 minutes</strong> before your session.<br>
+    The duration of the session can vary between <strong>2 to 4 hours</strong>. In most cases, you should expect the session to last approximately 2 hours.<br><br>
+    <strong>Please be aware that failure to attend your session will result in you losing your deposit and a further £100 as a Cancellation/Reschedule fee.</strong><br>
+    A further advance will be required to re-book a new session. <strong>We have a No Refund Policy once a deposit has been paid</strong>, due to the nature of the business.<br><br>
+    A non-refundable deposit of 50% is required to secure your chosen package. Balances must be paid in full prior to your session.<br>
+    You will receive a text a few days before the shoot — <strong>please reply to confirm</strong>.<br><br>
+    Please sign this form to confirm that you agree to all our Terms &amp; Conditions, and bring it with you on the day of the photo-shoot.<br>
+    <strong>PAYMENT / BALANCE MUST BE PAID IN FULL PRIOR TO THE SHOOT.</strong>
+  </div>
+
+  <!-- DEALS -->
+  <div class="sec-title">Choose Your Package</div>
+  <div class="deals-grid">
+    <div class="deal-box">
+      <div class="deal-name">Deal 1</div>
+      <div class="deal-price">£495</div>
+      <ul class="deal-feats">
+        <li>2 Outfit Changes</li>
+        <li>Makeup Artist</li>
+        <li>Hair Stylist</li>
+        <li>2 Retouched Images</li>
+        <li>At least 40 Images</li>
+      </ul>
+      <div class="deal-select">
+        <input type="radio" name="deal" id="d1" value="Deal 1 — £920"/>
+        <label for="d1">Select Deal 1</label>
+      </div>
+    </div>
+    <div class="deal-box highlight">
+      <div class="deal-name">Deal 2</div>
+      <div class="deal-price">£525</div>
+      <ul class="deal-feats">
+        <li>3 Outfit Changes</li>
+        <li>Makeup Artist</li>
+        <li>Hair Stylist</li>
+        <li>4 Retouched Images</li>
+        <li>At least 60 Images</li>
+      </ul>
+      <div class="deal-select">
+        <input type="radio" name="deal" id="d2" value="Deal 2 — £999"/>
+        <label for="d2">Select Deal 2</label>
+      </div>
+    </div>
+    <div class="deal-box">
+      <div class="deal-name">Deal 3</div>
+      <div class="deal-price">£550</div>
+      <ul class="deal-feats">
+        <li>4 Outfit Changes</li>
+        <li>Makeup Artist</li>
+        <li>Hair Stylist</li>
+        <li>6 Retouched Images</li>
+        <li>At least 80 Images</li>
+      </ul>
+      <div class="deal-select">
+        <input type="radio" name="deal" id="d3" value="Deal 3 — £1,100"/>
+        <label for="d3">Select Deal 3</label>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- BOOKING DETAILS -->
+  <div class="sec-title">Client Payment &amp; Booking Details</div>
+  <div class="fields-grid three">
+    <div class="field">
+      <label>Session Date</label>
+      <input type="date" name="session_date"/>
+    </div>
+    <div class="field">
+      <label>Session Time</label>
+      <input type="time" name="session_time"/>
+    </div>
+    <div class="field">
+      <label>Mobile Number</label>
+      <input type="tel" name="mobile" placeholder="07xxx xxxxxx"/>
+    </div>
+    <div class="field">
+      <label>Client Full Name</label>
+      <input type="text" name="name" placeholder="Full name"/>
+    </div>
+    <div class="field">
+      <label>Package Price (£)</label>
+      <input type="text" name="price" placeholder="e.g. £999"/>
+    </div>
+    <div class="field">
+      <label>Deposit Paid (£)</label>
+      <input type="text" name="deposit" placeholder="50% deposit"/>
+    </div>
+    <div class="field">
+      <label>Balance Due (£)</label>
+      <input type="text" name="balance" placeholder="Remaining balance"/>
+    </div>
+    <div class="field">
+      <label>Balance Due Date</label>
+      <input type="date" name="balance_date"/>
+    </div>
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" name="email" placeholder="email@example.com"/>
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- CARD DETAILS -->
+  <div class="sec-title">Card Details</div>
+  <div style="margin-bottom:14px;">
+    <p style="font-size:9.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--ink40);margin-bottom:10px;">Payment Type (tick one)</p>
+    <div class="pay-types">
+      <div class="pay-type"><input type="radio" name="pay_type" id="cash" value="Cash"/><label for="cash">Cash</label></div>
+      <div class="pay-type"><input type="radio" name="pay_type" id="visa" value="Visa"/><label for="visa">Visa</label></div>
+      <div class="pay-type"><input type="radio" name="pay_type" id="mc" value="Mastercard"/><label for="mc">Mastercard</label></div>
+      <div class="pay-type"><input type="radio" name="pay_type" id="bank" value="Bank Transfer"/><label for="bank">Bank Transfer</label></div>
+      <div class="pay-type"><input type="radio" name="pay_type" id="online" value="Online"/><label for="online">Online Payment</label></div>
+    </div>
+  </div>
+  <div class="fields-grid">
+    <div class="field">
+      <label>Card Number</label>
+      <input type="text" name="card_number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19"/>
+    </div>
+    <div class="field">
+      <label>Account Holder Name</label>
+      <input type="text" name="card_name" placeholder="Name on card"/>
+    </div>
+    <div class="field">
+      <label>Expiry Date (MM/YY)</label>
+      <input type="text" name="expiry" placeholder="MM/YY" maxlength="5"/>
+    </div>
+    <div class="field">
+      <label>CVC / CVV</label>
+      <input type="text" name="cvv" placeholder="XXX" maxlength="4"/>
+    </div>
+    <div class="field">
+      <label>Billing Address</label>
+      <input type="text" name="address" placeholder="Street address"/>
+    </div>
+    <div class="field">
+      <label>Postcode</label>
+      <input type="text" name="postcode" placeholder="Postcode"/>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top:20px;">
+    <p><strong>⚠ NOTE:</strong> Cancellation, reschedule of appointment, or failure to attend will result in an extra <strong>£100 cancellation fee</strong>.</p>
+    <p style="margin-top:6px;">Address: Unit 10B, 1 Woolwich Dockyard Industrial Estate, Woolwich Church Street, London, SE18 5PQ &nbsp;|&nbsp; Tel: 07570 951635</p>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- THE SESSION -->
+  <div class="sec-title">The Session</div>
+  <div class="info-section">
+    <p>Your session may consist of a few outfit changes, but we would request you to bring at least <strong>6 to 8 different items of clothing</strong> with you. You must try to make the most of your session by bringing a variety of clothes with different styles and colours. Please ensure these are washed and ironed. This may include Formal, Evening and Smart Casual, Dresses, Skirts, Tops, Shirts, Jackets, Suits, Swimwear, Lingerie, Dance and Beach Wear. Bring accessories such as belts, overcoats, jewellery, wigs, shoes, tights and matching undergarments.</p>
+    <p><strong>If you have any Skin Allergies, please inform us on your arrival at the Studio.</strong> The Studio takes no responsibility in case of an allergic reaction.</p>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- PHOTOGRAPHS -->
+  <div class="sec-title">Photographs</div>
+  <div class="info-section">
+    <p>After the session, you will be asked by one of our viewing consultants to view and select the best images from your session for printing. Extra prints can be ordered by paying a 50% deposit, which cannot be cancelled. Full balance must be paid before collecting your prints.</p>
+    <p>Prints must be collected within <strong>3 weeks</strong>. If these are not collected, the Studio may destroy and delete all prints and images after the <strong>3 months period</strong>. Once you leave the Studio with your prints, any changes or refunds are not permitted, either in partial or in full.</p>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- PAYMENTS & COLLECTION -->
+  <div class="sec-title">Payments &amp; Collection</div>
+  <div class="info-section">
+    <p>We do not accept Cheques or Amex cards. You can pay by Cash or by Debit/Credit cards. <strong>There is a 10% charge on all Card payments, bank transfers and online payments.</strong> Photographs ordered for printing may take up to 20 working days to be ready for collection. Once ready, a text will be sent to notify you.</p>
+    <p>For further details please visit <a href="/terms" style="color:var(--ink);font-weight:500;">ftmmanagement.space/terms</a></p>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- AGREEMENT & SIGNATURE -->
+  <div class="agreement">
+    <p>I have read, understood and agree to all the above Terms &amp; Conditions and will do my best to adhere to all of them.</p>
+  </div>
+
+  <div class="sig-grid">
+    <div class="sig-field">
+      <label>Full Name</label>
+      <input type="text" name="sig_name" placeholder="Print full name"/>
+    </div>
+    <div class="sig-field">
+      <label>Signature</label>
+      <input type="text" name="sig_sign" placeholder="Sign here"/>
+    </div>
+    <div class="sig-field">
+      <label>Date</label>
+      <input type="date" name="sig_date"/>
+    </div>
+  </div>
+
+  <!-- FORM FOOTER -->
+  <div class="form-footer">
+    <p>
+      FTM Management and Studios &nbsp;·&nbsp; Unit 10B, 1 Woolwich Dockyard Industrial Estate, Woolwich Church Street, London, SE18 5PQ<br>
+      Tel: 07570 951635 &nbsp;·&nbsp; <a href="mailto:admin@ftmmanagement.space">admin@ftmmanagement.space</a> &nbsp;·&nbsp; <a href="/">ftmmanagement.space</a>
+    </p>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
