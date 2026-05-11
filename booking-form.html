@@ -141,15 +141,64 @@
     /* ── PRINT / PDF STYLES ── */
     @media print {
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      nav, .btn-download, .page-wrap > .print-note { display: none !important; }
-      body { background: white; }
+      nav, .btn-download { display: none !important; }
+      body { background: white; font-size: 10px; }
       .page-wrap { max-width: 100%; margin: 0; padding: 0; }
-      .form-card { border: none; padding: 24px 32px; }
+      .form-card { border: none; padding: 12px 20px; }
+
+      /* Tighter header */
+      .form-header { padding-bottom: 8px; margin-bottom: 8px; }
+      .form-header h1 { font-size: 15px; }
+      .form-header p { font-size: 9px; }
+
+      /* Compact intro */
+      .intro-text { font-size: 9px; line-height: 1.5; margin-bottom: 10px; }
+
+      /* Compact section titles */
+      .sec-title { font-size: 8px; padding: 3px 8px; margin-top: 10px; margin-bottom: 8px; }
+
+      /* Compact deals */
+      .deals-grid { gap: 0; }
+      .deal-box { padding: 8px 10px; }
+      .deal-name { font-size: 10px; margin-bottom: 2px; }
+      .deal-price { font-size: 15px; margin-bottom: 5px; }
+      .deal-feats li { font-size: 9px; padding: 1px 0; }
+      .deal-select { margin-top: 6px; }
+      .deal-select label { font-size: 8px; }
       .deal-box.highlight { background: #18181a !important; }
       .deal-box.highlight * { color: white !important; }
-      .field input, .field select { background: white !important; }
-      .note-box { background: #f8f5f0 !important; }
-      .agreement { background: #f8f5f0 !important; }
+
+      /* Compact fields */
+      .fields-grid { gap: 6px; }
+      .field label { font-size: 7.5px; }
+      .field input, .field select { padding: 5px 8px; font-size: 10px; background: white !important; }
+
+      /* Compact payment types */
+      .pay-types { gap: 12px; }
+      .pay-type label { font-size: 10px; }
+
+      /* Compact dividers */
+      .divider { margin: 8px 0; }
+
+      /* Compact note box */
+      .note-box { padding: 7px 10px; margin: 8px 0; background: #f8f5f0 !important; }
+      .note-box p { font-size: 9px; line-height: 1.5; }
+
+      /* Compact info sections */
+      .info-section p { font-size: 9px; line-height: 1.5; margin-bottom: 4px; }
+
+      /* Compact agreement */
+      .agreement { padding: 8px 12px; margin: 10px 0; background: #f8f5f0 !important; }
+      .agreement p { font-size: 9px; }
+
+      /* Compact signature */
+      .sig-grid { gap: 12px; margin-top: 10px; }
+      .sig-field label { font-size: 7.5px; }
+      .sig-field input { padding: 6px 0; font-size: 11px; }
+
+      /* Compact footer */
+      .form-footer { margin-top: 10px; padding-top: 8px; }
+      .form-footer p { font-size: 8px; }
     }
 
     @media (max-width: 640px) {
