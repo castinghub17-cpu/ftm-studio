@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Refund &amp; Cancellation Policy — FTM Management and Studios</title>
+  <meta name="description" content="Refund and Cancellation Policy for FTM Management and Studios — London Photography Studio."/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:     #18181a;
+      --ink70:   #4a4a50;
+      --ink40:   #97979c;
+      --b100:    #f8f5f0;
+      --b200:    #f0ebe2;
+      --line:    #e8e3dc;
+      --white:   #ffffff;
+      --serif:   'DM Serif Display', Georgia, serif;
+      --display: 'Syne', system-ui, sans-serif;
+      --sans:    'Inter', system-ui, sans-serif;
+    }
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 13px; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+    }
+    .nav-back {
+      font-size: 10.5px; font-weight: 400; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--ink40);
+      text-decoration: none; transition: color .2s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-back:hover { color: var(--ink); }
+    .nav-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      padding: 80px 56px 72px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-label {
+      font-size: 9.5px; font-weight: 500; letter-spacing: .35em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .hero-label::before { content: ''; width: 20px; height: 1px; background: rgba(255,255,255,0.4); }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 400; color: var(--white);
+      line-height: 1.1; letter-spacing: -.01em;
+      margin-bottom: 20px;
+    }
+    .hero-meta {
+      font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.45);
+      letter-spacing: .05em;
+    }
+
+    /* ── NOTICE BANNER ── */
+    .notice {
+      background: #1a1a1a;
+      border-left: 3px solid #c8a96e;
+      padding: 20px 28px;
+      margin-bottom: 48px;
+    }
+    .notice p {
+      font-size: 13px; font-weight: 400;
+      color: #c8a96e; line-height: 1.7;
+      letter-spacing: .02em;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 72px 48px 100px;
+    }
+
+    .intro {
+      font-size: 14px; font-weight: 300; color: var(--ink70);
+      line-height: 1.9; padding-bottom: 48px;
+      border-bottom: 1px solid var(--line); margin-bottom: 56px;
+    }
+
+    .clause {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--line);
+    }
+    .clause:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .clause-num {
+      font-size: 9px; font-weight: 600; letter-spacing: .35em;
+      text-transform: uppercase; color: var(--ink40);
+      margin-bottom: 10px;
+    }
+    .clause h2 {
+      font-family: var(--display);
+      font-size: 20px; font-weight: 700;
+      letter-spacing: -.01em; color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .clause p {
+      font-size: 13.5px; font-weight: 300;
+      color: var(--ink70); line-height: 1.9;
+    }
+    .clause p + p { margin-top: 12px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--b100);
+      border-top: 1px solid var(--line);
+      padding: 32px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer p {
+      font-size: 11px; font-weight: 300;
+      color: var(--ink40); letter-spacing: .05em;
+    }
+    footer a {
+      font-size: 11px; font-weight: 400;
+      color: var(--ink40); text-decoration: none;
+      letter-spacing: .1em; text-transform: uppercase;
+      transition: color .2s;
+    }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 56px 24px 48px; }
+      .content { padding: 48px 24px 72px; }
+      footer { padding: 24px 20px; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-logo">FTM Studios</a>
+  <a href="/" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Home
+  </a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <p class="hero-label">Legal</p>
+  <h1>Refund &amp; Cancellation Policy</h1>
+  <p class="hero-meta">FTM Management and Studios &nbsp;·&nbsp; London, UK &nbsp;·&nbsp; Last updated May 2026</p>
+</div>
+
+<!-- ── CONTENT ── -->
+<main class="content">
+
+  <div class="notice">
+    <p>⚠ &nbsp;FTM Management and Studios operates a strict no-refund policy. By making a deposit or payment, you confirm that you have read, understood, and agreed to the terms set out below.</p>
+  </div>
+
+  <p class="intro">
+    All bookings with FTM Management and Studios are subject to the following Refund and Cancellation Policy. We strongly advise all clients to read this policy in full before making any payment. Once a deposit is placed, you are confirming your acceptance of these terms.
+  </p>
+
+  <!-- 1. BOOKING CONFIRMATION -->
+  <div class="clause">
+    <p class="clause-num">01</p>
+    <h2>Booking Confirmation</h2>
+    <p>A booking is considered confirmed only when the deposit has been paid in full. Until payment is received, no date or time slot will be held or reserved for the Client.</p>
+  </div>
+
+  <!-- 2. NO REFUND POLICY -->
+  <div class="clause">
+    <p class="clause-num">02</p>
+    <h2>No Refund Policy</h2>
+    <p>FTM Management and Studios operates a strict no-refund policy. Once a deposit or payment has been made, no refunds will be issued — either in full or in part — under any circumstances.</p>
+    <p>Once the Client has left the studio following their shoot, no changes, disputes, or refund requests will be accepted, whether partial or in full.</p>
+  </div>
+
+  <!-- 3. PHOTOSHOOT DEALS -->
+  <div class="clause">
+    <p class="clause-num">03</p>
+    <h2>Photoshoot Deals</h2>
+    <p>For all Photoshoot Deals, there is strictly no refund once a deposit has been placed. Photoshoot packages are a combination of services including photographer, makeup artist, and other professionals who are booked and confirmed in advance. As such, deposits cannot be returned under any circumstances.</p>
+    <p>This applies equally to bookings made directly with FTM Management and Studios and to bookings made through an agency or partner.</p>
+  </div>
+
+  <!-- 4. POSTPONEMENT -->
+  <div class="clause">
+    <p class="clause-num">04</p>
+    <h2>Postponement — Studio Space Only</h2>
+    <p>Postponement of a studio space booking is only permitted where notice is given no less than 72 hours prior to the start of the scheduled session. Any request to change the date made with less than 72 hours' notice will incur an additional charge at FTM Management and Studios' discretion.</p>
+  </div>
+
+  <!-- 5. CANCELLATION -->
+  <div class="clause">
+    <p class="clause-num">05</p>
+    <h2>Cancellation</h2>
+    <p>In the event of a cancellation by the Client, a cancellation charge of 70% of any payment made will be applied. The remaining balance will not be refunded.</p>
+    <p>For Photoshoot Deals, cancellation is not permitted once a deposit has been placed. The full deposit is non-refundable in all cases.</p>
+  </div>
+
+  <!-- 6. RESCHEDULING -->
+  <div class="clause">
+    <p class="clause-num">06</p>
+    <h2>Rescheduling</h2>
+    <p>Any request to reschedule a confirmed Photoshoot will incur a rescheduling fee of <strong>£100</strong>. This fee must be paid in full before a new date is confirmed. Rescheduling is subject to availability and is not guaranteed.</p>
+  </div>
+
+  <!-- 7. COVID-19 & UNFORESEEN CIRCUMSTANCES -->
+  <div class="clause">
+    <p class="clause-num">07</p>
+    <h2>Covid-19 &amp; Unforeseen Circumstances</h2>
+    <p>In the event that FTM Management and Studios is required to reschedule a shoot due to Government Covid-19 guidance or any other unforeseen circumstances beyond our control, any refund requested by the Client will be reimbursed in the form of an <strong>FTM Management and Studios voucher</strong>. The voucher will be valid for use within 6 months of the original scheduled shoot date. No cash refund will be issued in these circumstances.</p>
+  </div>
+
+  <!-- 8. AGENCY BOOKINGS -->
+  <div class="clause">
+    <p class="clause-num">08</p>
+    <h2>Agency &amp; Partner Bookings</h2>
+    <p>For clients who have booked through an agency or partner of FTM Management and Studios, the same no-refund policy applies in full. The Client's agreement with the agency does not override or supersede this policy. FTM Management and Studios will not be liable for any refund commitments made by third parties.</p>
+  </div>
+
+  <!-- 9. APPLICABLE LAW -->
+  <div class="clause">
+    <p class="clause-num">09</p>
+    <h2>Applicable Law</h2>
+    <p>This policy is governed by the laws of England &amp; Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England &amp; Wales.</p>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>&copy; 2026 FTM Management and Studios. All rights reserved.</p>
+  <a href="/">ftmmanagement.space</a>
+</footer>
+
+</body>
+</html>

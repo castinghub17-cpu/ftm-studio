@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms &amp; Conditions — FTM Management and Studios</title>
+  <meta name="description" content="Terms and Conditions for FTM Management and Studios — London Photography Studio."/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:     #18181a;
+      --ink70:   #4a4a50;
+      --ink40:   #97979c;
+      --b100:    #f8f5f0;
+      --b200:    #f0ebe2;
+      --line:    #e8e3dc;
+      --white:   #ffffff;
+      --serif:   'DM Serif Display', Georgia, serif;
+      --display: 'Syne', system-ui, sans-serif;
+      --sans:    'Inter', system-ui, sans-serif;
+    }
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 0 48px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 13px; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+    }
+    .nav-back {
+      font-size: 10.5px; font-weight: 400; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--ink40);
+      text-decoration: none; transition: color .2s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-back:hover { color: var(--ink); }
+    .nav-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      padding: 80px 56px 72px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-label {
+      font-size: 9.5px; font-weight: 500; letter-spacing: .35em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+    }
+    .hero-label::before { content: ''; width: 20px; height: 1px; background: rgba(255,255,255,0.4); }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 400; color: var(--white);
+      line-height: 1.1; letter-spacing: -.01em;
+      margin-bottom: 20px;
+    }
+    .hero-meta {
+      font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.45);
+      letter-spacing: .05em;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 72px 48px 100px;
+    }
+
+    .intro {
+      font-size: 14px; font-weight: 300; color: var(--ink70);
+      line-height: 1.9; padding-bottom: 48px;
+      border-bottom: 1px solid var(--line); margin-bottom: 56px;
+    }
+
+    .clause {
+      margin-bottom: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--line);
+    }
+    .clause:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .clause-num {
+      font-size: 9px; font-weight: 600; letter-spacing: .35em;
+      text-transform: uppercase; color: var(--ink40);
+      margin-bottom: 10px;
+    }
+    .clause h2 {
+      font-family: var(--display);
+      font-size: 20px; font-weight: 700;
+      letter-spacing: -.01em; color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .clause p {
+      font-size: 13.5px; font-weight: 300;
+      color: var(--ink70); line-height: 1.9;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--b100);
+      border-top: 1px solid var(--line);
+      padding: 32px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer p {
+      font-size: 11px; font-weight: 300;
+      color: var(--ink40); letter-spacing: .05em;
+    }
+    footer a {
+      font-size: 11px; font-weight: 400;
+      color: var(--ink40); text-decoration: none;
+      letter-spacing: .1em; text-transform: uppercase;
+      transition: color .2s;
+    }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .hero { padding: 56px 24px 48px; }
+      .content { padding: 48px 24px 72px; }
+      footer { padding: 24px 20px; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="/" class="nav-logo">FTM Studios</a>
+  <a href="/" class="nav-back">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Home
+  </a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <p class="hero-label">Legal</p>
+  <h1>Terms &amp; Conditions</h1>
+  <p class="hero-meta">FTM Management and Studios &nbsp;·&nbsp; London, UK &nbsp;·&nbsp; Last updated May 2026</p>
+</div>
+
+<!-- ── CONTENT ── -->
+<main class="content">
+
+  <p class="intro">
+    Please read these Terms and Conditions carefully before commissioning any work with FTM Management and Studios. By proceeding with a booking or payment, you agree to be bound by the terms set out below.
+  </p>
+
+  <!-- 1. DEFINITIONS -->
+  <div class="clause">
+    <p class="clause-num">01</p>
+    <h2>Definitions</h2>
+    <p>The purpose of this agreement — the "Client" shall where the context admits include their respective assignees, sub-licensees and successors in title. In cases where FTM Management and Studios works directly with a photography client (i.e. with no agency or intermediary), all references in this agreement to the "Client" shall be interpreted as references to that photography client. "Photographs" mean all photographic material furnished by FTM Management and Studios, whether transparencies, negatives, prints or any other type of physical or electronic material.</p>
+  </div>
+
+  <!-- 2. COPYRIGHT -->
+  <div class="clause">
+    <p class="clause-num">02</p>
+    <h2>Copyright</h2>
+    <p>FTM Management and Studios at all times throughout the world retains the entire copyright in the Photographs.</p>
+  </div>
+
+  <!-- 3. OWNERSHIP -->
+  <div class="clause">
+    <p class="clause-num">03</p>
+    <h2>Ownership of Materials</h2>
+    <p>Title to all Photographs remains the property of FTM Management and Studios. Other arrangements can be made by prior written agreement.</p>
+  </div>
+
+  <!-- 4. USE -->
+  <div class="clause">
+    <p class="clause-num">04</p>
+    <h2>Use</h2>
+    <p>The licence to use comes into effect from the date of payment of the relevant invoice(s). No use may be made of the Photographs before payment in full of the relevant invoice(s) without FTM Management and Studios' express permission. Any permission which may be given for prior use will automatically be revoked if full payment is not made by the due date or if the "Client" is put into receivership or liquidation. Where use is restricted in the Agreement, permission to use the Photographs for additional purposes will normally be granted upon payment of a further fee, to be mutually agreed.</p>
+  </div>
+
+  <!-- 5. EXCLUSIVITY -->
+  <div class="clause">
+    <p class="clause-num">05</p>
+    <h2>Exclusivity</h2>
+    <p>The "Client" will be authorised to publish the Photographs to the exclusion of all other persons including FTM Management and Studios. However, FTM Management and Studios retains the rights in all cases to use the Photographs in any manner at any time and in any part of the world for the purposes of advertising or otherwise promoting their work. After the exclusivity period indicated in the Licence to Use, FTM Management and Studios shall be entitled to use the Photographs for any purposes.</p>
+  </div>
+
+  <!-- 6. ELECTRONIC STORAGE -->
+  <div class="clause">
+    <p class="clause-num">06</p>
+    <h2>Electronic Storage</h2>
+    <p>Save for purposes of production for the licensed use(s), the Photographs may not be stored in any form of electronic medium without the written permission of FTM Management and Studios. Manipulation of the image or use of only a portion of the image may only take place with the permission of FTM Management and Studios.</p>
+  </div>
+
+  <!-- 7. CLIENT CONFIDENTIALITY -->
+  <div class="clause">
+    <p class="clause-num">07</p>
+    <h2>Client Confidentiality</h2>
+    <p>FTM Management and Studios will keep confidential and will not disclose to any third parties or make use of material or information communicated to them in confidence for the purposes of the photography, save as may be reasonably necessary to enable FTM Management and Studios to carry out their obligations in relation to the commission.</p>
+  </div>
+
+  <!-- 8. INDEMNITY -->
+  <div class="clause">
+    <p class="clause-num">08</p>
+    <h2>Indemnity</h2>
+    <p>FTM Management and Studios agrees to indemnify the "Client" against all expenses, damages, claims and legal costs arising out of any failure by FTM Management and Studios to obtain any clearances for which FTM Management and Studios was responsible in respect of third-party copyright works, trademarks, designs or other intellectual property. FTM Management and Studios shall only be responsible for obtaining such clearances if this has been expressly agreed before the shoot. In all other cases the "Client" shall be responsible for obtaining such clearances and will indemnify FTM Management and Studios against all expenses, damages, claims and legal costs arising out of any failure to obtain such clearances.</p>
+  </div>
+
+  <!-- 9. QUOTE -->
+  <div class="clause">
+    <p class="clause-num">09</p>
+    <h2>Quote</h2>
+    <p>A quote is considered firm from FTM Management and Studios from the date of the quote until the expiry date given on the quote. A booking is considered firm when the quote has been agreed to by the Client, either in writing or verbally.</p>
+  </div>
+
+  <!-- 10. DEPOSIT -->
+  <div class="clause">
+    <p class="clause-num">10</p>
+    <h2>Deposit</h2>
+    <p>A deposit is applicable to all clients for all commissioned work. The booking will remain unconfirmed until a full deposit is made.</p>
+  </div>
+
+  <!-- 11. PAYMENT -->
+  <div class="clause">
+    <p class="clause-num">11</p>
+    <h2>Payment</h2>
+    <p>Payments are expected in full on the day of commissioned work by cash, cheque, bank transfer, or via online payment. All PayPal payments will be charged a 5% admin fee. Corporate accounts may request a 30-day invoicing service. Failure to comply within the deadline will incur a £100 penalty fee.</p>
+  </div>
+
+  <!-- 12. EXPENSES -->
+  <div class="clause">
+    <p class="clause-num">12</p>
+    <h2>Expenses</h2>
+    <p>Where extra expenses or time are incurred by FTM Management and Studios as a result of alterations to the original brief by the "Client", or otherwise at their request, the "Client" shall approve and be liable to pay such extra expenses or fees at FTM Management and Studios' normal rate, in addition to the expenses previously agreed or estimated.</p>
+  </div>
+
+  <!-- 13. REJECTION -->
+  <div class="clause">
+    <p class="clause-num">13</p>
+    <h2>Rejection</h2>
+    <p>Unless a rejection fee has been agreed in advance, there is no right to reject on the basis of style or composition.</p>
+  </div>
+
+  <!-- 14. SUPPLY TO THIRD PARTIES -->
+  <div class="clause">
+    <p class="clause-num">14</p>
+    <h2>Supply to Third Parties</h2>
+    <p>The Licence only applies to the "Client" and the product as stated on the front of the form.</p>
+  </div>
+
+  <!-- 15. APPLICABLE LAW -->
+  <div class="clause">
+    <p class="clause-num">15</p>
+    <h2>Applicable Law</h2>
+    <p>The laws of England &amp; Wales shall govern this agreement.</p>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p>&copy; 2026 FTM Management and Studios. All rights reserved.</p>
+  <a href="/">ftmmanagement.space</a>
+</footer>
+
+</body>
+</html>
