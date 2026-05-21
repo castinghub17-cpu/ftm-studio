@@ -67,22 +67,34 @@ export default {
 async function handleCheckout(request, env) {
   try {
     const body = await request.json();
-    const pkg  = PACKAGES[body.packageId];
 
-    if (!pkg) {
-      return jsonError('Invalid package selected.', 400);
+    let pkg;
+
+    // Custom / manual payment amount
+    if (body.packageId === 'custom') {
+      const pence = Math.round(parseFloat(body.customAmount) * 100);
+      if (!pence || pence < 100) {
+        return jsonError('Minimum payment amount is £1.00.', 400);
+      }
+      pkg = {
+        name:        'FTM Management & Studios — Custom Payment',
+        description: 'Manual payment amount',
+        price:       pence,
+      };
+    } else {
+      pkg = PACKAGES[body.packageId];
+      if (!pkg) return jsonError('Invalid package selected.', 400);
     }
 
     const origin = new URL(request.url).origin;
 
     // Build Stripe Checkout Session request
-    // Using URLSearchParams for Stripe's form-encoded API
     const params = new URLSearchParams();
 
     // Mode
     params.append('mode', 'payment');
 
-    // Line item — kept minimal for maximum compatibility
+    // Line item
     params.append('line_items[0][price_data][currency]',             'gbp');
     params.append('line_items[0][price_data][product_data][name]',   pkg.name);
     params.append('line_items[0][price_data][unit_amount]',          String(pkg.price));

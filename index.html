@@ -1272,6 +1272,29 @@
     </div>
 
   </div>
+
+  <!-- ── CUSTOM / MANUAL PAYMENT ── -->
+  <div style="border-top:1px solid var(--line);margin-top:1px;padding:40px 32px;background:var(--white);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--ink40);margin-bottom:8px;">Custom Payment</div>
+      <div style="font-family:var(--display);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:4px;">Pay a Custom Amount</div>
+      <div style="font-size:12.5px;font-weight:300;color:var(--ink40);">For deposits, instalment payments, or any agreed amount.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;border:1px solid var(--line);background:var(--b100);">
+        <span style="padding:0 14px;font-size:18px;font-weight:300;color:var(--ink40);">£</span>
+        <input id="custom-amount" type="number" min="1" step="0.01" placeholder="0.00"
+          style="border:none;background:transparent;padding:13px 14px 13px 0;font-size:15px;font-family:var(--display);font-weight:600;color:var(--ink);width:120px;outline:none;"
+        />
+      </div>
+      <button id="custom-pay-btn" onclick="startCustomCheckout()"
+        style="padding:13px 32px;background:var(--ink);color:var(--white);border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;transition:opacity .2s;"
+        onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">
+        Pay Now
+      </button>
+    </div>
+  </div>
+
 </section>
 
 <!-- ── TESTIMONIALS ── -->
@@ -1623,6 +1646,34 @@
      IMPORTANT: You must enable Klarna and Clearpay in your Stripe Dashboard:
        Stripe Dashboard → Settings → Payment methods → toggle ON
   ───────────────────────────────────────────────────────────────────────── */
+  async function startCustomCheckout() {
+    const input = document.getElementById('custom-amount');
+    const btn   = document.getElementById('custom-pay-btn');
+    const val   = parseFloat(input.value);
+    if (!val || val < 1) {
+      input.style.borderColor = 'red';
+      input.focus();
+      return;
+    }
+    input.style.borderColor = '';
+    btn.disabled = true;
+    btn.textContent = 'Redirecting…';
+    try {
+      const res = await fetch('/create-checkout', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ packageId: 'custom', customAmount: val }),
+      });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else { throw new Error(data.error || 'No URL'); }
+    } catch (err) {
+      alert('Could not start payment. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Pay Now';
+    }
+  }
+
   async function startCheckout(packageId, btn) {
     const origText = btn.textContent;
     btn.disabled   = true;
