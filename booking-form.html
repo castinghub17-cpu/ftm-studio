@@ -144,6 +144,10 @@
       nav, .btn-download { display: none !important; }
       body { background: white; font-size: 10px; }
       .page-wrap { max-width: 100%; margin: 0; padding: 0; }
+      /* Hide placeholder text when printing — fields stay blank */
+      input::placeholder, textarea::placeholder { color: transparent !important; opacity: 0 !important; }
+      input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { color: transparent !important; opacity: 0 !important; }
+      input::-moz-placeholder, textarea::-moz-placeholder { color: transparent !important; opacity: 0 !important; }
       .form-card { border: none; padding: 12px 20px; }
 
       /* Tighter header */
