@@ -202,7 +202,17 @@ function isToday(d)   { return d===today.getDate()&&curMonth===today.getMonth()&
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function render() {
+  // Save scroll position before re-render
+  const wrap = document.querySelector('.table-wrap');
+  const scrollLeft = wrap ? wrap.scrollLeft : 0;
+  const scrollTop  = window.scrollY || 0;
+
   document.getElementById('app').innerHTML = buildApp();
+
+  // Restore scroll position after re-render
+  const newWrap = document.querySelector('.table-wrap');
+  if (newWrap) newWrap.scrollLeft = scrollLeft;
+  window.scrollTo(0, scrollTop);
 }
 
 function buildApp() {
