@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Attendance & Payroll — FTM</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0a0f1e;color:#e2e8f0;font-family:'DM Sans','Segoe UI',sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+  ::-webkit-scrollbar{height:4px;width:4px}
+  ::-webkit-scrollbar-track{background:#0f172a}
+  ::-webkit-scrollbar-thumb{background:#1e293b;border-radius:3px}
+  .mono{font-family:'DM Mono',monospace}
+  .header{background:#0d1117;border-bottom:1px solid #1e293b;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+  .header-title{font-size:17px;font-weight:700;color:#f1f5f9;letter-spacing:-0.3px}
+  .header-sub{font-size:11px;color:#475569;margin-top:2px;font-family:'DM Mono',monospace}
+  .month-nav{background:#0d1117;border-bottom:1px solid #1e293b;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+  .nav-btn{background:#111827;border:1px solid #1e293b;color:#94a3b8;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:18px;transition:all 0.15s}
+  .nav-btn:active{background:#1e293b}
+  .month-label{font-size:15px;font-weight:700;color:#f1f5f9;font-family:'DM Mono',monospace}
+  .tabs{background:#0d1117;border-bottom:1px solid #1e293b;display:flex}
+  .tab{flex:1;background:transparent;border:none;color:#475569;cursor:pointer;padding:11px 8px;font-size:13px;font-weight:600;border-bottom:2px solid transparent;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+  .tab.active{color:#38bdf8;border-bottom-color:#38bdf8}
+  .btn-primary{background:#0ea5e9;border:none;color:white;border-radius:9px;padding:10px 18px;cursor:pointer;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;transition:background 0.15s;width:100%}
+  .btn-primary:active{background:#0284c7}
+  .btn-ghost{background:transparent;border:1px solid #334155;color:#94a3b8;border-radius:9px;padding:10px 18px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;width:100%}
+  .btn-ghost:active{background:#1e293b}
+  .btn-action{background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif}
+  .btn-action:active{background:#334155}
+  .btn-icon{background:transparent;border:none;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:13px;opacity:0.45;transition:opacity 0.15s}
+  .btn-icon:active{opacity:1}
+  .btn-save{background:#22c55e;border:none;color:#fff;border-radius:9px;padding:9px 18px;cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;transition:background 0.15s}
+  .btn-save:active{background:#16a34a}
+  .btn-save.saved{background:#166534;color:#86efac}
+  .input{background:#0f172a;border:1px solid #334155;color:#e2e8f0;border-radius:9px;padding:11px 13px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;width:100%;-webkit-appearance:none}
+  .input:focus{border-color:#38bdf8}
+  .label{font-size:12px;color:#64748b;font-weight:600;display:block;margin-bottom:6px;letter-spacing:0.04em}
+  .card{background:#111827;border:1px solid #1e293b;border-radius:14px;padding:18px}
+  .att-cell{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;user-select:none;font-family:'DM Mono',monospace;transition:transform 0.1s;-webkit-tap-highlight-color:transparent}
+  .att-cell:active{transform:scale(0.9)}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:flex-end;justify-content:center;z-index:100;padding:0}
+  .modal{background:#111827;border:1px solid #1e293b;border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:480px}
+  .modal-title{font-size:17px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+  .modal-sub{font-size:13px;color:#475569;margin-bottom:20px}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#475569;margin-bottom:8px}
+  .divider{border:none;border-top:1px solid #1e293b;margin:14px 0}
+  .pay-badge{font-family:'DM Mono',monospace;font-weight:600;font-size:13px;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:3px 9px;color:#34d399}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%}
+  th,td{white-space:nowrap}
+  .balance-paid{background:#052e16;border:1px solid #166534;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+  .balance-owed{background:#1c1208;border:1px solid #92400e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+  .empty{text-align:center;padding:50px 20px;color:#334155}
+  .empty-icon{font-size:36px;margin-bottom:10px}
+  .empty-text{font-size:15px;font-weight:600;color:#475569}
+  .empty-sub{font-size:13px;margin-top:6px}
+  /* Toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;font-size:13px;font-weight:700;padding:10px 22px;border-radius:99px;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1}
+  /* Data bar */
+  .data-bar{background:#0d1117;border-bottom:1px solid #1e293b;padding:10px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'ftm_att_v1';
+const DEFAULT_EMPLOYEES = [{ name: 'Kerry', rate: 55 }];
+const STATUS = {
+  P:  { label:'Present',  color:'#22c55e', bg:'#dcfce7', short:'P', mult:1   },
+  H:  { label:'Half Day', color:'#f59e0b', bg:'#fef3c7', short:'H', mult:0.5 },
+  L:  { label:'Leave',    color:'#6366f1', bg:'#ede9fe', short:'L', mult:0   },
+  A:  { label:'Absent',   color:'#ef4444', bg:'#fee2e2', short:'A', mult:0   },
+  '-':{ label:'—',        color:'#334155', bg:'transparent', short:'—', mult:0 },
+};
+const CYCLE = ['P','H','L','A','-'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SMONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DNAMES = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const daysInMonth = (y,m) => new Date(y,m+1,0).getDate();
+const fmt = n => '£' + Number(n).toFixed(2);
+const fmtDate = iso => { if(!iso) return ''; const d=new Date(iso); return `${d.getDate()} ${SMONTHS[d.getMonth()]} ${d.getFullYear()}`; };
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let state = { employees: DEFAULT_EMPLOYEES, attendance: {}, commissions: {}, payments: {} };
+const today = new Date();
+let curYear  = today.getFullYear();
+let curMonth = today.getMonth();
+let curView  = 'attendance';
+let modal = null;
+let modalData = {};
+let pendingSave = false; // tracks unsaved changes
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      state = JSON.parse(raw);
+      if (!state.employees.find(e => e.name === 'Kerry'))
+        state.employees.unshift({ name: 'Kerry', rate: 55 });
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    pendingSave = false;
+    showToast('✓ Saved!');
+    render();
+  } catch(e) {}
+}
+
+function markDirty() {
+  pendingSave = true;
+  // Auto-save silently to localStorage so data isn't lost
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  render();
+}
+
+function showToast(msg, duration=1800) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── EXPORT / IMPORT ───────────────────────────────────────────────────────────
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `ftm-payroll-backup-${MONTHS[curMonth]}-${curYear}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📥 Backup downloaded!');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target.result);
+        if (!parsed.employees) throw new Error('Invalid file');
+        state = parsed;
+        saveState();
+        showToast('✓ Data imported!');
+        render();
+      } catch(err) { showToast('✗ Invalid backup file'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+const aKey = (name,d) => `${name}__${curYear}-${curMonth}-${d}`;
+const mKey = (name)   => `${name}__${curYear}-${curMonth}`;
+const getAtt   = (name,d)  => state.attendance[aKey(name,d)] || '-';
+const getComms = (name)    => state.commissions[mKey(name)] || [];
+const getPays  = (name)    => state.payments[mKey(name)] || [];
+const totalComm= (name)    => getComms(name).reduce((s,c)=>s+parseFloat(c.amount||0),0);
+const totalPaid= (name)    => getPays(name).reduce((s,p)=>s+parseFloat(p.amount||0),0);
+
+function cycleAtt(name,d) {
+  const cur = getAtt(name,d);
+  const next = CYCLE[(CYCLE.indexOf(cur)+1)%CYCLE.length];
+  state.attendance[aKey(name,d)] = next;
+  markDirty();
+}
+
+function calcEarned(name) {
+  const rate = getRate(name);
+  let pay = 0;
+  for(let d=1; d<=daysInMonth(curYear,curMonth); d++) pay += rate * STATUS[getAtt(name,d)].mult;
+  return pay;
+}
+function getRate(name) {
+  const emp = state.employees.find(e=>e.name===name);
+  return emp ? parseFloat(emp.rate)||0 : 0;
+}
+function getSummary(name) {
+  const c={P:0,H:0,A:0,L:0};
+  for(let d=1;d<=daysInMonth(curYear,curMonth);d++){const s=getAtt(name,d);if(c[s]!==undefined)c[s]++;}
+  return c;
+}
+function isWeekend(d) { const day=new Date(curYear,curMonth,d).getDay(); return day===0||day===6; }
+function isToday(d)   { return d===today.getDate()&&curMonth===today.getMonth()&&curYear===today.getFullYear(); }
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  document.getElementById('app').innerHTML = buildApp();
+}
+
+function buildApp() {
+  return `
+    ${buildHeader()}
+    ${buildDataBar()}
+    ${buildMonthNav()}
+    ${buildTabs()}
+    <div style="padding:16px">
+      ${curView==='attendance' ? buildAttendance() : buildPayroll()}
+    </div>
+    ${modal ? buildModal() : ''}
+  `;
+}
+
+function buildHeader() {
+  return `
+    <div class="header">
+      <div>
+        <div class="header-title">📋 Attendance & Payroll</div>
+        <div class="header-sub">FTM Management · ${state.employees.length} employee${state.employees.length!==1?'s':''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${state.employees.length<10?`<button class="btn-action" onclick="openModal('addEmp')" style="font-size:13px;padding:8px 14px">+ Add</button>`:''}
+        <button class="btn-save${pendingSave?'':' saved'}" onclick="saveState()">
+          💾 ${pendingSave ? 'Save' : 'Saved'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function buildDataBar() {
+  return `
+    <div class="data-bar">
+      <button onclick="exportData()" class="btn-action" style="font-size:12px;color:#38bdf8;border-color:#38bdf830">📤 Export Backup</button>
+      <button onclick="importData()" class="btn-action" style="font-size:12px;color:#a78bfa;border-color:#a78bfa30">📥 Import Backup</button>
+      <span style="font-size:11px;color:#334155;margin-left:4px">Data saved per device — use Export/Import to sync across devices</span>
+    </div>
+  `;
+}
+
+function buildMonthNav() {
+  return `
+    <div class="month-nav">
+      <button class="nav-btn" onclick="prevMonth()">‹</button>
+      <span class="month-label">${MONTHS[curMonth]} ${curYear}</span>
+      <button class="nav-btn" onclick="nextMonth()">›</button>
+    </div>
+  `;
+}
+
+function buildTabs() {
+  return `
+    <div class="tabs">
+      <button class="tab ${curView==='attendance'?'active':''}" onclick="setView('attendance')">Attendance</button>
+      <button class="tab ${curView==='payroll'?'active':''}" onclick="setView('payroll')">Payroll</button>
+    </div>
+  `;
+}
+
+// ── ATTENDANCE VIEW ───────────────────────────────────────────────────────────
+function buildAttendance() {
+  if(state.employees.length===0) return `<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No employees yet</div><div class="empty-sub">Tap "+ Add" to get started</div></div>`;
+  const days = daysInMonth(curYear, curMonth);
+  const dayNums = Array.from({length:days},(_,i)=>i+1);
+  let html = `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+      ${Object.entries(STATUS).filter(([k])=>k!=='-').map(([k,v])=>`
+        <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:${v.bg};color:${v.color};font-family:'DM Mono',monospace">${v.short} ${v.label}</span>
+      `).join('')}
+    </div>
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:8px 10px;font-size:11px;color:#475569;font-weight:600;background:#0d1117;position:sticky;left:0;z-index:2;min-width:90px;border-right:1px solid #1e293b">NAME</th>
+          ${dayNums.map(d=>`
+            <th style="padding:4px 2px;font-size:10px;color:${isToday(d)?'#38bdf8':isWeekend(d)?'#6366f1':'#475569'};font-weight:600;background:#0d1117;text-align:center;min-width:34px">
+              <div class="mono">${d}</div>
+              <div style="opacity:0.6;font-weight:400">${DNAMES[new Date(curYear,curMonth,d).getDay()]}</div>
+            </th>
+          `).join('')}
+          <th style="padding:4px 8px;font-size:11px;color:#475569;font-weight:600;background:#0d1117;text-align:center;min-width:48px">DAYS</th>
+          <th style="padding:4px 8px;font-size:11px;color:#34d399;font-weight:600;background:#0d1117;text-align:center;min-width:72px">EARNED</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${state.employees.map((emp,ei)=>{
+          const s=getSummary(emp.name); const earned=calcEarned(emp.name);
+          const rowBg=ei%2===0?'#0a0f1e':'#0d1117';
+          return `
+            <tr>
+              <td style="padding:8px 10px;background:${rowBg};position:sticky;left:0;z-index:1;border-right:1px solid #1e293b">
+                <div style="font-size:13px;font-weight:600;color:#e2e8f0">${emp.name}</div>
+                <div style="font-size:11px;color:#475569;font-family:'DM Mono',monospace;margin-top:1px">${fmt(emp.rate)}/day</div>
+              </td>
+              ${dayNums.map(d=>{
+                const st=getAtt(emp.name,d); const info=STATUS[st];
+                return `
+                  <td style="text-align:center;padding:3px 1px;background:${rowBg}">
+                    <div class="att-cell" onclick="cycleAtt('${emp.name}',${d})"
+                      style="background:${st==='-'?'transparent':info.bg};color:${st==='-'?'#1e293b':info.color};border:${st==='-'?'1px dashed #1e293b':'none'};outline:${isToday(d)?'2px solid #38bdf820':'none'}">
+                      ${info.short}
+                    </div>
+                  </td>
+                `;
+              }).join('')}
+              <td style="text-align:center;background:${rowBg};padding:3px 8px">
+                <span class="mono" style="font-size:13px;font-weight:600;color:#94a3b8">${s.P+s.H*0.5}</span>
+              </td>
+              <td style="text-align:center;background:${rowBg};padding:3px 8px">
+                <span class="pay-badge">${fmt(earned)}</span>
+              </td>
+            </tr>
+          `;
+        }).join('')}
+        <tr>
+          <td colspan="${days+2}" style="background:#0d1117;border-top:1px solid #1e293b"></td>
+          <td style="background:#0d1117;border-top:1px solid #1e293b;padding:10px 8px;text-align:center">
+            <span style="font-size:11px;color:#475569;font-weight:600">TOTAL</span>
+          </td>
+          <td style="background:#0d1117;border-top:1px solid #1e293b;padding:10px 8px;text-align:center">
+            <span class="mono" style="font-size:14px;font-weight:700;color:#34d399">${fmt(state.employees.reduce((s,e)=>s+calcEarned(e.name),0))}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    ${state.employees.length>0?`
+    <div style="margin-top:20px;border-top:1px solid #1e293b;padding-top:16px">
+      <div class="section-label">Manage Employees</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${state.employees.map(emp=>`
+          <div style="display:flex;align-items:center;gap:8px;background:#111827;border:1px solid #1e293b;border-radius:10px;padding:8px 12px">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#e2e8f0">${emp.name}</div>
+              <div style="font-size:11px;color:#475569;font-family:'DM Mono',monospace">${fmt(emp.rate)}/day</div>
+            </div>
+            <button class="btn-icon" onclick="openModal('editEmp','${emp.name}')">✏️</button>
+            <button class="btn-icon" onclick="removeEmp('${emp.name}')" style="color:#ef4444">🗑️</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    `:''}
+  `;
+  return html;
+}
+
+// ── PAYROLL VIEW ──────────────────────────────────────────────────────────────
+function buildPayroll() {
+  const allEarned  = state.employees.reduce((s,e)=>s+calcEarned(e.name),0);
+  const allComm    = state.employees.reduce((s,e)=>s+totalComm(e.name),0);
+  const allPaid    = state.employees.reduce((s,e)=>s+totalPaid(e.name),0);
+  const allBalance = allEarned+allComm-allPaid;
+  let html = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      ${[
+        {l:'Total Earned',v:fmt(allEarned),c:'#34d399'},
+        {l:'Commission',v:fmt(allComm),c:'#a78bfa'},
+        {l:'Total Paid',v:fmt(allPaid),c:'#38bdf8'},
+        {l:'Balance Owed',v:fmt(allBalance),c:allBalance>0?'#f59e0b':'#22c55e'},
+      ].map(x=>`
+        <div class="card" style="padding:12px 14px">
+          <div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px">${x.l}</div>
+          <div class="mono" style="font-size:19px;font-weight:700;color:${x.c}">${x.v}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  if(state.employees.length===0) return html+`<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No employees yet</div></div>`;
+  state.employees.forEach(emp=>{
+    const earned  = calcEarned(emp.name);
+    const comms   = getComms(emp.name);
+    const totC    = totalComm(emp.name);
+    const pays    = getPays(emp.name);
+    const totP    = totalPaid(emp.name);
+    const subtotal= earned+totC;
+    const balance = subtotal-totP;
+    const s       = getSummary(emp.name);
+    html += `
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+          <div>
+            <div style="font-size:16px;font-weight:700;color:#f1f5f9">${emp.name}</div>
+            <div class="mono" style="font-size:11px;color:#475569;margin-top:2px">${fmt(emp.rate)}/day · ${SMONTHS[curMonth]} ${curYear}</div>
+          </div>
+          <div style="display:flex;gap:4px">
+            <button class="btn-icon" onclick="openModal('editEmp','${emp.name}')">✏️</button>
+            <button class="btn-icon" onclick="removeEmp('${emp.name}')">🗑️</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+          ${[{l:'Present',v:s.P,c:'#22c55e',bg:'#dcfce7'},{l:'Half',v:s.H,c:'#f59e0b',bg:'#fef3c7'},{l:'Absent',v:s.A,c:'#ef4444',bg:'#fee2e2'},{l:'Leave',v:s.L,c:'#6366f1',bg:'#ede9fe'}].map(x=>`
+            <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:${x.bg};color:${x.c};font-family:'DM Mono',monospace">${x.v} ${x.l}</span>
+          `).join('')}
+        </div>
+        <hr class="divider"/>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <div class="section-label">Total Earned</div>
+            <div style="font-size:12px;color:#475569">${s.P} full + ${s.H} half days</div>
+          </div>
+          <span class="mono" style="font-size:18px;font-weight:700;color:#34d399">${fmt(earned)}</span>
+        </div>
+        <hr class="divider"/>
+        <div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="section-label">Commission</div>
+            <button class="btn-action" onclick="openModal('comm','${emp.name}')">+ Add</button>
+          </div>
+          ${comms.length===0?`<div style="font-size:12px;color:#334155;font-style:italic">No commission added</div>`:`
+            <div style="display:flex;flex-direction:column;gap:6px">
+              ${comms.map(c=>`
+                <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:8px;padding:8px 12px">
+                  <div>
+                    <span class="mono" style="font-size:13px;color:#a78bfa;font-weight:600">+${fmt(c.amount)}</span>
+                    ${c.note?`<span style="font-size:12px;color:#475569;margin-left:8px">${c.note}</span>`:''}
+                  </div>
+                  <button class="btn-icon" onclick="removeComm('${emp.name}',${c.id})">✕</button>
+                </div>
+              `).join('')}
+              <div style="text-align:right;font-size:12px;color:#a78bfa;font-family:'DM Mono',monospace;font-weight:600">Total: ${fmt(totC)}</div>
+            </div>
+          `}
+        </div>
+        <hr class="divider"/>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:10px;padding:12px 14px;margin-bottom:14px">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#94a3b8">SUBTOTAL</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">Earned + Commission</div>
+          </div>
+          <span class="mono" style="font-size:20px;font-weight:700;color:#f1f5f9">${fmt(subtotal)}</span>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="section-label" style="color:#38bdf8">Payments Made</div>
+            <button class="btn-action" style="border-color:#38bdf830;color:#38bdf8" onclick="openModal('pay','${emp.name}')">+ Log Payment</button>
+          </div>
+          ${pays.length===0?`<div style="font-size:12px;color:#334155;font-style:italic">No payments logged</div>`:`
+            <div style="display:flex;flex-direction:column;gap:6px">
+              ${pays.map(p=>`
+                <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:8px;padding:8px 12px">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="mono" style="font-size:13px;color:#38bdf8;font-weight:600">−${fmt(p.amount)}</span>
+                    <span style="font-size:11px;color:#475569;background:#1e293b;border-radius:5px;padding:2px 7px">${fmtDate(p.date)}</span>
+                    ${p.note?`<span style="font-size:12px;color:#475569">${p.note}</span>`:''}
+                  </div>
+                  <button class="btn-icon" onclick="removePay('${emp.name}',${p.id})">✕</button>
+                </div>
+              `).join('')}
+              <div style="text-align:right;font-size:12px;color:#38bdf8;font-family:'DM Mono',monospace;font-weight:600">Total Paid: ${fmt(totP)}</div>
+            </div>
+          `}
+        </div>
+        <div class="${balance<=0?'balance-paid':'balance-owed'}">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:${balance<=0?'#22c55e':'#f59e0b'}">${balance<=0?'✓ FULLY PAID':'⚠ BALANCE OWED'}</div>
+            <div style="font-size:11px;color:${balance<=0?'#16a34a':'#d97706'};margin-top:2px">${balance<=0?'No outstanding amount':'Still to be paid'}</div>
+          </div>
+          <span class="mono" style="font-size:24px;font-weight:700;color:${balance<=0?'#22c55e':'#f59e0b'}">${fmt(Math.abs(balance))}</span>
+        </div>
+      </div>
+    `;
+  });
+  return html;
+}
+
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function buildModal() {
+  let inner = '';
+  if(modal==='addEmp') {
+    inner = `
+      <div class="modal-title">Add Employee</div>
+      <div class="modal-sub">Enter name and daily rate</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><label class="label">FULL NAME</label><input class="input" id="m-name" placeholder="e.g. John Smith" autocomplete="off"/></div>
+        <div><label class="label">DAILY RATE (£)</label><input class="input" id="m-rate" type="number" min="0" step="0.01" placeholder="e.g. 55"/></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="addEmp()">Add Employee</button>
+        </div>
+      </div>
+    `;
+  } else if(modal==='editEmp') {
+    const emp = state.employees.find(e=>e.name===modalData.emp);
+    inner = `
+      <div class="modal-title">Edit Employee</div>
+      <div class="modal-sub">${modalData.emp}</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><label class="label">NAME</label><input class="input" id="m-name" value="${emp?emp.name:''}" autocomplete="off"/></div>
+        <div><label class="label">DAILY RATE (£)</label><input class="input" id="m-rate" type="number" min="0" step="0.01" value="${emp?emp.rate:''}"/></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="saveEdit()">Save</button>
+        </div>
+      </div>
+    `;
+  } else if(modal==='comm') {
+    inner = `
+      <div class="modal-title">Add Commission</div>
+      <div class="modal-sub">${modalData.emp} · ${SMONTHS[curMonth]} ${curYear}</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><label class="label">AMOUNT (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 100"/></div>
+        <div><label class="label">NOTE (optional)</label><input class="input" id="m-note" placeholder="e.g. Sales bonus" autocomplete="off"/></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="addComm()">Add Commission</button>
+        </div>
+      </div>
+    `;
+  } else if(modal==='pay') {
+    const td = new Date().toISOString().slice(0,10);
+    inner = `
+      <div class="modal-title">Log Payment</div>
+      <div class="modal-sub">${modalData.emp} · ${SMONTHS[curMonth]} ${curYear}</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><label class="label">AMOUNT PAID (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 200"/></div>
+        <div><label class="label">DATE</label><input class="input" id="m-date" type="date" value="${td}"/></div>
+        <div><label class="label">NOTE (optional)</label><input class="input" id="m-note" placeholder="e.g. Bank transfer" autocomplete="off"/></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="addPay()">Log Payment</button>
+        </div>
+      </div>
+    `;
+  }
+  return `<div class="modal-overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">${inner}</div></div>`;
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function openModal(type, emp) { modal=type; modalData={emp}; render(); setTimeout(()=>{ const el=document.getElementById('m-name')||document.getElementById('m-amount'); if(el) el.focus(); },100); }
+function closeModal() { modal=null; modalData={}; render(); }
+
+function addEmp() {
+  const name=(document.getElementById('m-name').value||'').trim();
+  const rate=parseFloat(document.getElementById('m-rate').value);
+  if(!name||state.employees.find(e=>e.name===name)||isNaN(rate)||rate<=0) return;
+  state.employees.push({name,rate});
+  markDirty(); closeModal();
+}
+function saveEdit() {
+  const name=(document.getElementById('m-name').value||'').trim();
+  const rate=parseFloat(document.getElementById('m-rate').value);
+  const old=modalData.emp;
+  if(!name||isNaN(rate)||rate<=0) return;
+  if(name!==old && state.employees.find(e=>e.name===name)) return;
+  const idx=state.employees.findIndex(e=>e.name===old);
+  if(idx<0) return;
+  state.employees[idx]={name,rate};
+  if(name!==old) {
+    const migrate=obj=>{ const n={}; Object.entries(obj).forEach(([k,v])=>{ n[k.startsWith(old+'__')?k.replace(old+'__',name+'__'):k]=v; }); return n; };
+    state.attendance=migrate(state.attendance);
+    state.commissions=migrate(state.commissions);
+    state.payments=migrate(state.payments);
+  }
+  markDirty(); closeModal();
+}
+function removeEmp(name) {
+  if(!confirm(`Remove "${name}"? All data deleted.`)) return;
+  state.employees=state.employees.filter(e=>e.name!==name);
+  [state.attendance,state.commissions,state.payments].forEach(obj=>{ Object.keys(obj).forEach(k=>{ if(k.startsWith(name+'__')) delete obj[k]; }); });
+  markDirty(); render();
+}
+function addComm() {
+  const amt=parseFloat(document.getElementById('m-amount').value);
+  const note=(document.getElementById('m-note').value||'').trim();
+  if(isNaN(amt)||amt===0) return;
+  const k=mKey(modalData.emp);
+  if(!state.commissions[k]) state.commissions[k]=[];
+  state.commissions[k].push({id:Date.now(),amount:amt,note});
+  markDirty(); closeModal();
+}
+function removeComm(name,id) {
+  const k=mKey(name); if(!state.commissions[k]) return;
+  state.commissions[k]=state.commissions[k].filter(c=>c.id!==id);
+  markDirty(); render();
+}
+function addPay() {
+  const amt=parseFloat(document.getElementById('m-amount').value);
+  const date=document.getElementById('m-date').value;
+  const note=(document.getElementById('m-note').value||'').trim();
+  if(isNaN(amt)||amt<=0) return;
+  const k=mKey(modalData.emp);
+  if(!state.payments[k]) state.payments[k]=[];
+  state.payments[k].push({id:Date.now(),amount:amt,date,note});
+  markDirty(); closeModal();
+}
+function removePay(name,id) {
+  const k=mKey(name); if(!state.payments[k]) return;
+  state.payments[k]=state.payments[k].filter(p=>p.id!==id);
+  markDirty(); render();
+}
+function prevMonth() { if(curMonth===0){curMonth=11;curYear--;}else curMonth--; render(); }
+function nextMonth() { if(curMonth===11){curMonth=0;curYear++;}else curMonth++; render(); }
+function setView(v)  { curView=v; render(); }
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+loadState();
+render();
+</script>
+</body>
+</html>
