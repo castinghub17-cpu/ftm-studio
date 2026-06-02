@@ -67,6 +67,40 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ── SUPABASE CONFIG ───────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://qibdsiirzhfkpkyznfys.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_2kYikvy29rc9845zr8J26A_jYNUyM4t';
+const SB_HEADERS   = { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
+
+async function cloudLoad() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/ftm_attendance?id=eq.state&select=data`, { headers: SB_HEADERS });
+    const rows = await res.json();
+    if (rows && rows[0] && rows[0].data && rows[0].data.employees) {
+      state = rows[0].data;
+      if (!state.employees.find(e => e.name === 'Kerry')) state.employees.unshift({ name: 'Kerry', rate: 55 });
+    }
+  } catch(e) { console.warn('Cloud load failed, using local', e); }
+}
+
+async function cloudSave() {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/ftm_attendance?id=eq.state`, {
+      method: 'PATCH',
+      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ data: state, updated_at: new Date().toISOString() })
+    });
+    // Also save locally as backup
+    try { localStorage.setItem('ftm_att_v1', JSON.stringify(state)); } catch(e) {}
+    pendingSave = false;
+    showToast('☁️ Saved & synced!');
+    render();
+  } catch(e) {
+    showToast('✗ Sync failed — saved locally');
+    try { localStorage.setItem('ftm_att_v1', JSON.stringify(state)); } catch(e2) {}
+  }
+}
+
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'ftm_att_v1';
 const DEFAULT_EMPLOYEES = [{ name: 'Kerry', rate: 55 }];
@@ -97,6 +131,7 @@ let pendingSave = false; // tracks unsaved changes
 
 // ── STORAGE ───────────────────────────────────────────────────────────────────
 function loadState() {
+  // Load from localStorage as instant fallback while cloud loads
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -108,17 +143,12 @@ function loadState() {
 }
 
 function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    pendingSave = false;
-    showToast('✓ Saved!');
-    render();
-  } catch(e) {}
+  cloudSave(); // Save to cloud (also saves locally inside cloudSave)
 }
 
 function markDirty() {
   pendingSave = true;
-  // Auto-save silently to localStorage so data isn't lost
+  // Auto-save locally immediately so nothing is lost if offline
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
   render();
 }
@@ -250,7 +280,7 @@ function buildDataBar() {
     <div class="data-bar">
       <button onclick="exportData()" class="btn-action" style="font-size:12px;color:#38bdf8;border-color:#38bdf830">📤 Export Backup</button>
       <button onclick="importData()" class="btn-action" style="font-size:12px;color:#a78bfa;border-color:#a78bfa30">📥 Import Backup</button>
-      <span style="font-size:11px;color:#334155;margin-left:4px">Data saved per device — use Export/Import to sync across devices</span>
+      <span style="font-size:11px;color:#334155;margin-left:4px">☁️ Cloud sync ON — updates everywhere instantly</span>
     </div>
   `;
 }
@@ -612,8 +642,10 @@ function nextMonth() { if(curMonth===11){curMonth=0;curYear++;}else curMonth++; 
 function setView(v)  { curView=v; render(); }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-loadState();
-render();
+loadState(); // Load local instantly
+render();    // Show immediately
+// Then load from cloud and refresh
+cloudLoad().then(() => render());
 </script>
 </body>
 </html>
