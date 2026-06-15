@@ -63,12 +63,17 @@ const SB_ROW  = 'accounts';
 const STORAGE_KEY = 'ftm_accounts_v1';
 
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat'];
-const METHODS = [
-  { key:'bankTransfer', label:'Bank Transfer', color:'#38bdf8' },
-  { key:'klarna',       label:'Klarna',        color:'#f472b6' },
-  { key:'square',       label:'Square',        color:'#a78bfa' },
-  { key:'paypal',       label:'PayPal',        color:'#34d399' },
+/* Payment columns shown per day. Cash + non-cash methods (modes of "card"). */
+const PAY = [
+  { key:'cash',         label:'Cash',   color:'#34d399' },
+  { key:'card',         label:'Card',   color:'#60a5fa' },
+  { key:'bankTransfer', label:'Bank',   color:'#38bdf8' },
+  { key:'klarna',       label:'Klarna', color:'#f472b6' },
+  { key:'square',       label:'Square', color:'#a78bfa' },
+  { key:'paypal',       label:'PayPal', color:'#2dd4bf' },
 ];
+/* legacy period-level method keys (migrated into the daily grid) */
+const LEGACY_METHODS = ['bankTransfer','klarna','square','paypal'];
 const DEFAULT_EXPENSES = ['Photographer','Makeup Artist','Rhys / Daniel','Kerry','Rent Studio','Rent Office','Zettle','Advert / PayPal','Bank Exp'];
 const SMONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -88,6 +93,7 @@ function loadLocal(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(raw) state = Object.assign({periods:[]}, JSON.parse(raw));
   }catch(e){}
+  migrateState();
   if(!curId && state.periods.length) curId = state.periods[0].id;
 }
 
@@ -99,6 +105,7 @@ async function loadCloud(){
     const rows = await res.json();
     if(rows && rows.length && rows[0].data){
       state = Object.assign({periods:[]}, rows[0].data);
+      migrateState();
       try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
     }
     if(!curId && state.periods.length) curId = state.periods[0].id;
@@ -147,30 +154,47 @@ function setCloudStatus(s, customText){
 /* ---------- helpers ---------- */
 const getPeriod = () => state.periods.find(p => p.id === curId) || null;
 
+function blankDay(){ const d={}; PAY.forEach(c => d[c.key]=0); return d; }
+
 function blankPeriod(type, endDate){
   const days = {};
-  DAYS.forEach(d => days[d] = { cash:0, card:0 });
-  const methods = {};
-  METHODS.forEach(m => methods[m.key] = 0);
+  DAYS.forEach(d => days[d] = blankDay());
   return {
     id: Date.now(),
     type,
     endDate,
     label: (type==='fortnightly'?'Fortnight':'Week') + ' end ' + fmtEnd(endDate),
     days,
-    methods,
     expenses: DEFAULT_EXPENSES.map((name,i)=>({ id: Date.now()+i+1, name, amount:0 })),
   };
 }
 
+/* Upgrade old data: make sure every day has all payment keys, and fold any
+   legacy period-level methods (Other Income) into Monday so nothing is lost. */
+function migratePeriod(p){
+  if(!p.days) p.days = {};
+  DAYS.forEach(d => {
+    if(!p.days[d]) p.days[d] = {};
+    PAY.forEach(c => { if(typeof p.days[d][c.key] !== 'number') p.days[d][c.key] = num(p.days[d][c.key]); });
+  });
+  if(p.methods){
+    LEGACY_METHODS.forEach(k => {
+      const v = num(p.methods[k]);
+      if(v) p.days['Mon'][k] = num(p.days['Mon'][k]) + v;
+    });
+    delete p.methods;
+  }
+  return p;
+}
+
+function migrateState(){ (state.periods||[]).forEach(migratePeriod); }
+
 function totals(p){
-  let cash=0, card=0;
-  DAYS.forEach(d => { cash += num(p.days[d].cash); card += num(p.days[d].card); });
-  let other = 0;
-  METHODS.forEach(m => other += num(p.methods[m.key]));
-  const income = cash + card + other;
+  const sums = {}; PAY.forEach(c => sums[c.key] = 0);
+  DAYS.forEach(d => PAY.forEach(c => sums[c.key] += num(p.days[d][c.key])));
+  const income = PAY.reduce((s,c)=>s+sums[c.key], 0);
   const expenses = p.expenses.reduce((s,e)=>s+num(e.amount), 0);
-  return { cash, card, other, income, expenses, net: income - expenses };
+  return { sums, income, expenses, net: income - expenses };
 }
 
 /* ---------- render ---------- */
@@ -232,50 +256,38 @@ function buildBody(){
       <div class="mono" style="font-size:24px;font-weight:700;color:${t.net>=0?'#22c55e':'#f59e0b'}">${fmt(Math.abs(t.net))}</div>
     </div>
 
-    <!-- daily takings -->
+    <!-- daily takings: cash + card payment methods per day -->
     <div class="card" style="margin-bottom:14px">
-      <div class="section-label">Daily Takings</div>
-      <table>
-        <thead>
-          <tr>
-            <th class="grid-th" style="text-align:left">Day</th>
-            <th class="grid-th">Cash</th>
-            <th class="grid-th">Card</th>
-            <th class="grid-th" style="text-align:right">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${DAYS.map(d=>{
-            const day = p.days[d];
-            const tot = num(day.cash)+num(day.card);
-            return `
-              <tr>
-                <td class="grid-day">${d}</td>
-                <td style="padding:3px 4px"><input class="num" type="number" inputmode="decimal" step="0.01" value="${day.cash||''}" placeholder="0" onchange="setDay(${p.id},'${d}','cash',this.value)"/></td>
-                <td style="padding:3px 4px"><input class="num" type="number" inputmode="decimal" step="0.01" value="${day.card||''}" placeholder="0" onchange="setDay(${p.id},'${d}','card',this.value)"/></td>
-                <td class="mono" style="text-align:right;padding:3px 8px;color:#94a3b8;font-size:13px;white-space:nowrap">${fmt(tot)}</td>
-              </tr>`;
-          }).join('')}
-          <tr>
-            <td class="grid-day" style="border-top:1px solid #1e293b;color:#cbd5e1;font-weight:700;padding-top:8px">Total</td>
-            <td class="mono" style="border-top:1px solid #1e293b;text-align:right;padding:8px 9px 0;color:#34d399;font-size:13px">${fmt(t.cash)}</td>
-            <td class="mono" style="border-top:1px solid #1e293b;text-align:right;padding:8px 9px 0;color:#34d399;font-size:13px">${fmt(t.card)}</td>
-            <td class="mono" style="border-top:1px solid #1e293b;text-align:right;padding:8px 8px 0;color:#34d399;font-size:14px;font-weight:700">${fmt(t.cash+t.card)}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- other income -->
-    <div class="card" style="margin-bottom:14px">
-      <div class="section-label">Other Income</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${METHODS.map(m=>`
-          <div style="display:flex;align-items:center;gap:10px">
-            <div style="flex:1;font-size:13px;color:${m.color};font-weight:600">${m.label}</div>
-            <div style="width:130px"><input class="num" type="number" inputmode="decimal" step="0.01" value="${p.methods[m.key]||''}" placeholder="0" onchange="setMethod(${p.id},'${m.key}',this.value)"/></div>
-          </div>`).join('')}
+      <div class="section-label">Daily Takings — Cash &amp; Card methods</div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table style="min-width:560px">
+          <thead>
+            <tr>
+              <th class="grid-th" style="text-align:left;position:sticky;left:0;background:#111827;z-index:1">Day</th>
+              ${PAY.map(c=>`<th class="grid-th" style="color:${c.color}">${c.label}</th>`).join('')}
+              <th class="grid-th" style="text-align:right">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${DAYS.map(d=>{
+              const day = p.days[d];
+              const tot = PAY.reduce((s,c)=>s+num(day[c.key]),0);
+              return `
+                <tr>
+                  <td class="grid-day" style="position:sticky;left:0;background:#111827;z-index:1">${d}</td>
+                  ${PAY.map(c=>`<td style="padding:3px 4px"><input class="num" style="min-width:64px" type="number" inputmode="decimal" step="0.01" value="${day[c.key]||''}" placeholder="0" onchange="setDay(${p.id},'${d}','${c.key}',this.value)"/></td>`).join('')}
+                  <td class="mono" style="text-align:right;padding:3px 8px;color:#94a3b8;font-size:13px;white-space:nowrap">${fmt(tot)}</td>
+                </tr>`;
+            }).join('')}
+            <tr>
+              <td class="grid-day" style="border-top:1px solid #1e293b;color:#cbd5e1;font-weight:700;padding-top:8px;position:sticky;left:0;background:#111827;z-index:1">Total</td>
+              ${PAY.map(c=>`<td class="mono" style="border-top:1px solid #1e293b;text-align:right;padding:8px 9px 0;color:#34d399;font-size:13px;white-space:nowrap">${fmt(t.sums[c.key])}</td>`).join('')}
+              <td class="mono" style="border-top:1px solid #1e293b;text-align:right;padding:8px 8px 0;color:#34d399;font-size:14px;font-weight:700;white-space:nowrap">${fmt(t.income)}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <div style="font-size:11px;color:#475569;margin-top:8px">Swipe sideways to see all payment methods →</div>
     </div>
 
     <!-- expenses -->
@@ -364,14 +376,10 @@ function downloadXlsx(){
   aoa.push([p.label]);
   aoa.push([(p.type==='fortnightly'?'Fortnightly':'Weekly'), 'Period end:', fmtEnd(p.endDate)]);
   aoa.push([]);
-  aoa.push(['DAILY TAKINGS']);
-  aoa.push(['Day', 'Cash (£)', 'Card (£)', 'Total (£)']);
-  DAYS.forEach(d=>{ const day=p.days[d]; aoa.push([d, num(day.cash), num(day.card), num(day.cash)+num(day.card)]); });
-  aoa.push(['Total', t.cash, t.card, t.cash + t.card]);
-  aoa.push([]);
-  aoa.push(['OTHER INCOME', 'Amount (£)']);
-  METHODS.forEach(m=> aoa.push([m.label, num(p.methods[m.key])]));
-  aoa.push(['Other income total', t.other]);
+  aoa.push(['DAILY TAKINGS (£)']);
+  aoa.push(['Day', ...PAY.map(c=>c.label), 'Total']);
+  DAYS.forEach(d=>{ const day=p.days[d]; const row=PAY.map(c=>num(day[c.key])); aoa.push([d, ...row, row.reduce((s,v)=>s+v,0)]); });
+  aoa.push(['Total', ...PAY.map(c=>t.sums[c.key]), t.income]);
   aoa.push([]);
   aoa.push(['EXPENSES', 'Amount (£)']);
   p.expenses.forEach(e=> aoa.push([e.name || '(unnamed)', num(e.amount)]));
@@ -385,7 +393,7 @@ function downloadXlsx(){
   const safe = (p.label || 'account').replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'');
   if(typeof XLSX !== 'undefined'){
     const ws = XLSX.utils.aoa_to_sheet(aoa);
-    ws['!cols'] = [{wch:24},{wch:14},{wch:14},{wch:14}];
+    ws['!cols'] = [{wch:24}].concat(PAY.map(()=>({wch:11})), [{wch:12}]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Accounts');
     XLSX.writeFile(wb, safe + '.xlsx');
@@ -413,7 +421,6 @@ function deletePeriod(){
 }
 
 function setDay(pid, day, field, val){ const p=state.periods.find(x=>x.id===pid); if(!p)return; p.days[day][field]=num(val); saveState(); render(); }
-function setMethod(pid, key, val){ const p=state.periods.find(x=>x.id===pid); if(!p)return; p.methods[key]=num(val); saveState(); render(); }
 function addExpense(pid){ const p=state.periods.find(x=>x.id===pid); if(!p)return; p.expenses.push({id:Date.now(),name:'',amount:0}); saveState(); render(); }
 function setExpenseName(pid, eid, val){ const p=state.periods.find(x=>x.id===pid); if(!p)return; const e=p.expenses.find(x=>x.id===eid); if(e){e.name=val; saveState();} }
 function setExpenseAmt(pid, eid, val){ const p=state.periods.find(x=>x.id===pid); if(!p)return; const e=p.expenses.find(x=>x.id===eid); if(e){e.amount=num(val); saveState(); render();} }
