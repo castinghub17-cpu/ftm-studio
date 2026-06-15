@@ -63,6 +63,15 @@
 const STORAGE_KEY = 'nst_att_v2';
 const DEFAULT_EMPLOYEES = [{ name: 'Kerry', rate: 55 }];
 
+/* ── Supabase sync (data lives in the ftm_attendance table, row id="state") ── */
+const SB_URL  = 'https://qibdsiirzhfkpkyznfys.supabase.co';
+const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpYmRzaWlyemhma3BreXpuZnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2ODYyMDgsImV4cCI6MjA5MjI2MjIwOH0.ikrSP2efW_6e7BZdcdqvfKtZrswvt8hlF8F4gcPknpg';
+const SB_REST = SB_URL + '/rest/v1/ftm_attendance';
+const SB_HEAD = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+const SB_ROW  = 'state';
+let cloudTimer = null;
+let cloudStatus = { text: '', color: '#475569' };
+
 const STATUS = {
   P:  { label:'Present',  color:'#22c55e', bg:'#dcfce7', short:'P', mult:1   },
   H:  { label:'Half Day', color:'#f59e0b', bg:'#fef3c7', short:'H', mult:0.5 },
@@ -110,6 +119,56 @@ function loadState() {
 
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); showSave(); } catch(e) {}
+  pushCloud();
+}
+
+/* Pull the saved state from Supabase on startup. Cloud is the source of truth,
+   so if a row exists it overwrites the local cache. Never pushes on load. */
+async function loadCloud() {
+  const blank = {employees:DEFAULT_EMPLOYEES,attendance:{},commissions:{},payments:{},carryForward:{},carryHandled:{}};
+  setCloudStatus('saving', 'Loading…');
+  try {
+    const res = await fetch(`${SB_REST}?id=eq.${SB_ROW}&select=data`, { headers: SB_HEAD });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const rows = await res.json();
+    if (rows && rows.length && rows[0].data) {
+      state = Object.assign({}, blank, rows[0].data);
+      if (!state.employees.find(e => e.name === 'Kerry')) state.employees.unshift({ name: 'Kerry', rate: 55 });
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+    }
+    setCloudStatus('synced');
+  } catch(e) {
+    setCloudStatus('offline');
+  }
+  render();
+}
+
+/* Save the whole state back to Supabase (debounced). Upsert on the single row. */
+function pushCloud() {
+  clearTimeout(cloudTimer);
+  setCloudStatus('saving');
+  cloudTimer = setTimeout(async () => {
+    try {
+      const body = JSON.stringify([{ id: SB_ROW, data: state, updated_at: new Date().toISOString().slice(0,23) }]);
+      const res = await fetch(SB_REST, {
+        method: 'POST',
+        headers: Object.assign({}, SB_HEAD, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+        body
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      setCloudStatus('synced');
+    } catch(e) {
+      setCloudStatus('offline');
+    }
+  }, 600);
+}
+
+function setCloudStatus(s, customText) {
+  if (s === 'saving')      cloudStatus = { text: customText || 'Saving…', color: '#f59e0b' };
+  else if (s === 'synced') cloudStatus = { text: '✓ Synced',  color: '#22c55e' };
+  else                     cloudStatus = { text: '⚠ Offline', color: '#ef4444' };
+  const el = document.getElementById('cloud-status');
+  if (el) { el.textContent = cloudStatus.text; el.style.color = cloudStatus.color; }
 }
 
 function showSave() {
@@ -197,6 +256,7 @@ function buildHeader() {
         <div class="header-sub">FTM Management · ${state.employees.length} employee${state.employees.length!==1?'s':''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
+        <span id="cloud-status" class="mono" style="font-size:10px;color:${cloudStatus.color}">${cloudStatus.text}</span>
         <span class="save-dot" id="save-dot"></span>
         ${state.employees.length<5?`<button class="btn-action" onclick="openModal('addEmp')" style="font-size:13px;padding:8px 14px">+ Add</button>`:''}
       </div>
@@ -664,6 +724,7 @@ function setView(v)  { curView=v; render(); }
 
 loadState();
 render();
+loadCloud();
 </script>
 </body>
 </html>
