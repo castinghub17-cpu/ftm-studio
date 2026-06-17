@@ -4,80 +4,127 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>Attendance & Payroll</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#0a0f1e;color:#e2e8f0;font-family:'DM Sans','Segoe UI',sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
-  ::-webkit-scrollbar{height:4px;width:4px}
-  ::-webkit-scrollbar-track{background:#0f172a}
-  ::-webkit-scrollbar-thumb{background:#1e293b;border-radius:3px}
-  .mono{font-family:'DM Mono',monospace}
-  .header{background:#0d1117;border-bottom:1px solid #1e293b;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-  .header-title{font-size:17px;font-weight:700;color:#f1f5f9;letter-spacing:-0.3px}
-  .header-sub{font-size:11px;color:#475569;margin-top:2px;font-family:'DM Mono',monospace}
-  .month-nav{background:#0d1117;border-bottom:1px solid #1e293b;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
-  .nav-btn{background:#111827;border:1px solid #1e293b;color:#94a3b8;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:18px;transition:all 0.15s}
-  .nav-btn:active{background:#1e293b}
-  .month-label{font-size:15px;font-weight:700;color:#f1f5f9;font-family:'DM Mono',monospace}
-  .tabs{background:#0d1117;border-bottom:1px solid #1e293b;display:flex}
-  .tab{flex:1;background:transparent;border:none;color:#475569;cursor:pointer;padding:11px 8px;font-size:13px;font-weight:600;border-bottom:2px solid transparent;transition:all 0.15s;font-family:'DM Sans',sans-serif}
-  .tab.active{color:#38bdf8;border-bottom-color:#38bdf8}
-  .btn-primary{background:#0ea5e9;border:none;color:white;border-radius:9px;padding:10px 18px;cursor:pointer;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;transition:background 0.15s;width:100%}
-  .btn-primary:active{background:#0284c7}
-  .btn-ghost{background:transparent;border:1px solid #334155;color:#94a3b8;border-radius:9px;padding:10px 18px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;width:100%}
-  .btn-ghost:active{background:#1e293b}
-  .btn-action{background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif}
-  .btn-action:active{background:#334155}
-  .btn-icon{background:transparent;border:none;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:13px;opacity:0.45;transition:opacity 0.15s}
-  .btn-icon:active{opacity:1}
-  .input{background:#0f172a;border:1px solid #334155;color:#e2e8f0;border-radius:9px;padding:11px 13px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;width:100%;-webkit-appearance:none}
-  .input:focus{border-color:#38bdf8}
-  .label{font-size:12px;color:#64748b;font-weight:600;display:block;margin-bottom:6px;letter-spacing:0.04em}
-  .card{background:#111827;border:1px solid #1e293b;border-radius:14px;padding:18px}
-  .att-cell{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;user-select:none;font-family:'DM Mono',monospace;transition:transform 0.1s;-webkit-tap-highlight-color:transparent}
-  .att-cell:active{transform:scale(0.9)}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:flex-end;justify-content:center;z-index:100;padding:0}
-  .modal{background:#111827;border:1px solid #1e293b;border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
-  .modal-title{font-size:17px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
-  .modal-sub{font-size:13px;color:#475569;margin-bottom:20px}
-  .section-label{font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#475569;margin-bottom:8px}
-  .divider{border:none;border-top:1px solid #1e293b;margin:14px 0}
-  .pay-badge{font-family:'DM Mono',monospace;font-weight:600;font-size:13px;background:#0f172a;border:1px solid #1e293b;border-radius:6px;padding:3px 9px;color:#34d399}
-  .save-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:5px;opacity:0;transition:opacity 0.3s}
-  .save-dot.show{opacity:1}
-  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  :root{
+    --paper:#FAF7F1;
+    --paper-raised:#FFFFFF;
+    --ink:#1C2541;
+    --ink-soft:#5B6478;
+    --ink-faint:#A3A8B5;
+    --line:#E8E2D6;
+    --line-soft:#F0EBE0;
+    --teal:#0F766E;
+    --teal-bg:#E6F4F2;
+    --teal-deep:#0B5C56;
+    --amber:#C2740A;
+    --amber-bg:#FBF0DD;
+    --rose:#C81E4E;
+    --rose-bg:#FBE6EC;
+    --violet:#6D4FC2;
+    --violet-bg:#EFEAFB;
+    --blue:#2563A8;
+    --blue-bg:#E5EFF9;
+    --gold-leaf:#B8923F;
+  }
+  body{background:var(--paper);color:var(--ink);font-family:'Inter','Segoe UI',sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+  ::-webkit-scrollbar{height:5px;width:5px}
+  ::-webkit-scrollbar-track{background:var(--line-soft)}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .serif{font-family:'Fraunces',serif}
+  .header{background:var(--paper-raised);border-bottom:1px solid var(--line);padding:18px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(28,37,65,0.02)}
+  .header-mark{width:36px;height:36px;border-radius:9px;background:linear-gradient(150deg,var(--teal) 0%, var(--teal-deep) 100%);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(15,118,110,0.25)}
+  .header-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-0.2px;line-height:1.1}
+  .header-sub{font-size:11px;color:var(--ink-faint);margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:0.01em}
+  .month-nav{background:var(--paper-raised);border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+  .nav-btn{background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);border-radius:9px;padding:8px 16px;cursor:pointer;font-size:17px;transition:all 0.15s;line-height:1}
+  .nav-btn:active{background:var(--teal-bg);border-color:var(--teal);color:var(--teal-deep)}
+  .month-label{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--ink);letter-spacing:0.01em}
+  .tabs{background:var(--paper-raised);border-bottom:1px solid var(--line);display:flex;padding:0 10px}
+  .tab{flex:1;background:transparent;border:none;color:var(--ink-faint);cursor:pointer;padding:13px 8px;font-size:13px;font-weight:600;border-bottom:2.5px solid transparent;transition:all 0.15s;font-family:'Inter',sans-serif;letter-spacing:0.01em}
+  .tab.active{color:var(--teal-deep);border-bottom-color:var(--teal)}
+  .btn-primary{background:var(--teal);border:none;color:white;border-radius:10px;padding:11px 18px;cursor:pointer;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;transition:all 0.15s;width:100%;box-shadow:0 2px 8px rgba(15,118,110,0.25)}
+  .btn-primary:active{background:var(--teal-deep);transform:scale(0.98)}
+  .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink-soft);border-radius:10px;padding:11px 18px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;width:100%;transition:all 0.15s}
+  .btn-ghost:active{background:var(--line-soft)}
+  .btn-action{background:var(--paper-raised);border:1.5px solid var(--line);color:var(--ink-soft);border-radius:9px;padding:7px 13px;cursor:pointer;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;transition:all 0.15s}
+  .btn-action:active{background:var(--line-soft)}
+  .btn-icon{background:transparent;border:none;cursor:pointer;padding:5px 7px;border-radius:7px;font-size:13px;opacity:0.55;transition:all 0.15s}
+  .btn-icon:active{opacity:1;background:var(--line-soft)}
+  .header-add{background:var(--ink);color:white;border:none;border-radius:9px;padding:8px 15px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
+  .header-add:active{background:var(--teal-deep)}
+  .input{background:var(--paper);border:1.5px solid var(--line);color:var(--ink);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'Inter',sans-serif;outline:none;width:100%;-webkit-appearance:none;transition:border-color 0.15s}
+  .input:focus{border-color:var(--teal)}
+  .label{font-size:11px;color:var(--ink-faint);font-weight:700;display:block;margin-bottom:7px;letter-spacing:0.07em;text-transform:uppercase}
+  .card{background:var(--paper-raised);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 1px 3px rgba(28,37,65,0.04)}
+  .att-cell{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;user-select:none;font-family:'JetBrains Mono',monospace;transition:transform 0.1s;-webkit-tap-highlight-color:transparent}
+  .att-cell:active{transform:scale(0.88)}
+  .hr-cell{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;user-select:none;font-family:'JetBrains Mono',monospace;-webkit-tap-highlight-color:transparent;border:1.5px dashed var(--line)}
+  .modal-overlay{position:fixed;inset:0;background:rgba(28,37,65,0.45);display:flex;align-items:flex-end;justify-content:center;z-index:100;padding:0;backdrop-filter:blur(2px)}
+  .modal{background:var(--paper-raised);border-top:1px solid var(--line);border-radius:24px 24px 0 0;padding:26px 20px 38px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(28,37,65,0.12)}
+  .modal-title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--ink);margin-bottom:4px}
+  .modal-sub{font-size:13px;color:var(--ink-faint);margin-bottom:22px;font-family:'JetBrains Mono',monospace}
+  .section-label{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:9px}
+  .divider{border:none;border-top:1px solid var(--line-soft);margin:16px 0}
+  .pay-badge{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;background:var(--teal-bg);border:1px solid rgba(15,118,110,0.15);border-radius:7px;padding:4px 10px;color:var(--teal-deep)}
+  .save-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;transition:all 0.3s;color:var(--teal-deep)}
+  .save-dot{width:6px;height:6px;border-radius:50%}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;border:1px solid var(--line)}
   table{border-collapse:collapse;width:100%}
   th,td{white-space:nowrap}
-  .balance-paid{background:#052e16;border:1px solid #166534;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
-  .balance-owed{background:#1c1208;border:1px solid #92400e;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
-  .carry-banner{background:#1e1b4b;border:1px solid #4338ca;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-  .empty{text-align:center;padding:50px 20px;color:#334155}
-  .empty-icon{font-size:36px;margin-bottom:10px}
-  .empty-text{font-size:15px;font-weight:600;color:#475569}
-  .empty-sub{font-size:13px;margin-top:6px}
+  .balance-paid{background:var(--teal-bg);border:1px solid rgba(15,118,110,0.2);border-radius:14px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
+  .balance-owed{background:var(--amber-bg);border:1px solid rgba(194,116,10,0.25);border-radius:14px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
+  .carry-banner{background:var(--violet-bg);border:1px solid rgba(109,79,194,0.22);border-radius:14px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .empty{text-align:center;padding:56px 20px;color:var(--ink-faint)}
+  .empty-icon{font-size:38px;margin-bottom:12px;opacity:0.6}
+  .empty-text{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink-soft)}
+  .empty-sub{font-size:13px;margin-top:7px}
+  .type-toggle{display:flex;gap:8px}
+  .type-btn{flex:1;background:var(--paper);border:1.5px solid var(--line);color:var(--ink-soft);border-radius:10px;padding:11px;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;transition:all 0.15s}
+  .type-btn.active{background:var(--ink);border-color:var(--ink);color:white}
+  .type-pill{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;letter-spacing:0.04em;text-transform:uppercase}
+  .summary-stat{background:var(--paper-raised);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:0 1px 3px rgba(28,37,65,0.03)}
+  .summary-stat-label{font-size:10px;color:var(--ink-faint);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px}
+  .summary-stat-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700}
+  .emp-row-name{font-size:13px;font-weight:700;color:var(--ink)}
+  .emp-row-rate{font-size:11px;color:var(--ink-faint);font-family:'JetBrains Mono',monospace;margin-top:2px}
+  .chip{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;font-family:'JetBrains Mono',monospace}
+  .loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;color:var(--ink-faint)}
+  .spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app"><div class="loading-screen"><div class="spinner"></div><div style="font-family:'JetBrains Mono',monospace;font-size:13px">Loading from database…</div></div></div>
 <script>
-const STORAGE_KEY = 'nst_att_v2';
-const DEFAULT_EMPLOYEES = [{ name: 'Kerry', rate: 55 }];
+// ── Supabase ─────────────────────────────────────────────────────────────────
+const SB_URL = 'https://qibdsiirzhfkpkyznfys.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpYmRzaWlyemhma3BreXpuZnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2ODYyMDgsImV4cCI6MjA5MjI2MjIwOH0.ikrSP2efW_6e7BZdcdqvfKtZrswvt8hlF8F4gcPknpg';
+const SB_HDRS = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' };
 
-/* ── Supabase sync (data lives in the ftm_attendance table, row id="state") ── */
-const SB_URL  = 'https://qibdsiirzhfkpkyznfys.supabase.co';
-const SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpYmRzaWlyemhma3BreXpuZnlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2ODYyMDgsImV4cCI6MjA5MjI2MjIwOH0.ikrSP2efW_6e7BZdcdqvfKtZrswvt8hlF8F4gcPknpg';
-const SB_REST = SB_URL + '/rest/v1/ftm_attendance';
-const SB_HEAD = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
-const SB_ROW  = 'state';
-let cloudTimer = null;
-let cloudStatus = { text: '', color: '#475569' };
+async function dbLoad() {
+  const r = await fetch(`${SB_URL}/rest/v1/ftm_attendance?id=eq.state&select=data`, { headers: SB_HDRS });
+  const rows = await r.json();
+  return (rows && rows[0] && rows[0].data) ? rows[0].data : null;
+}
 
+async function dbSave(data) {
+  return fetch(`${SB_URL}/rest/v1/ftm_attendance`, {
+    method: 'POST', headers: SB_HDRS,
+    body: JSON.stringify({ id: 'state', data, updated_at: new Date().toISOString() })
+  });
+}
+
+// ── App ───────────────────────────────────────────────────────────────────────
+const DEFAULT_EMPLOYEES = [{ name: 'Kerry', rate: 55, payType: 'daily' }];
 const STATUS = {
-  P:  { label:'Present',  color:'#22c55e', bg:'#dcfce7', short:'P', mult:1   },
-  H:  { label:'Half Day', color:'#f59e0b', bg:'#fef3c7', short:'H', mult:0.5 },
-  L:  { label:'Leave',    color:'#6366f1', bg:'#ede9fe', short:'L', mult:0   },
-  A:  { label:'Absent',   color:'#ef4444', bg:'#fee2e2', short:'A', mult:0   },
-  '-':{ label:'—',        color:'#334155', bg:'transparent', short:'—', mult:0 },
+  P:  { label:'Present',  color:'#0F766E', bg:'#E6F4F2', short:'P', mult:1   },
+  H:  { label:'Half Day', color:'#C2740A', bg:'#FBF0DD', short:'H', mult:0.5 },
+  L:  { label:'Leave',    color:'#6D4FC2', bg:'#EFEAFB', short:'L', mult:0   },
+  A:  { label:'Absent',   color:'#C81E4E', bg:'#FBE6EC', short:'A', mult:0   },
+  '-':{ label:'—',        color:'#C9C2B2', bg:'transparent', short:'—', mult:0 },
 };
 const CYCLE = ['P','H','L','A','-'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -90,6 +137,7 @@ const fmtDate = iso => { if(!iso) return ''; const d=new Date(iso); return `${d.
 let state = {
   employees: DEFAULT_EMPLOYEES,
   attendance: {},
+  hours: {},
   commissions: {},
   payments: {},
   carryForward: {},
@@ -100,170 +148,174 @@ let curYear  = today.getFullYear();
 let curMonth = today.getMonth();
 let curView  = 'attendance';
 let saveTimer = null;
+let syncStatus = 'synced'; // 'synced' | 'saving' | 'error'
 let modal = null;
 let modalData = {};
+let addPayType = 'daily';
+let editPayType = 'daily';
 
-function loadState() {
+async function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const blank = {employees:DEFAULT_EMPLOYEES,attendance:{},commissions:{},payments:{},carryForward:{},carryHandled:{}};
-    if (raw) {
-      state = Object.assign({}, blank, JSON.parse(raw));
-    } else {
-      const old = localStorage.getItem('nst_att_v1');
-      if (old) state = Object.assign({}, blank, JSON.parse(old));
+    const data = await dbLoad();
+    const blank = {employees:DEFAULT_EMPLOYEES,attendance:{},hours:{},commissions:{},payments:{},carryForward:{},carryHandled:{}};
+    if (data) {
+      state = Object.assign({}, blank, data);
     }
-    if (!state.employees.find(e => e.name === 'Kerry')) state.employees.unshift({ name: 'Kerry', rate: 55 });
-  } catch(e) {}
+    if (!state.hours) state.hours = {};
+    state.employees = state.employees.map(e => ({ name:e.name, rate:e.rate, payType: e.payType==='hourly' ? 'hourly' : 'daily' }));
+    if (!state.employees.find(e => e.name === 'Kerry')) state.employees.unshift({ name: 'Kerry', rate: 55, payType:'daily' });
+  } catch(e) {
+    console.error('Load error', e);
+  }
 }
 
 function saveState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); showSave(); } catch(e) {}
-  pushCloud();
-}
-
-/* Pull the saved state from Supabase on startup. Cloud is the source of truth,
-   so if a row exists it overwrites the local cache. Never pushes on load. */
-async function loadCloud() {
-  const blank = {employees:DEFAULT_EMPLOYEES,attendance:{},commissions:{},payments:{},carryForward:{},carryHandled:{}};
-  setCloudStatus('saving', 'Loading…');
-  try {
-    const res = await fetch(`${SB_REST}?id=eq.${SB_ROW}&select=data`, { headers: SB_HEAD });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const rows = await res.json();
-    if (rows && rows.length && rows[0].data) {
-      state = Object.assign({}, blank, rows[0].data);
-      if (!state.employees.find(e => e.name === 'Kerry')) state.employees.unshift({ name: 'Kerry', rate: 55 });
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
-    }
-    setCloudStatus('synced');
-  } catch(e) {
-    setCloudStatus('offline');
-  }
-  render();
-}
-
-/* Save the whole state back to Supabase (debounced). Upsert on the single row. */
-function pushCloud() {
-  clearTimeout(cloudTimer);
-  setCloudStatus('saving');
-  cloudTimer = setTimeout(async () => {
-    try {
-      const body = JSON.stringify([{ id: SB_ROW, data: state, updated_at: new Date().toISOString().slice(0,23) }]);
-      const res = await fetch(SB_REST, {
-        method: 'POST',
-        headers: Object.assign({}, SB_HEAD, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
-        body
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      setCloudStatus('synced');
-    } catch(e) {
-      setCloudStatus('offline');
-    }
-  }, 600);
-}
-
-function setCloudStatus(s, customText) {
-  if (s === 'saving')      cloudStatus = { text: customText || 'Saving…', color: '#f59e0b' };
-  else if (s === 'synced') cloudStatus = { text: '✓ Synced',  color: '#22c55e' };
-  else                     cloudStatus = { text: '⚠ Offline', color: '#ef4444' };
-  const el = document.getElementById('cloud-status');
-  if (el) { el.textContent = cloudStatus.text; el.style.color = cloudStatus.color; }
-}
-
-function showSave() {
-  const dot = document.getElementById('save-dot');
-  if (!dot) return;
-  dot.classList.add('show');
+  setSyncStatus('saving');
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => dot.classList.remove('show'), 2000);
+  saveTimer = setTimeout(async () => {
+    try {
+      const r = await dbSave({ ...state });
+      setSyncStatus(r.ok ? 'synced' : 'error');
+    } catch(e) {
+      setSyncStatus('error');
+    }
+  }, 800);
+}
+
+function setSyncStatus(s) {
+  syncStatus = s;
+  const pill = document.getElementById('save-pill');
+  const dot  = document.getElementById('save-dot');
+  if (!pill || !dot) return;
+  if (s === 'saving') {
+    dot.style.background = '#C2740A';
+    pill.style.color = '#C2740A';
+    pill.innerHTML = '<span id="save-dot" style="width:6px;height:6px;border-radius:50%;background:#C2740A;display:inline-block"></span>&nbsp;SAVING…';
+  } else if (s === 'error') {
+    dot.style.background = '#C81E4E';
+    pill.style.color = '#C81E4E';
+    pill.innerHTML = '<span id="save-dot" style="width:6px;height:6px;border-radius:50%;background:#C81E4E;display:inline-block"></span>&nbsp;ERROR';
+  } else {
+    pill.style.color = 'var(--teal-deep)';
+    pill.innerHTML = '<span id="save-dot" style="width:6px;height:6px;border-radius:50%;background:var(--teal);display:inline-block"></span>&nbsp;SYNCED';
+  }
 }
 
 const aKey = (name,d) => `${name}__${curYear}-${curMonth}-${d}`;
 const mKey = (name,y=curYear,m=curMonth) => `${name}__${y}-${m}`;
 const getAtt   = (name,d)  => state.attendance[aKey(name,d)] || '-';
+const getHours = (name,d)  => state.hours[aKey(name,d)] !== undefined ? state.hours[aKey(name,d)] : 0;
 const getComms = (name,y=curYear,m=curMonth) => state.commissions[mKey(name,y,m)] || [];
 const getPays  = (name,y=curYear,m=curMonth) => state.payments[mKey(name,y,m)] || [];
 const getCarry = (name,y=curYear,m=curMonth) => state.carryForward[mKey(name,y,m)] || [];
 const totalComm= (name,y=curYear,m=curMonth) => getComms(name,y,m).reduce((s,c)=>s+parseFloat(c.amount||0),0);
 const totalPaid= (name,y=curYear,m=curMonth) => getPays(name,y,m).reduce((s,p)=>s+parseFloat(p.amount||0),0);
 const totalCarry=(name,y=curYear,m=curMonth) => getCarry(name,y,m).reduce((s,c)=>s+parseFloat(c.amount||0),0);
-
+function getEmp(name) { return state.employees.find(e=>e.name===name); }
+function isHourly(name) { const e=getEmp(name); return e && e.payType==='hourly'; }
 function prevMonthYM(y,m) { return m===0 ? {y:y-1,m:11} : {y, m:m-1}; }
-
 function cycleAtt(name,d) {
   const cur = getAtt(name,d);
   const next = CYCLE[(CYCLE.indexOf(cur)+1)%CYCLE.length];
   state.attendance[aKey(name,d)] = next;
   saveState(); render();
 }
-
+function promptHours(name,d) {
+  modal='hours'; modalData={emp:name, day:d};
+  render();
+  setTimeout(()=>{ const el=document.getElementById('m-hours'); if(el){ el.focus(); el.select(); } },100);
+}
+function saveHours() {
+  const el = document.getElementById('m-hours');
+  const val = el.value;
+  const name = modalData.emp, d = modalData.day;
+  if (val === '' || val === null) { delete state.hours[aKey(name,d)]; saveState(); closeModal(); return; }
+  const num = parseFloat(val);
+  if (isNaN(num) || num < 0) return;
+  state.hours[aKey(name,d)] = num;
+  saveState(); closeModal();
+}
+function clearHours() {
+  const name = modalData.emp, d = modalData.day;
+  delete state.hours[aKey(name,d)];
+  saveState(); closeModal();
+}
 function calcEarned(name,y=curYear,m=curMonth) {
   const rate = getRate(name);
-  let pay = 0;
   const days = daysInMonth(y,m);
-  for(let d=1; d<=days; d++) {
-    const key = `${name}__${y}-${m}-${d}`;
-    pay += rate * STATUS[state.attendance[key] || '-'].mult;
+  let pay = 0;
+  if (isHourly(name)) {
+    for(let d=1; d<=days; d++) {
+      const key = `${name}__${y}-${m}-${d}`;
+      const h = state.hours[key];
+      if (h) pay += rate * h;
+    }
+  } else {
+    for(let d=1; d<=days; d++) {
+      const key = `${name}__${y}-${m}-${d}`;
+      pay += rate * STATUS[state.attendance[key] || '-'].mult;
+    }
   }
   return pay;
 }
-
 function getRate(name) {
-  const emp = state.employees.find(e=>e.name===name);
+  const emp = getEmp(name);
   return emp ? parseFloat(emp.rate)||0 : 0;
 }
-
 function getSummary(name) {
+  if (isHourly(name)) {
+    const days = daysInMonth(curYear,curMonth);
+    let totalHours=0, daysWorked=0;
+    for(let d=1;d<=days;d++){ const h=getHours(name,d); if(h){ totalHours+=h; daysWorked++; } }
+    return { totalHours, daysWorked };
+  }
   const c={P:0,H:0,A:0,L:0};
   for(let d=1;d<=daysInMonth(curYear,curMonth);d++){const s=getAtt(name,d);if(c[s]!==undefined)c[s]++;}
   return c;
 }
-
 function getBalance(name,y=curYear,m=curMonth) {
   return totalCarry(name,y,m) + calcEarned(name,y,m) + totalComm(name,y,m) - totalPaid(name,y,m);
 }
-
 function getPrevBalance(name) {
   const {y,m} = prevMonthYM(curYear,curMonth);
   return getBalance(name,y,m);
 }
-
 function isWeekend(d) { const day=new Date(curYear,curMonth,d).getDay(); return day===0||day===6; }
 function isToday(d)   { return d===today.getDate()&&curMonth===today.getMonth()&&curYear===today.getFullYear(); }
-
 function render() {
   document.getElementById('app').innerHTML = buildApp();
 }
-
 function buildApp() {
   return `
     ${buildHeader()}
     ${buildMonthNav()}
     ${buildTabs()}
-    <div style="padding:16px">
+    <div style="padding:18px">
       ${curView==='attendance' ? buildAttendance() : buildPayroll()}
     </div>
     ${modal ? buildModal() : ''}
   `;
 }
-
 function buildHeader() {
+  const dotColor = syncStatus==='saving'?'#C2740A':syncStatus==='error'?'#C81E4E':'var(--teal)';
+  const pillColor = syncStatus==='saving'?'#C2740A':syncStatus==='error'?'#C81E4E':'var(--teal-deep)';
+  const pillText = syncStatus==='saving'?'SAVING…':syncStatus==='error'?'ERROR':'SYNCED';
   return `
     <div class="header">
-      <div>
-        <div class="header-title">📋 Attendance & Payroll</div>
-        <div class="header-sub">FTM Management · ${state.employees.length} employee${state.employees.length!==1?'s':''}</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="header-mark">📋</div>
+        <div>
+          <div class="header-title">Attendance &amp; Payroll</div>
+          <div class="header-sub">FTM MANAGEMENT · ${state.employees.length} ${state.employees.length===1?'EMPLOYEE':'EMPLOYEES'}</div>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span id="cloud-status" class="mono" style="font-size:10px;color:${cloudStatus.color}">${cloudStatus.text}</span>
-        <span class="save-dot" id="save-dot"></span>
-        ${state.employees.length<5?`<button class="btn-action" onclick="openModal('addEmp')" style="font-size:13px;padding:8px 14px">+ Add</button>`:''}
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="save-pill" id="save-pill" style="color:${pillColor}"><span id="save-dot" style="width:6px;height:6px;border-radius:50%;background:${dotColor};display:inline-block"></span>&nbsp;${pillText}</span>
+        ${state.employees.length<8?`<button class="header-add" onclick="openModal('addEmp')">+ Add</button>`:''}
       </div>
     </div>
   `;
 }
-
 function buildMonthNav() {
   return `
     <div class="month-nav">
@@ -273,7 +325,6 @@ function buildMonthNav() {
     </div>
   `;
 }
-
 function buildTabs() {
   return `
     <div class="tabs">
@@ -282,89 +333,112 @@ function buildTabs() {
     </div>
   `;
 }
-
 function buildAttendance() {
-  if(state.employees.length===0) return `<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No employees yet</div><div class="empty-sub">Tap "+ Add" to get started</div></div>`;
-
+  if(state.employees.length===0) return `<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No employees yet</div><div class="empty-sub">Tap "+ Add" above to get started</div></div>`;
   const days = daysInMonth(curYear, curMonth);
   const dayNums = Array.from({length:days},(_,i)=>i+1);
-
   let html = `
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;align-items:center">
       ${Object.entries(STATUS).filter(([k])=>k!=='-').map(([k,v])=>`
-        <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:${v.bg};color:${v.color};font-family:'DM Mono',monospace">${v.short} ${v.label}</span>
+        <span class="chip" style="background:${v.bg};color:${v.color}">${v.short} ${v.label}</span>
       `).join('')}
+      <span style="font-size:11px;color:var(--ink-faint)">· Hourly staff: tap a cell to enter hours</span>
     </div>
     <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th style="text-align:left;padding:8px 10px;font-size:11px;color:#475569;font-weight:600;background:#0d1117;position:sticky;left:0;z-index:2;min-width:90px;border-right:1px solid #1e293b">NAME</th>
+          <th style="text-align:left;padding:10px 12px;font-size:11px;color:var(--ink-faint);font-weight:700;background:var(--paper);position:sticky;left:0;z-index:2;min-width:104px;border-right:1px solid var(--line);letter-spacing:0.06em">NAME</th>
           ${dayNums.map(d=>`
-            <th style="padding:4px 2px;font-size:10px;color:${isToday(d)?'#38bdf8':isWeekend(d)?'#6366f1':'#475569'};font-weight:600;background:#0d1117;text-align:center;min-width:34px">
+            <th style="padding:6px 2px;font-size:10px;color:${isToday(d)?'#0F766E':isWeekend(d)?'#6D4FC2':'var(--ink-faint)'};font-weight:700;background:var(--paper);text-align:center;min-width:34px">
               <div class="mono">${d}</div>
-              <div style="opacity:0.6;font-weight:400">${DNAMES[new Date(curYear,curMonth,d).getDay()]}</div>
+              <div style="opacity:0.65;font-weight:500">${DNAMES[new Date(curYear,curMonth,d).getDay()]}</div>
             </th>
           `).join('')}
-          <th style="padding:4px 8px;font-size:11px;color:#475569;font-weight:600;background:#0d1117;text-align:center;min-width:48px">DAYS</th>
-          <th style="padding:4px 8px;font-size:11px;color:#34d399;font-weight:600;background:#0d1117;text-align:center;min-width:72px">EARNED</th>
+          <th style="padding:6px 8px;font-size:11px;color:var(--ink-faint);font-weight:700;background:var(--paper);text-align:center;min-width:50px">QTY</th>
+          <th style="padding:6px 8px;font-size:11px;color:var(--teal-deep);font-weight:700;background:var(--paper);text-align:center;min-width:76px">EARNED</th>
         </tr>
       </thead>
       <tbody>
         ${state.employees.map((emp,ei)=>{
-          const s=getSummary(emp.name); const earned=calcEarned(emp.name);
-          const rowBg=ei%2===0?'#0a0f1e':'#0d1117';
+          const hourly = emp.payType==='hourly';
+          const earned=calcEarned(emp.name);
+          const rowBg=ei%2===0?'#FFFFFF':'#FCFAF6';
+          let qtyLabel;
+          if (hourly) {
+            const s=getSummary(emp.name);
+            qtyLabel = `${s.totalHours}h`;
+          } else {
+            const s=getSummary(emp.name);
+            qtyLabel = `${s.P+s.H*0.5}`;
+          }
           return `
             <tr>
-              <td style="padding:8px 10px;background:${rowBg};position:sticky;left:0;z-index:1;border-right:1px solid #1e293b">
-                <div style="font-size:13px;font-weight:600;color:#e2e8f0">${emp.name}</div>
-                <div style="font-size:11px;color:#475569;font-family:'DM Mono',monospace;margin-top:1px">${fmt(emp.rate)}/day</div>
+              <td style="padding:10px 12px;background:${rowBg};position:sticky;left:0;z-index:1;border-right:1px solid var(--line)">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="emp-row-name">${emp.name}</div>
+                  <span class="type-pill" style="background:${hourly?'var(--violet-bg)':'var(--teal-bg)'};color:${hourly?'#6D4FC2':'#0F766E'}">${hourly?'Hourly':'Daily'}</span>
+                </div>
+                <div class="emp-row-rate">${fmt(emp.rate)}${hourly?'/hr':'/day'}</div>
               </td>
               ${dayNums.map(d=>{
+                if (hourly) {
+                  const h = getHours(emp.name,d);
+                  return `
+                    <td style="text-align:center;padding:4px 1px;background:${rowBg}">
+                      <div class="hr-cell" onclick="promptHours('${emp.name}',${d})"
+                        style="background:${h>0?'var(--violet-bg)':'transparent'};color:${h>0?'#6D4FC2':'#D8D2C2'};border-color:${h>0?'transparent':'var(--line)'};outline:${isToday(d)?'2px solid rgba(15,118,110,0.25)':'none'}">
+                        ${h>0?h:'—'}
+                      </div>
+                    </td>
+                  `;
+                }
                 const st=getAtt(emp.name,d); const info=STATUS[st];
                 return `
-                  <td style="text-align:center;padding:3px 1px;background:${rowBg}">
+                  <td style="text-align:center;padding:4px 1px;background:${rowBg}">
                     <div class="att-cell" onclick="cycleAtt('${emp.name}',${d})"
-                      style="background:${st==='-'?'transparent':info.bg};color:${st==='-'?'#1e293b':info.color};border:${st==='-'?'1px dashed #1e293b':'none'};outline:${isToday(d)?'2px solid #38bdf820':'none'}">
+                      style="background:${st==='-'?'transparent':info.bg};color:${st==='-'?'#D8D2C2':info.color};border:${st==='-'?'1.5px dashed var(--line)':'none'};outline:${isToday(d)?'2px solid rgba(15,118,110,0.25)':'none'}">
                       ${info.short}
                     </div>
                   </td>
                 `;
               }).join('')}
-              <td style="text-align:center;background:${rowBg};padding:3px 8px">
-                <span class="mono" style="font-size:13px;font-weight:600;color:#94a3b8">${s.P+s.H*0.5}</span>
+              <td style="text-align:center;background:${rowBg};padding:4px 8px">
+                <span class="mono" style="font-size:13px;font-weight:700;color:var(--ink-soft)">${qtyLabel}</span>
               </td>
-              <td style="text-align:center;background:${rowBg};padding:3px 8px">
+              <td style="text-align:center;background:${rowBg};padding:4px 8px">
                 <span class="pay-badge">${fmt(earned)}</span>
               </td>
             </tr>
           `;
         }).join('')}
         <tr>
-          <td colspan="${days+2}" style="background:#0d1117;border-top:1px solid #1e293b"></td>
-          <td style="background:#0d1117;border-top:1px solid #1e293b;padding:10px 8px;text-align:center">
-            <span style="font-size:11px;color:#475569;font-weight:600">TOTAL</span>
+          <td colspan="${days+2}" style="background:var(--paper);border-top:1px solid var(--line)"></td>
+          <td style="background:var(--paper);border-top:1px solid var(--line);padding:12px 8px;text-align:center">
+            <span style="font-size:11px;color:var(--ink-faint);font-weight:700">TOTAL</span>
           </td>
-          <td style="background:#0d1117;border-top:1px solid #1e293b;padding:10px 8px;text-align:center">
-            <span class="mono" style="font-size:14px;font-weight:700;color:#34d399">${fmt(state.employees.reduce((s,e)=>s+calcEarned(e.name),0))}</span>
+          <td style="background:var(--paper);border-top:1px solid var(--line);padding:12px 8px;text-align:center">
+            <span class="mono" style="font-size:14px;font-weight:800;color:var(--teal-deep)">${fmt(state.employees.reduce((s,e)=>s+calcEarned(e.name),0))}</span>
           </td>
         </tr>
       </tbody>
     </table>
     </div>
-
     ${state.employees.length>0?`
-    <div style="margin-top:20px;border-top:1px solid #1e293b;padding-top:16px">
+    <div style="margin-top:24px;border-top:1px solid var(--line);padding-top:18px">
       <div class="section-label">Manage Employees</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;flex-wrap:wrap;gap:9px">
         ${state.employees.map(emp=>`
-          <div style="display:flex;align-items:center;gap:8px;background:#111827;border:1px solid #1e293b;border-radius:10px;padding:8px 12px">
+          <div style="display:flex;align-items:center;gap:9px;background:var(--paper-raised);border:1px solid var(--line);border-radius:12px;padding:10px 13px;box-shadow:0 1px 3px rgba(28,37,65,0.03)">
             <div>
-              <div style="font-size:13px;font-weight:600;color:#e2e8f0">${emp.name}</div>
-              <div style="font-size:11px;color:#475569;font-family:'DM Mono',monospace">${fmt(emp.rate)}/day</div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <div class="emp-row-name">${emp.name}</div>
+                <span class="type-pill" style="background:${emp.payType==='hourly'?'var(--violet-bg)':'var(--teal-bg)'};color:${emp.payType==='hourly'?'#6D4FC2':'#0F766E'}">${emp.payType==='hourly'?'Hourly':'Daily'}</span>
+              </div>
+              <div class="emp-row-rate">${fmt(emp.rate)}${emp.payType==='hourly'?'/hr':'/day'}</div>
             </div>
             <button class="btn-icon" onclick="openModal('editEmp','${emp.name}')">✏️</button>
-            <button class="btn-icon" onclick="removeEmp('${emp.name}')" style="color:#ef4444">🗑️</button>
+            <button class="btn-icon" onclick="removeEmp('${emp.name}')" style="color:var(--rose)">🗑️</button>
           </div>
         `).join('')}
       </div>
@@ -373,37 +447,34 @@ function buildAttendance() {
   `;
   return html;
 }
-
 function buildPayroll() {
   const allEarned   = state.employees.reduce((s,e)=>s+calcEarned(e.name),0);
   const allComm     = state.employees.reduce((s,e)=>s+totalComm(e.name),0);
   const allPaid     = state.employees.reduce((s,e)=>s+totalPaid(e.name),0);
   const allCarry    = state.employees.reduce((s,e)=>s+totalCarry(e.name),0);
   const allBalance  = allEarned+allComm+allCarry-allPaid;
-
   let html = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:20px">
       ${[
-        {l:'Brought Forward',v:fmt(allCarry),c:'#f472b6'},
-        {l:'Total Earned',v:fmt(allEarned),c:'#34d399'},
-        {l:'Commission',v:fmt(allComm),c:'#a78bfa'},
-        {l:'Total Paid',v:fmt(allPaid),c:'#38bdf8'},
+        {l:'Brought Forward',v:fmt(allCarry),c:'#6D4FC2'},
+        {l:'Total Earned',v:fmt(allEarned),c:'#0F766E'},
+        {l:'Commission',v:fmt(allComm),c:'#2563A8'},
+        {l:'Total Paid',v:fmt(allPaid),c:'#1C2541'},
       ].map(x=>`
-        <div class="card" style="padding:12px 14px">
-          <div style="font-size:10px;color:#475569;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px">${x.l}</div>
-          <div class="mono" style="font-size:19px;font-weight:700;color:${x.c}">${x.v}</div>
+        <div class="summary-stat">
+          <div class="summary-stat-label">${x.l}</div>
+          <div class="summary-stat-val" style="color:${x.c}">${x.v}</div>
         </div>
       `).join('')}
     </div>
-    <div class="card" style="padding:14px 16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">
-      <div style="font-size:12px;color:#475569;font-weight:700;letter-spacing:0.05em;text-transform:uppercase">Total Balance Owed</div>
-      <div class="mono" style="font-size:22px;font-weight:700;color:${allBalance>0?'#f59e0b':'#22c55e'}">${fmt(allBalance)}</div>
+    <div class="card" style="padding:17px 19px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;border-color:${allBalance>0?'rgba(194,116,10,0.3)':'rgba(15,118,110,0.25)'}">
+      <div class="section-label" style="margin-bottom:0">Total Balance Owed</div>
+      <div class="mono" style="font-size:23px;font-weight:800;color:${allBalance>0?'#C2740A':'#0F766E'}">${fmt(allBalance)}</div>
     </div>
   `;
-
-  if(state.employees.length===0) return html+`<div class="empty"><div class="empty-icon">👤</div><div class="empty-text">No employees yet</div></div>`;
-
+  if(state.employees.length===0) return html+`<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No employees yet</div></div>`;
   state.employees.forEach(emp=>{
+    const hourly  = emp.payType==='hourly';
     const earned  = calcEarned(emp.name);
     const comms   = getComms(emp.name);
     const totC    = totalComm(emp.name);
@@ -414,152 +485,150 @@ function buildPayroll() {
     const subtotal= totCarry+earned+totC;
     const balance = subtotal-totP;
     const s       = getSummary(emp.name);
-
     const prevBal = getPrevBalance(emp.name);
     const alreadyHandled = !!state.carryHandled[mKey(emp.name)];
     const {y:py,m:pm} = prevMonthYM(curYear,curMonth);
     const showCarrySuggestion = !alreadyHandled && Math.abs(prevBal) > 0.001;
-
+    const summaryChips = hourly
+      ? `<span class="chip" style="background:var(--violet-bg);color:#6D4FC2">${s.totalHours} hrs total</span>
+         <span class="chip" style="background:var(--line-soft);color:var(--ink-soft)">${s.daysWorked} days worked</span>`
+      : [{l:'Present',v:s.P,c:'#0F766E',bg:'#E6F4F2'},{l:'Half',v:s.H,c:'#C2740A',bg:'#FBF0DD'},{l:'Absent',v:s.A,c:'#C81E4E',bg:'#FBE6EC'},{l:'Leave',v:s.L,c:'#6D4FC2',bg:'#EFEAFB'}].map(x=>
+          `<span class="chip" style="background:${x.bg};color:${x.c}">${x.v} ${x.l}</span>`).join('');
     html += `
-      <div class="card" style="margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
           <div>
-            <div style="font-size:16px;font-weight:700;color:#f1f5f9">${emp.name}</div>
-            <div class="mono" style="font-size:11px;color:#475569;margin-top:2px">${fmt(emp.rate)}/day · ${SMONTHS[curMonth]} ${curYear}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="serif" style="font-size:17px;font-weight:600;color:var(--ink)">${emp.name}</div>
+              <span class="type-pill" style="background:${hourly?'var(--violet-bg)':'var(--teal-bg)'};color:${hourly?'#6D4FC2':'#0F766E'}">${hourly?'Hourly':'Daily'}</span>
+            </div>
+            <div class="mono" style="font-size:11px;color:var(--ink-faint);margin-top:3px">${fmt(emp.rate)}${hourly?'/hr':'/day'} · ${SMONTHS[curMonth]} ${curYear}</div>
           </div>
           <div style="display:flex;gap:4px">
             <button class="btn-icon" onclick="openModal('editEmp','${emp.name}')">✏️</button>
             <button class="btn-icon" onclick="removeEmp('${emp.name}')">🗑️</button>
           </div>
         </div>
-
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-          ${[{l:'Present',v:s.P,c:'#22c55e',bg:'#dcfce7'},{l:'Half',v:s.H,c:'#f59e0b',bg:'#fef3c7'},{l:'Absent',v:s.A,c:'#ef4444',bg:'#fee2e2'},{l:'Leave',v:s.L,c:'#6366f1',bg:'#ede9fe'}].map(x=>`
-            <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:${x.bg};color:${x.c};font-family:'DM Mono',monospace">${x.v} ${x.l}</span>
-          `).join('')}
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+          ${summaryChips}
         </div>
-
         ${showCarrySuggestion?`
-          <div class="carry-banner" style="margin-bottom:14px">
+          <div class="carry-banner" style="margin-bottom:16px">
             <div>
-              <div style="font-size:12px;font-weight:700;color:#a5b4fc">Outstanding from ${MONTHS[pm]} ${py}</div>
-              <div class="mono" style="font-size:16px;font-weight:700;color:#c7d2fe;margin-top:2px">${fmt(prevBal)}</div>
+              <div style="font-size:12px;font-weight:700;color:#6D4FC2">Outstanding from ${MONTHS[pm]} ${py}</div>
+              <div class="mono" style="font-size:16px;font-weight:800;color:#4A3580;margin-top:2px">${fmt(prevBal)}</div>
             </div>
-            <button class="btn-action" style="background:#4338ca;border-color:#6366f1;color:white" onclick="bringForward('${emp.name}',${prevBal.toFixed(2)})">Bring forward →</button>
+            <button class="btn-action" style="background:#6D4FC2;border-color:#6D4FC2;color:white" onclick="bringForward('${emp.name}',${prevBal.toFixed(2)})">Bring forward →</button>
           </div>
         `:''}
-
         <hr class="divider"/>
-
-        <div style="margin-bottom:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <div class="section-label" style="color:#f472b6">Brought Forward</div>
-            <button class="btn-action" style="border-color:#f472b630;color:#f472b6" onclick="openModal('carry','${emp.name}')">+ Add</button>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+            <div class="section-label" style="color:#6D4FC2;margin-bottom:0">Brought Forward</div>
+            <button class="btn-action" style="border-color:rgba(109,79,194,0.3);color:#6D4FC2" onclick="openModal('carry','${emp.name}')">+ Add</button>
           </div>
-          ${carries.length===0?`<div style="font-size:12px;color:#334155;font-style:italic">Nothing carried forward</div>`:`
-            <div style="display:flex;flex-direction:column;gap:6px">
+          ${carries.length===0?`<div style="font-size:12px;color:var(--ink-faint);font-style:italic">Nothing carried forward</div>`:`
+            <div style="display:flex;flex-direction:column;gap:7px">
               ${carries.map(c=>`
-                <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:8px;padding:8px 12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;padding:9px 13px">
                   <div>
-                    <span class="mono" style="font-size:13px;color:#f472b6;font-weight:600">${parseFloat(c.amount)>=0?'+':''}${fmt(c.amount)}</span>
-                    ${c.note?`<span style="font-size:12px;color:#475569;margin-left:8px">${c.note}</span>`:''}
+                    <span class="mono" style="font-size:13px;color:#6D4FC2;font-weight:700">${parseFloat(c.amount)>=0?'+':''}${fmt(c.amount)}</span>
+                    ${c.note?`<span style="font-size:12px;color:var(--ink-faint);margin-left:8px">${c.note}</span>`:''}
                   </div>
                   <button class="btn-icon" onclick="removeCarry('${emp.name}',${c.id})">✕</button>
                 </div>
               `).join('')}
-              <div style="text-align:right;font-size:12px;color:#f472b6;font-family:'DM Mono',monospace;font-weight:600">Total: ${fmt(totCarry)}</div>
+              <div style="text-align:right;font-size:12px;color:#6D4FC2;font-family:'JetBrains Mono',monospace;font-weight:700">Total: ${fmt(totCarry)}</div>
             </div>
           `}
         </div>
-
         <hr class="divider"/>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
           <div>
-            <div class="section-label">Total Earned</div>
-            <div style="font-size:12px;color:#475569">${s.P} full + ${s.H} half days</div>
+            <div class="section-label" style="margin-bottom:3px">Total Earned</div>
+            <div style="font-size:12px;color:var(--ink-faint)">${hourly ? `${s.totalHours} hrs × ${fmt(emp.rate)}` : `${s.P} full + ${s.H} half days`}</div>
           </div>
-          <span class="mono" style="font-size:18px;font-weight:700;color:#34d399">${fmt(earned)}</span>
+          <span class="mono" style="font-size:19px;font-weight:800;color:#0F766E">${fmt(earned)}</span>
         </div>
-
         <hr class="divider"/>
-
-        <div style="margin-bottom:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <div class="section-label">Commission</div>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+            <div class="section-label" style="margin-bottom:0">Commission</div>
             <button class="btn-action" onclick="openModal('comm','${emp.name}')">+ Add</button>
           </div>
-          ${comms.length===0?`<div style="font-size:12px;color:#334155;font-style:italic">No commission added</div>`:`
-            <div style="display:flex;flex-direction:column;gap:6px">
+          ${comms.length===0?`<div style="font-size:12px;color:var(--ink-faint);font-style:italic">No commission added</div>`:`
+            <div style="display:flex;flex-direction:column;gap:7px">
               ${comms.map(c=>`
-                <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:8px;padding:8px 12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;padding:9px 13px">
                   <div>
-                    <span class="mono" style="font-size:13px;color:#a78bfa;font-weight:600">+${fmt(c.amount)}</span>
-                    ${c.note?`<span style="font-size:12px;color:#475569;margin-left:8px">${c.note}</span>`:''}
+                    <span class="mono" style="font-size:13px;color:#2563A8;font-weight:700">+${fmt(c.amount)}</span>
+                    ${c.note?`<span style="font-size:12px;color:var(--ink-faint);margin-left:8px">${c.note}</span>`:''}
                   </div>
                   <button class="btn-icon" onclick="removeComm('${emp.name}',${c.id})">✕</button>
                 </div>
               `).join('')}
-              <div style="text-align:right;font-size:12px;color:#a78bfa;font-family:'DM Mono',monospace;font-weight:600">Total: ${fmt(totC)}</div>
+              <div style="text-align:right;font-size:12px;color:#2563A8;font-family:'JetBrains Mono',monospace;font-weight:700">Total: ${fmt(totC)}</div>
             </div>
           `}
         </div>
-
+        <button class="btn-action" style="margin-bottom:16px" onclick="openModal('comm','${emp.name}')">+ Add Commission</button>
         <hr class="divider"/>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:10px;padding:12px 14px;margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px">
           <div>
-            <div style="font-size:12px;font-weight:700;color:#94a3b8">SUBTOTAL</div>
-            <div style="font-size:11px;color:#475569;margin-top:2px">Brought Forward + Earned + Commission</div>
+            <div style="font-size:12px;font-weight:700;color:var(--ink-soft)">SUBTOTAL</div>
+            <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">Brought Forward + Earned + Commission</div>
           </div>
-          <span class="mono" style="font-size:20px;font-weight:700;color:#f1f5f9">${fmt(subtotal)}</span>
+          <span class="mono" style="font-size:21px;font-weight:800;color:var(--ink)">${fmt(subtotal)}</span>
         </div>
-
-        <div style="margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-            <div class="section-label" style="color:#38bdf8">Payments Made</div>
-            <button class="btn-action" style="border-color:#38bdf830;color:#38bdf8" onclick="openModal('pay','${emp.name}')">+ Log Payment</button>
+        <div style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+            <div class="section-label" style="color:#1C2541;margin-bottom:0">Payments Made</div>
+            <button class="btn-action" style="border-color:var(--line);color:var(--ink-soft)" onclick="openModal('pay','${emp.name}')">+ Log Payment</button>
           </div>
-          ${pays.length===0?`<div style="font-size:12px;color:#334155;font-style:italic">No payments logged</div>`:`
-            <div style="display:flex;flex-direction:column;gap:6px">
+          ${pays.length===0?`<div style="font-size:12px;color:var(--ink-faint);font-style:italic">No payments logged</div>`:`
+            <div style="display:flex;flex-direction:column;gap:7px">
               ${pays.map(p=>`
-                <div style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;border-radius:8px;padding:8px 12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;padding:9px 13px">
                   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                    <span class="mono" style="font-size:13px;color:#38bdf8;font-weight:600">−${fmt(p.amount)}</span>
-                    <span style="font-size:11px;color:#475569;background:#1e293b;border-radius:5px;padding:2px 7px">${fmtDate(p.date)}</span>
-                    ${p.note?`<span style="font-size:12px;color:#475569">${p.note}</span>`:''}
+                    <span class="mono" style="font-size:13px;color:var(--ink);font-weight:700">−${fmt(p.amount)}</span>
+                    <span style="font-size:11px;color:var(--ink-faint);background:var(--line-soft);border-radius:6px;padding:2px 8px">${fmtDate(p.date)}</span>
+                    ${p.note?`<span style="font-size:12px;color:var(--ink-faint)">${p.note}</span>`:''}
                   </div>
                   <button class="btn-icon" onclick="removePay('${emp.name}',${p.id})">✕</button>
                 </div>
               `).join('')}
-              <div style="text-align:right;font-size:12px;color:#38bdf8;font-family:'DM Mono',monospace;font-weight:600">Total Paid: ${fmt(totP)}</div>
+              <div style="text-align:right;font-size:12px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:700">Total Paid: ${fmt(totP)}</div>
             </div>
           `}
         </div>
-
         <div class="${balance<=0?'balance-paid':'balance-owed'}">
           <div>
-            <div style="font-size:13px;font-weight:700;color:${balance<=0?'#22c55e':'#f59e0b'}">${balance<=0?'✓ FULLY PAID':'⚠ BALANCE OWED'}</div>
-            <div style="font-size:11px;color:${balance<=0?'#16a34a':'#d97706'};margin-top:2px">${balance<=0?'No outstanding amount':'Still to be paid'}</div>
+            <div style="font-size:13px;font-weight:700;color:${balance<=0?'#0F766E':'#C2740A'}">${balance<=0?'✓ FULLY PAID':'⚠ BALANCE OWED'}</div>
+            <div style="font-size:11px;color:${balance<=0?'#0B5C56':'#9C5E08'};margin-top:2px">${balance<=0?'No outstanding amount':'Still to be paid'}</div>
           </div>
-          <span class="mono" style="font-size:24px;font-weight:700;color:${balance<=0?'#22c55e':'#f59e0b'}">${fmt(Math.abs(balance))}</span>
+          <span class="mono" style="font-size:25px;font-weight:800;color:${balance<=0?'#0F766E':'#C2740A'}">${fmt(Math.abs(balance))}</span>
         </div>
       </div>
     `;
   });
-
   return html;
 }
-
 function buildModal() {
   let inner = '';
   if(modal==='addEmp') {
     inner = `
       <div class="modal-title">Add Employee</div>
-      <div class="modal-sub">Enter name and daily rate</div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div><label class="label">FULL NAME</label><input class="input" id="m-name" placeholder="e.g. John Smith" autocomplete="off"/></div>
-        <div><label class="label">DAILY RATE (£)</label><input class="input" id="m-rate" type="number" min="0" step="0.01" placeholder="e.g. 55"/></div>
+      <div class="modal-sub">Enter name, pay type and rate</div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Full Name</label><input class="input" id="m-name" placeholder="e.g. John Smith" autocomplete="off"/></div>
+        <div>
+          <label class="label">Pay Type</label>
+          <div class="type-toggle">
+            <div class="type-btn ${addPayType==='daily'?'active':''}" onclick="setAddPayType('daily')">Full Day Rate</div>
+            <div class="type-btn ${addPayType==='hourly'?'active':''}" onclick="setAddPayType('hourly')">Hourly Basis</div>
+          </div>
+        </div>
+        <div><label class="label">${addPayType==='hourly'?'Hourly Rate (£)':'Daily Rate (£)'}</label><input class="input" id="m-rate" type="number" min="0" step="0.01" placeholder="${addPayType==='hourly'?'e.g. 12':'e.g. 55'}"/></div>
         <div style="display:flex;gap:10px;margin-top:6px">
           <button class="btn-ghost" onclick="closeModal()">Cancel</button>
           <button class="btn-primary" onclick="addEmp()">Add Employee</button>
@@ -567,13 +636,21 @@ function buildModal() {
       </div>
     `;
   } else if(modal==='editEmp') {
-    const emp = state.employees.find(e=>e.name===modalData.emp);
+    const emp = getEmp(modalData.emp);
+    editPayType = emp ? emp.payType : 'daily';
     inner = `
       <div class="modal-title">Edit Employee</div>
       <div class="modal-sub">${modalData.emp}</div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div><label class="label">NAME</label><input class="input" id="m-name" value="${emp?emp.name:''}" autocomplete="off"/></div>
-        <div><label class="label">DAILY RATE (£)</label><input class="input" id="m-rate" type="number" min="0" step="0.01" value="${emp?emp.rate:''}"/></div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Name</label><input class="input" id="m-name" value="${emp?emp.name:''}" autocomplete="off"/></div>
+        <div>
+          <label class="label">Pay Type</label>
+          <div class="type-toggle">
+            <div class="type-btn ${editPayType==='daily'?'active':''}" onclick="setEditPayType('daily')">Full Day Rate</div>
+            <div class="type-btn ${editPayType==='hourly'?'active':''}" onclick="setEditPayType('hourly')">Hourly Basis</div>
+          </div>
+        </div>
+        <div><label class="label">${editPayType==='hourly'?'Hourly Rate (£)':'Daily Rate (£)'}</label><input class="input" id="m-rate" type="number" min="0" step="0.01" value="${emp?emp.rate:''}"/></div>
         <div style="display:flex;gap:10px;margin-top:6px">
           <button class="btn-ghost" onclick="closeModal()">Cancel</button>
           <button class="btn-primary" onclick="saveEdit()">Save</button>
@@ -584,9 +661,9 @@ function buildModal() {
     inner = `
       <div class="modal-title">Add Commission</div>
       <div class="modal-sub">${modalData.emp} · ${SMONTHS[curMonth]} ${curYear}</div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div><label class="label">AMOUNT (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 100"/></div>
-        <div><label class="label">NOTE (optional)</label><input class="input" id="m-note" placeholder="e.g. Sales bonus" autocomplete="off"/></div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Amount (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 100"/></div>
+        <div><label class="label">Note (optional)</label><input class="input" id="m-note" placeholder="e.g. Sales bonus" autocomplete="off"/></div>
         <div style="display:flex;gap:10px;margin-top:6px">
           <button class="btn-ghost" onclick="closeModal()">Cancel</button>
           <button class="btn-primary" onclick="addComm()">Add Commission</button>
@@ -598,13 +675,26 @@ function buildModal() {
     inner = `
       <div class="modal-title">Log Payment</div>
       <div class="modal-sub">${modalData.emp} · ${SMONTHS[curMonth]} ${curYear}</div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div><label class="label">AMOUNT PAID (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 200"/></div>
-        <div><label class="label">DATE</label><input class="input" id="m-date" type="date" value="${td}"/></div>
-        <div><label class="label">NOTE (optional)</label><input class="input" id="m-note" placeholder="e.g. Bank transfer" autocomplete="off"/></div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Amount Paid (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 200"/></div>
+        <div><label class="label">Date</label><input class="input" id="m-date" type="date" value="${td}"/></div>
+        <div><label class="label">Note (optional)</label><input class="input" id="m-note" placeholder="e.g. Bank transfer" autocomplete="off"/></div>
         <div style="display:flex;gap:10px;margin-top:6px">
           <button class="btn-ghost" onclick="closeModal()">Cancel</button>
           <button class="btn-primary" onclick="addPay()">Log Payment</button>
+        </div>
+      </div>
+    `;
+  } else if(modal==='hours') {
+    const cur = getHours(modalData.emp, modalData.day);
+    inner = `
+      <div class="modal-title">Hours Worked</div>
+      <div class="modal-sub">${modalData.emp} · ${MONTHS[curMonth]} ${modalData.day}, ${curYear}</div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Hours</label><input class="input" id="m-hours" type="number" min="0" step="0.5" inputmode="decimal" value="${cur||''}" placeholder="e.g. 6.5" onkeydown="if(event.key==='Enter')saveHours()"/></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn-ghost" onclick="clearHours()">Clear</button>
+          <button class="btn-primary" onclick="saveHours()">Save</button>
         </div>
       </div>
     `;
@@ -612,9 +702,9 @@ function buildModal() {
     inner = `
       <div class="modal-title">Add Brought-Forward Balance</div>
       <div class="modal-sub">${modalData.emp} · ${SMONTHS[curMonth]} ${curYear}</div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div><label class="label">AMOUNT (£) — use negative to subtract</label><input class="input" id="m-amount" type="number" step="0.01" placeholder="e.g. 110"/></div>
-        <div><label class="label">NOTE (optional)</label><input class="input" id="m-note" placeholder="e.g. Owed from last week of May" autocomplete="off"/></div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Amount (£) — use negative to subtract</label><input class="input" id="m-amount" type="number" step="0.01" placeholder="e.g. 110"/></div>
+        <div><label class="label">Note (optional)</label><input class="input" id="m-note" placeholder="e.g. Owed from last week of May" autocomplete="off"/></div>
         <div style="display:flex;gap:10px;margin-top:6px">
           <button class="btn-ghost" onclick="closeModal()">Cancel</button>
           <button class="btn-primary" onclick="addCarry()">Add</button>
@@ -624,18 +714,22 @@ function buildModal() {
   }
   return `<div class="modal-overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">${inner}</div></div>`;
 }
-
-function openModal(type, emp) { modal=type; modalData={emp}; render(); setTimeout(()=>{ const el=document.getElementById('m-name')||document.getElementById('m-amount'); if(el) el.focus(); },100); }
+function setAddPayType(t) { addPayType=t; render(); setTimeout(()=>{ const el=document.getElementById('m-name'); if(el) el.focus(); },50); }
+function setEditPayType(t) { editPayType=t; render(); }
+function openModal(type, emp) {
+  modal=type; modalData={emp};
+  if (type==='addEmp') addPayType='daily';
+  render();
+  setTimeout(()=>{ const el=document.getElementById('m-name')||document.getElementById('m-amount'); if(el) el.focus(); },100);
+}
 function closeModal() { modal=null; modalData={}; render(); }
-
 function addEmp() {
   const name=(document.getElementById('m-name').value||'').trim();
   const rate=parseFloat(document.getElementById('m-rate').value);
   if(!name||state.employees.find(e=>e.name===name)||isNaN(rate)||rate<=0) return;
-  state.employees.push({name,rate});
+  state.employees.push({name,rate,payType:addPayType});
   saveState(); closeModal();
 }
-
 function saveEdit() {
   const name=(document.getElementById('m-name').value||'').trim();
   const rate=parseFloat(document.getElementById('m-rate').value);
@@ -644,10 +738,11 @@ function saveEdit() {
   if(name!==old && state.employees.find(e=>e.name===name)) return;
   const idx=state.employees.findIndex(e=>e.name===old);
   if(idx<0) return;
-  state.employees[idx]={name,rate};
+  state.employees[idx]={name,rate,payType:editPayType};
   if(name!==old) {
     const migrate=obj=>{ const n={}; Object.entries(obj).forEach(([k,v])=>{ n[k.startsWith(old+'__')?k.replace(old+'__',name+'__'):k]=v; }); return n; };
     state.attendance=migrate(state.attendance);
+    state.hours=migrate(state.hours);
     state.commissions=migrate(state.commissions);
     state.payments=migrate(state.payments);
     state.carryForward=migrate(state.carryForward);
@@ -655,14 +750,12 @@ function saveEdit() {
   }
   saveState(); closeModal();
 }
-
 function removeEmp(name) {
   if(!confirm(`Remove "${name}"? All data deleted.`)) return;
   state.employees=state.employees.filter(e=>e.name!==name);
-  [state.attendance,state.commissions,state.payments,state.carryForward,state.carryHandled].forEach(obj=>{ Object.keys(obj).forEach(k=>{ if(k.startsWith(name+'__')) delete obj[k]; }); });
+  [state.attendance,state.hours,state.commissions,state.payments,state.carryForward,state.carryHandled].forEach(obj=>{ Object.keys(obj).forEach(k=>{ if(k.startsWith(name+'__')) delete obj[k]; }); });
   saveState(); render();
 }
-
 function addComm() {
   const amt=parseFloat(document.getElementById('m-amount').value);
   const note=(document.getElementById('m-note').value||'').trim();
@@ -677,7 +770,6 @@ function removeComm(name,id) {
   state.commissions[k]=state.commissions[k].filter(c=>c.id!==id);
   saveState(); render();
 }
-
 function addPay() {
   const amt=parseFloat(document.getElementById('m-amount').value);
   const date=document.getElementById('m-date').value;
@@ -693,7 +785,6 @@ function removePay(name,id) {
   state.payments[k]=state.payments[k].filter(p=>p.id!==id);
   saveState(); render();
 }
-
 function addCarry() {
   const amt=parseFloat(document.getElementById('m-amount').value);
   const note=(document.getElementById('m-note').value||'').trim();
@@ -708,7 +799,6 @@ function removeCarry(name,id) {
   state.carryForward[k]=state.carryForward[k].filter(c=>c.id!==id);
   saveState(); render();
 }
-
 function bringForward(name, amount) {
   const k=mKey(name);
   if(!state.carryForward[k]) state.carryForward[k]=[];
@@ -717,14 +807,12 @@ function bringForward(name, amount) {
   state.carryHandled[k]=true;
   saveState(); render();
 }
-
 function prevMonth() { if(curMonth===0){curMonth=11;curYear--;}else curMonth--; render(); }
 function nextMonth() { if(curMonth===11){curMonth=0;curYear++;}else curMonth++; render(); }
 function setView(v)  { curView=v; render(); }
 
-loadState();
-render();
-loadCloud();
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadState().then(() => render());
 </script>
 </body>
 </html>
