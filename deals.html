@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Deals &amp; Packages — FTM Photography &amp; Management</title>
+  <meta name="description" content="Photography package deals from FTM Photography &amp; Management — London studio. Portfolio shoots from £920 including hair, makeup and retouching."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://ftmmanagement.space/deals"/>
+  <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --white:    #ffffff;
+      --off:      #fdfbf8;
+      --b100:     #f8f5f0;
+      --b200:     #f0ebe2;
+      --b300:     #e4ddd2;
+      --b400:     #d4cbbf;
+      --ink:      #18181a;
+      --ink70:    #4a4a4e;
+      --ink40:    #97979c;
+      --ink20:    #d0cfc9;
+      --line:     #e8e3dc;
+      --serif:    'DM Serif Display', Georgia, serif;
+      --display:  'Syne', system-ui, sans-serif;
+      --sans:     'Inter', system-ui, sans-serif;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--white); color: var(--ink); overflow-x: hidden; }
+    ::selection { background: var(--b300); }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--b100); }
+    ::-webkit-scrollbar-thumb { background: var(--b400); }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      height: 80px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; }
+    .nav-logo img { height: 44px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 11px; font-weight: 400; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--ink70); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+    .nav-book {
+      font-size: 10px; font-weight: 500; letter-spacing: .22em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+      border: 1px solid var(--ink); padding: 10px 22px;
+      transition: all .2s;
+    }
+    .nav-book:hover { background: var(--ink); color: var(--white); }
+
+    /* ─── HAMBURGER ─── */
+    .ham {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .ham span { display: block; width: 22px; height: 1.5px; background: var(--ink); transition: all .3s; }
+
+    /* ─── MOBILE MENU ─── */
+    .mob {
+      position: fixed; inset: 0; background: var(--white); z-index: 400;
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+    }
+    .mob.open { display: flex; }
+    .mob a {
+      font-family: var(--display); font-size: 28px; font-weight: 700;
+      color: var(--ink); text-decoration: none; letter-spacing: -.01em;
+      transition: color .2s;
+    }
+    .mob a:hover { color: var(--ink40); }
+    .mob-x {
+      position: fixed; top: 28px; right: 28px;
+      background: none; border: none; font-size: 22px; cursor: pointer; color: var(--ink);
+    }
+
+    /* ─── PAGE HERO ─── */
+    .page-hero {
+      padding: 160px 56px 80px;
+      background: var(--b100);
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+    .page-hero-label {
+      font-size: 9px; font-weight: 600; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--ink40); margin-bottom: 16px;
+    }
+    .page-hero-title {
+      font-family: var(--serif); font-size: clamp(42px, 6vw, 80px);
+      font-weight: 400; color: var(--ink); line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .page-hero-title em { font-style: italic; }
+    .page-hero-sub {
+      font-size: 14px; font-weight: 300; color: var(--ink70);
+      line-height: 1.9; max-width: 560px; margin: 0 auto;
+    }
+
+    /* ─── DEALS SECTION ─── */
+    .deals-wrap {
+      background: var(--b100);
+      padding: 72px 56px 80px;
+    }
+    .deals-head {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: end; margin-bottom: 52px; padding-bottom: 44px;
+      border-bottom: 1px solid var(--line);
+    }
+    .slabel {
+      font-size: 9px; font-weight: 600; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--ink40); margin-bottom: 12px;
+    }
+    .stitle {
+      font-family: var(--serif); font-size: clamp(36px, 4vw, 56px);
+      font-weight: 400; color: var(--ink); line-height: 1.1;
+    }
+    .stitle em { font-style: italic; }
+    .deals-note { font-size: 13px; font-weight: 300; color: var(--ink70); line-height: 1.9; }
+
+    /* ─── PACKAGES ─── */
+    .pkg-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); }
+    .pkg { background: var(--white); padding: 44px 32px; display: flex; flex-direction: column; transition: background .2s; }
+    .pkg:hover { background: var(--off); }
+    .pkg.dark { background: var(--ink); }
+    .pkg.dark:hover { background: #22222a; }
+    .pkg-badge { font-size: 9px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--ink40); margin-bottom: 18px; min-height: 13px; }
+    .pkg.dark .pkg-badge { color: rgba(255,255,255,.3); }
+    .pkg-pill { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--ink); background: var(--b200); padding: 4px 12px; margin-bottom: 18px; }
+    .pkg-name { font-family: var(--display); font-size: 20px; font-weight: 700; letter-spacing: -.01em; color: var(--ink); }
+    .pkg.dark .pkg-name { color: var(--white); }
+    .pkg-price { font-family: var(--display); font-size: 48px; font-weight: 800; color: var(--ink); line-height: 1; margin: 6px 0 2px; letter-spacing: -.02em; }
+    .pkg.dark .pkg-price { color: rgba(255,255,255,.88); }
+    .pkg-price sup { font-size: 20px; vertical-align: super; }
+    .pkg-unit { font-size: 10.5px; letter-spacing: .1em; color: var(--ink40); margin-bottom: 24px; }
+    .pkg.dark .pkg-unit { color: rgba(255,255,255,.3); }
+    .pkg-hr { height: 1px; background: var(--line); margin-bottom: 24px; }
+    .pkg.dark .pkg-hr { background: rgba(255,255,255,.1); }
+    .pkg-feats { list-style: none; flex: 1; display: flex; flex-direction: column; gap: 9px; margin-bottom: 32px; }
+    .pkg-feats li { font-size: 12.5px; font-weight: 300; color: var(--ink70); padding-left: 14px; position: relative; line-height: 1.5; }
+    .pkg.dark .pkg-feats li { color: rgba(255,255,255,.55); }
+    .pkg-feats li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 1px; background: var(--b400); }
+    .pkg.dark .pkg-feats li::before { background: rgba(255,255,255,.25); }
+    .pkg-btn { display: block; width: 100%; text-align: center; padding: 13px; font-size: 10.5px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--line); color: var(--ink); transition: all .2s; background: transparent; font-family: var(--sans); cursor: pointer; }
+    .pkg-btn:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+    .pkg.dark .pkg-btn { border-color: rgba(255,255,255,.2); color: var(--white); }
+    .pkg.dark .pkg-btn:hover { background: rgba(255,255,255,.12); }
+    .pkg-btn:disabled { opacity: .55; cursor: not-allowed; }
+    .pkg-pay-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; }
+    .pay-badge { font-size: 8.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink40); background: var(--b200); padding: 3px 7px; border-radius: 2px; white-space: nowrap; }
+    .pkg.dark .pay-badge { color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); }
+
+    /* ─── CUSTOM PAYMENT ─── */
+    .custom-pay {
+      border-top: 1px solid var(--line); margin-top: 1px; padding: 40px 32px;
+      background: var(--white); display: flex; align-items: center;
+      justify-content: space-between; gap: 32px; flex-wrap: wrap;
+    }
+    .custom-pay-label { font-size: 9px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--ink40); margin-bottom: 8px; }
+    .custom-pay-title { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .custom-pay-sub { font-size: 12.5px; font-weight: 300; color: var(--ink40); }
+    .custom-pay-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .custom-input-wrap { display: flex; align-items: center; border: 1px solid var(--line); background: var(--b100); }
+    .custom-input-wrap span { padding: 0 14px; font-size: 18px; font-weight: 300; color: var(--ink40); }
+    #custom-amount { border: none; background: transparent; padding: 13px 14px 13px 0; font-size: 15px; font-family: var(--display); font-weight: 600; color: var(--ink); width: 120px; outline: none; }
+    #custom-pay-btn { padding: 13px 32px; background: var(--ink); color: var(--white); border: none; cursor: pointer; font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; transition: opacity .2s; }
+    #custom-pay-btn:hover { opacity: .75; }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--b100); border-top: 1px solid var(--line); padding: 68px 56px 36px; }
+    .ft-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+    .ft-brand { font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); margin-bottom: 10px; }
+    .ft-desc { font-size: 12px; font-weight: 300; color: var(--ink40); line-height: 1.8; margin-bottom: 20px; max-width: 240px; }
+    .ft-divider { width: 24px; height: 1px; background: var(--b400); }
+    .ft-col-h { font-size: 9px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--ink40); margin-bottom: 18px; }
+    .ft-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .ft-links a { font-size: 12.5px; font-weight: 300; color: var(--ink70); text-decoration: none; transition: color .2s; }
+    .ft-links a:hover { color: var(--ink); }
+    .ft-bottom { padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .ft-copy { font-size: 11px; font-weight: 300; color: var(--ink40); }
+    .ft-legal { display: flex; gap: 18px; }
+    .ft-legal a { font-size: 11px; font-weight: 300; color: var(--ink40); text-decoration: none; transition: color .2s; }
+    .ft-legal a:hover { color: var(--ink); }
+
+    /* ─── REVEAL ─── */
+    .rv { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .rv.in { opacity: 1; transform: none; }
+    .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      nav { padding: 0 32px; }
+      .nav-links, .nav-book { display: none; }
+      .ham { display: flex; }
+      .deals-wrap { padding: 60px 32px; }
+      .deals-head { grid-template-columns: 1fr; gap: 24px; }
+      .pkg-grid { grid-template-columns: 1fr; }
+      footer { padding: 60px 32px 32px; }
+      .ft-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .ft-bottom { flex-direction: column; gap: 10px; }
+      .page-hero { padding: 140px 32px 60px; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 20px; }
+      .deals-wrap { padding: 48px 20px; }
+      .custom-pay { padding: 28px 20px; }
+      footer { padding: 52px 20px 28px; }
+      .ft-top { grid-template-columns: 1fr; }
+      .page-hero { padding: 120px 20px 52px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a href="/" class="nav-logo">
+    <img src="LOGO-C.png" alt="FTM Photography &amp; Management">
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#services">Services</a></li>
+    <li><a href="/#gallery">Gallery</a></li>
+    <li><a href="/#retouch">Retouch</a></li>
+    <li><a href="/deals" class="active">Deals</a></li>
+    <li><a href="/#contact">Contact</a></li>
+  </ul>
+  <a href="/#contact" class="nav-book">Book Online</a>
+  <button class="ham" id="ham"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ── MOBILE MENU ── -->
+<div class="mob" id="mob">
+  <button class="mob-x" id="mobX">✕</button>
+  <a href="/#about"    onclick="closeMob()">About</a>
+  <a href="/#services" onclick="closeMob()">Services</a>
+  <a href="/#gallery"  onclick="closeMob()">Gallery</a>
+  <a href="/#retouch"  onclick="closeMob()">Retouch</a>
+  <a href="/deals"     onclick="closeMob()">Deals</a>
+  <a href="/#contact"  onclick="closeMob()">Contact</a>
+</div>
+
+<!-- ── PAGE HERO ── -->
+<div class="page-hero">
+  <div class="page-hero-label rv">FTM Photography &amp; Management</div>
+  <h1 class="page-hero-title rv d1">Portfolio <em>Deals</em></h1>
+  <p class="page-hero-sub rv d2">Every package includes a full luxury studio experience — from consultation to final retouched images. Choose the deal that suits you best.</p>
+</div>
+
+<!-- ── DEALS ── -->
+<div class="deals-wrap">
+
+  <div class="deals-head">
+    <div>
+      <p class="slabel rv">Photoshoot Deals</p>
+      <h2 class="stitle rv d1">Portfolio <em>Packages</em></h2>
+    </div>
+    <p class="deals-note rv d2">All shoots take place at our premium London studio in Woolwich, SE18. Hair styling and makeup by our top artists are included in every package.</p>
+  </div>
+
+  <!-- Package Grid -->
+  <div class="pkg-grid">
+
+    <div class="pkg">
+      <div class="pkg-badge">Deal 1</div>
+      <div class="pkg-name">Portfolio Shoot</div>
+      <div class="pkg-price"><sup>£</sup>920</div>
+      <div class="pkg-unit">Full studio experience</div>
+      <div class="pkg-hr"></div>
+      <ul class="pkg-feats">
+        <li>Personal introductory consultation</li>
+        <li>Hair styling included</li>
+        <li>Makeup by top makeup artists</li>
+        <li>2 outfit changes</li>
+        <li>40 photos taken</li>
+        <li>Personal viewing of your images</li>
+        <li>2 retouched images</li>
+        <li>Drinks served throughout</li>
+      </ul>
+      <button class="pkg-btn" data-pkg="deal-1" onclick="startCheckout('deal-1', this)">Book &amp; Pay Online</button>
+      <div class="pkg-pay-note">
+        <span class="pay-badge">Card</span>
+        <span class="pay-badge">Klarna</span>
+        <span class="pay-badge">Clearpay</span>
+      </div>
+    </div>
+
+    <div class="pkg dark">
+      <div class="pkg-pill">Most Popular</div>
+      <div class="pkg-badge" style="color:rgba(255,255,255,0.6);background:transparent;border:1px solid rgba(255,255,255,0.2);margin-bottom:8px;">Deal 2</div>
+      <div class="pkg-name">Portfolio Shoot</div>
+      <div class="pkg-price"><sup>£</sup>999</div>
+      <div class="pkg-unit">Full studio experience</div>
+      <div class="pkg-hr"></div>
+      <ul class="pkg-feats">
+        <li>Personal introductory consultation</li>
+        <li>Hair styling included</li>
+        <li>Makeup by top makeup artists</li>
+        <li>3 outfit changes</li>
+        <li>60 photos taken</li>
+        <li>Personal viewing of your images</li>
+        <li>4 retouched images</li>
+        <li>Drinks served throughout</li>
+      </ul>
+      <button class="pkg-btn" data-pkg="deal-2" onclick="startCheckout('deal-2', this)">Book &amp; Pay Online</button>
+      <div class="pkg-pay-note">
+        <span class="pay-badge">Card</span>
+        <span class="pay-badge">Klarna</span>
+        <span class="pay-badge">Clearpay</span>
+      </div>
+    </div>
+
+    <div class="pkg">
+      <div class="pkg-badge">Deal 3</div>
+      <div class="pkg-name">Portfolio Shoot</div>
+      <div class="pkg-price"><sup>£</sup>1,100</div>
+      <div class="pkg-unit">Full studio experience</div>
+      <div class="pkg-hr"></div>
+      <ul class="pkg-feats">
+        <li>Personal introductory consultation</li>
+        <li>Hair styling included</li>
+        <li>Makeup by top makeup artists</li>
+        <li>3 outfit changes</li>
+        <li>90 photos taken</li>
+        <li>Personal viewing of your images</li>
+        <li>6 retouched images</li>
+        <li>Drinks served throughout</li>
+      </ul>
+      <button class="pkg-btn" data-pkg="deal-3" onclick="startCheckout('deal-3', this)">Book &amp; Pay Online</button>
+      <div class="pkg-pay-note">
+        <span class="pay-badge">Card</span>
+        <span class="pay-badge">Klarna</span>
+        <span class="pay-badge">Clearpay</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Custom Payment -->
+  <div class="custom-pay">
+    <div>
+      <div class="custom-pay-label">Custom Payment</div>
+      <div class="custom-pay-title">Pay a Custom Amount</div>
+      <div class="custom-pay-sub">For deposits, instalment payments, or any agreed amount.</div>
+    </div>
+    <div class="custom-pay-row">
+      <div class="custom-input-wrap">
+        <span>£</span>
+        <input id="custom-amount" type="number" min="1" step="0.01" placeholder="0.00"/>
+      </div>
+      <button id="custom-pay-btn" onclick="startCustomCheckout()">Pay Now</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-brand">FTM · Photography &amp; Management</div>
+      <p class="ft-desc">Premium photography studio based in London — fashion, product, clothing, and advertising photography.</p>
+      <div class="ft-divider"></div>
+    </div>
+    <div>
+      <div class="ft-col-h">Services</div>
+      <ul class="ft-links">
+        <li><a href="/#services">Fashion Photography</a></li>
+        <li><a href="/#services">Product Photography</a></li>
+        <li><a href="/#services">Clothing &amp; E-Commerce</a></li>
+        <li><a href="/#services">Portfolio Shoots</a></li>
+        <li><a href="/#services">Studio Hire</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Studio</div>
+      <ul class="ft-links">
+        <li><a href="/#about">About FTM</a></li>
+        <li><a href="/#gallery">Gallery</a></li>
+        <li><a href="/deals">Deals</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        <li><a href="/#contact">Book Online</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Contact</div>
+      <ul class="ft-links">
+        <li><a href="mailto:admin@ftmmanagement.space">Email Us</a></li>
+        <li><a href="#">Woolwich, London SE18 5PQ</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-copy">© 2026 FTM Photography &amp; Management. All rights reserved.</p>
+    <div class="ft-legal">
+      <a href="/terms">Terms &amp; Conditions</a>
+      <a href="/refund-policy">Refund &amp; Cancellation Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── MOBILE MENU ── */
+  const mob  = document.getElementById('mob');
+  const ham  = document.getElementById('ham');
+  const mobX = document.getElementById('mobX');
+  ham.addEventListener('click',  () => mob.classList.add('open'));
+  mobX.addEventListener('click', () => mob.classList.remove('open'));
+  function closeMob() { mob.classList.remove('open'); }
+
+  /* ── REVEAL ON SCROLL ── */
+  const rvEls = document.querySelectorAll('.rv');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  rvEls.forEach(el => obs.observe(el));
+
+  /* ── STRIPE CHECKOUT ── */
+  async function startCustomCheckout() {
+    const input = document.getElementById('custom-amount');
+    const btn   = document.getElementById('custom-pay-btn');
+    const val   = parseFloat(input.value);
+    if (!val || val < 1) { input.style.borderColor = 'red'; input.focus(); return; }
+    input.style.borderColor = '';
+    btn.disabled = true; btn.textContent = 'Redirecting…';
+    try {
+      const res  = await fetch('/create-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ packageId: 'custom', customAmount: val }) });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else { throw new Error(data.error || 'No URL'); }
+    } catch (err) {
+      alert('Could not start payment. Please try again.');
+      btn.disabled = false; btn.textContent = 'Pay Now';
+    }
+  }
+
+  async function startCheckout(packageId, btn) {
+    const origText = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Redirecting to payment…';
+    try {
+      const res  = await fetch('/create-checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ packageId }) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else { throw new Error(data.error || 'No checkout URL returned'); }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Could not start checkout. Please try again or email us at admin@ftmmanagement.space');
+      btn.disabled = false; btn.textContent = origText;
+    }
+  }
+</script>
+</body>
+</html>

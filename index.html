@@ -705,7 +705,7 @@
     <li><a href="#services">Services</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#retouch">Retouch</a></li>
-    <li><a href="#deals">Pricing</a></li>
+    <li><a href="/deals">Deals</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <a href="#contact" class="nav-book">Book Online</a>
@@ -719,7 +719,7 @@
   <a href="#services" onclick="closeMob()">Services</a>
   <a href="#gallery"  onclick="closeMob()">Gallery</a>
   <a href="#retouch"  onclick="closeMob()">Retouch</a>
-  <a href="#deals"    onclick="closeMob()">Pricing</a>
+  <a href="/deals"    onclick="closeMob()">Deals</a>
   <a href="#contact"  onclick="closeMob()">Contact</a>
 </div>
 
@@ -1182,118 +1182,6 @@
 
 </section>
 
-<!-- ── DEALS / PRICING ── -->
-<section class="sec" id="deals">
-  <div class="deals-head">
-    <div>
-      <p class="slabel rv">Photoshoot Deals</p>
-      <h2 class="stitle rv d1">Portfolio <em>Packages</em></h2>
-    </div>
-    <p class="deals-note rv d2">Every package includes a full luxury studio experience — from consultation to final retouched images. Choose the deal that suits you best.</p>
-  </div>
-
-  <!-- Portfolio Deals -->
-  <div class="pkg-grid">
-
-    <div class="pkg">
-      <div class="pkg-badge">Deal 1</div>
-      <div class="pkg-name">Portfolio Shoot</div>
-      <div class="pkg-price"><sup>£</sup>920</div>
-      <div class="pkg-unit">Full studio experience</div>
-      <div class="pkg-hr"></div>
-      <ul class="pkg-feats">
-        <li>Personal introductory consultation</li>
-        <li>Hair styling included</li>
-        <li>Makeup by top makeup artists</li>
-        <li>2 outfit changes</li>
-        <li>40 photos taken</li>
-        <li>Personal viewing of your images</li>
-        <li>2 retouched images</li>
-        <li>Drinks served throughout</li>
-      </ul>
-      <button class="pkg-btn" data-pkg="deal-1" onclick="startCheckout('deal-1', this)">Book &amp; Pay Online</button>
-      <div class="pkg-pay-note">
-        <span class="pay-badge">Card</span>
-        <span class="pay-badge">Klarna</span>
-        <span class="pay-badge">Clearpay</span>
-      </div>
-    </div>
-
-    <div class="pkg dark">
-      <div class="pkg-pill">Most Popular</div>
-      <div class="pkg-badge" style="color:rgba(255,255,255,0.6);background:transparent;border:1px solid rgba(255,255,255,0.2);margin-bottom:8px;">Deal 2</div>
-      <div class="pkg-name">Portfolio Shoot</div>
-      <div class="pkg-price"><sup>£</sup>999</div>
-      <div class="pkg-unit">Full studio experience</div>
-      <div class="pkg-hr"></div>
-      <ul class="pkg-feats">
-        <li>Personal introductory consultation</li>
-        <li>Hair styling included</li>
-        <li>Makeup by top makeup artists</li>
-        <li>3 outfit changes</li>
-        <li>60 photos taken</li>
-        <li>Personal viewing of your images</li>
-        <li>4 retouched images</li>
-        <li>Drinks served throughout</li>
-      </ul>
-      <button class="pkg-btn" data-pkg="deal-2" onclick="startCheckout('deal-2', this)">Book &amp; Pay Online</button>
-      <div class="pkg-pay-note">
-        <span class="pay-badge">Card</span>
-        <span class="pay-badge">Klarna</span>
-        <span class="pay-badge">Clearpay</span>
-      </div>
-    </div>
-
-    <div class="pkg">
-      <div class="pkg-badge">Deal 3</div>
-      <div class="pkg-name">Portfolio Shoot</div>
-      <div class="pkg-price"><sup>£</sup>1,100</div>
-      <div class="pkg-unit">Full studio experience</div>
-      <div class="pkg-hr"></div>
-      <ul class="pkg-feats">
-        <li>Personal introductory consultation</li>
-        <li>Hair styling included</li>
-        <li>Makeup by top makeup artists</li>
-        <li>3 outfit changes</li>
-        <li>90 photos taken</li>
-        <li>Personal viewing of your images</li>
-        <li>6 retouched images</li>
-        <li>Drinks served throughout</li>
-      </ul>
-      <button class="pkg-btn" data-pkg="deal-3" onclick="startCheckout('deal-3', this)">Book &amp; Pay Online</button>
-      <div class="pkg-pay-note">
-        <span class="pay-badge">Card</span>
-        <span class="pay-badge">Klarna</span>
-        <span class="pay-badge">Clearpay</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ── CUSTOM / MANUAL PAYMENT ── -->
-  <div style="border-top:1px solid var(--line);margin-top:1px;padding:40px 32px;background:var(--white);display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
-    <div>
-      <div style="font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--ink40);margin-bottom:8px;">Custom Payment</div>
-      <div style="font-family:var(--display);font-size:20px;font-weight:700;color:var(--ink);margin-bottom:4px;">Pay a Custom Amount</div>
-      <div style="font-size:12.5px;font-weight:300;color:var(--ink40);">For deposits, instalment payments, or any agreed amount.</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;border:1px solid var(--line);background:var(--b100);">
-        <span style="padding:0 14px;font-size:18px;font-weight:300;color:var(--ink40);">£</span>
-        <input id="custom-amount" type="number" min="1" step="0.01" placeholder="0.00"
-          style="border:none;background:transparent;padding:13px 14px 13px 0;font-size:15px;font-family:var(--display);font-weight:600;color:var(--ink);width:120px;outline:none;"
-        />
-      </div>
-      <button id="custom-pay-btn" onclick="startCustomCheckout()"
-        style="padding:13px 32px;background:var(--ink);color:var(--white);border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;transition:opacity .2s;"
-        onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">
-        Pay Now
-      </button>
-    </div>
-  </div>
-
-</section>
-
 <!-- ── TESTIMONIALS ── -->
 <section id="testimonials">
   <div class="test-head rv">
@@ -1467,7 +1355,7 @@
       <ul class="ft-links">
         <li><a href="#about">About FTM</a></li>
         <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#deals">Pricing</a></li>
+        <li><a href="/deals">Deals</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#contact">Book Online</a></li>
       </ul>
