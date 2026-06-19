@@ -283,7 +283,15 @@ function getPrevBalance(name) {
 function isWeekend(d) { const day=new Date(curYear,curMonth,d).getDay(); return day===0||day===6; }
 function isToday(d)   { return d===today.getDate()&&curMonth===today.getMonth()&&curYear===today.getFullYear(); }
 function render() {
+  const tableWrap = document.querySelector('.table-wrap');
+  const scrollLeft = tableWrap ? tableWrap.scrollLeft : 0;
+  const scrollY = window.scrollY;
+
   document.getElementById('app').innerHTML = buildApp();
+
+  const newTableWrap = document.querySelector('.table-wrap');
+  if (newTableWrap) newTableWrap.scrollLeft = scrollLeft;
+  window.scrollTo(0, scrollY);
 }
 function buildApp() {
   return `
@@ -543,13 +551,46 @@ function buildPayroll() {
           `}
         </div>
         <hr class="divider"/>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-          <div>
-            <div class="section-label" style="margin-bottom:3px">Total Earned</div>
-            <div style="font-size:12px;color:var(--ink-faint)">${hourly ? `${s.totalHours} hrs × ${fmt(emp.rate)}` : `${s.P} full + ${s.H} half days`}</div>
-          </div>
-          <span class="mono" style="font-size:19px;font-weight:800;color:#0F766E">${fmt(earned)}</span>
-        </div>
+        <div class="section-label" style="margin-bottom:10px">Weekly Breakdown</div>
+        ${getWeeks(curYear,curMonth).map(w=>{
+          const wE   = getWeekEarned(emp.name, w.start, w.end);
+          const wP   = totalWeekPaid(emp.name, w.wn);
+          const wBal = wE - wP;
+          const wPays= getWeekPays(emp.name, w.wn);
+          const paid = wBal <= 0.001;
+          return `
+          <div style="border:1px solid ${paid?'rgba(15,118,110,0.25)':'var(--line)'};border-radius:12px;overflow:hidden;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:${paid?'rgba(15,118,110,0.04)':'var(--paper)'};">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--ink)">${w.label}</div>
+                <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">
+                  Earned: <span class="mono" style="font-weight:700;color:#0F766E">${fmt(wE)}</span>
+                  ${wP>0?` · Paid: <span class="mono" style="color:var(--ink-soft);font-weight:700">${fmt(wP)}</span>`:''}
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                ${paid
+                  ? `<span style="font-size:12px;font-weight:700;color:#0F766E">✓ Paid</span>`
+                  : `<span class="mono" style="font-size:13px;font-weight:800;color:#C2740A">${fmt(wBal)} owed</span>`}
+                <button class="btn-action" onclick="openWeekPayModal('${emp.name}',${w.wn},'${w.label}',${wE})" ${wE===0?'disabled style="opacity:0.35"':''}>+ Pay</button>
+              </div>
+            </div>
+            ${wPays.length>0?`
+              <div style="padding:8px 14px 4px;border-top:1px solid var(--line-soft);background:#fff;">
+                ${wPays.map(p=>`
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--line-soft);">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                      <span class="mono" style="font-size:12px;font-weight:700;color:var(--ink)">−${fmt(p.amount)}</span>
+                      <span style="font-size:11px;color:var(--ink-faint);background:var(--line-soft);border-radius:6px;padding:2px 7px">${fmtDate(p.date)}</span>
+                      ${p.note?`<span style="font-size:11px;color:var(--ink-faint)">${p.note}</span>`:''}
+                    </div>
+                    <button class="btn-icon" onclick="removePay('${emp.name}',${p.id})">✕</button>
+                  </div>
+                `).join('')}
+              </div>
+            `:''}
+          </div>`;
+        }).join('')}
         <hr class="divider"/>
         <div style="margin-bottom:14px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
@@ -573,34 +614,6 @@ function buildPayroll() {
         </div>
         <button class="btn-action" style="margin-bottom:16px" onclick="openModal('comm','${emp.name}')">+ Add Commission</button>
         <hr class="divider"/>
-        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:16px">
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--ink-soft)">SUBTOTAL</div>
-            <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">Brought Forward + Earned + Commission</div>
-          </div>
-          <span class="mono" style="font-size:21px;font-weight:800;color:var(--ink)">${fmt(subtotal)}</span>
-        </div>
-        <div style="margin-bottom:16px">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
-            <div class="section-label" style="color:#1C2541;margin-bottom:0">Payments Made</div>
-            <button class="btn-action" style="border-color:var(--line);color:var(--ink-soft)" onclick="openModal('pay','${emp.name}')">+ Log Payment</button>
-          </div>
-          ${pays.length===0?`<div style="font-size:12px;color:var(--ink-faint);font-style:italic">No payments logged</div>`:`
-            <div style="display:flex;flex-direction:column;gap:7px">
-              ${pays.map(p=>`
-                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;padding:9px 13px">
-                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                    <span class="mono" style="font-size:13px;color:var(--ink);font-weight:700">−${fmt(p.amount)}</span>
-                    <span style="font-size:11px;color:var(--ink-faint);background:var(--line-soft);border-radius:6px;padding:2px 8px">${fmtDate(p.date)}</span>
-                    ${p.note?`<span style="font-size:12px;color:var(--ink-faint)">${p.note}</span>`:''}
-                  </div>
-                  <button class="btn-icon" onclick="removePay('${emp.name}',${p.id})">✕</button>
-                </div>
-              `).join('')}
-              <div style="text-align:right;font-size:12px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-weight:700">Total Paid: ${fmt(totP)}</div>
-            </div>
-          `}
-        </div>
         <div class="${balance<=0?'balance-paid':'balance-owed'}">
           <div>
             <div style="font-size:13px;font-weight:700;color:${balance<=0?'#0F766E':'#C2740A'}">${balance<=0?'✓ FULLY PAID':'⚠ BALANCE OWED'}</div>
@@ -672,11 +685,12 @@ function buildModal() {
     `;
   } else if(modal==='pay') {
     const td = new Date().toISOString().slice(0,10);
+    const weekLabel = modalData.weekLabel ? ` · ${modalData.weekLabel}` : '';
     inner = `
       <div class="modal-title">Log Payment</div>
-      <div class="modal-sub">${modalData.emp} · ${SMONTHS[curMonth]} ${curYear}</div>
+      <div class="modal-sub">${modalData.emp}${weekLabel} · ${SMONTHS[curMonth]} ${curYear}</div>
       <div style="display:flex;flex-direction:column;gap:13px">
-        <div><label class="label">Amount Paid (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 200"/></div>
+        <div><label class="label">Amount Paid (£)</label><input class="input" id="m-amount" type="number" min="0" step="0.01" placeholder="e.g. 200" value="${modalData.suggested||''}"/></div>
         <div><label class="label">Date</label><input class="input" id="m-date" type="date" value="${td}"/></div>
         <div><label class="label">Note (optional)</label><input class="input" id="m-note" placeholder="e.g. Bank transfer" autocomplete="off"/></div>
         <div style="display:flex;gap:10px;margin-top:6px">
@@ -777,7 +791,9 @@ function addPay() {
   if(isNaN(amt)||amt<=0) return;
   const k=mKey(modalData.emp);
   if(!state.payments[k]) state.payments[k]=[];
-  state.payments[k].push({id:Date.now(),amount:amt,date,note});
+  const entry={id:Date.now(),amount:amt,date,note};
+  if(modalData.week) entry.week=modalData.week;
+  state.payments[k].push(entry);
   saveState(); closeModal();
 }
 function removePay(name,id) {
@@ -807,6 +823,42 @@ function bringForward(name, amount) {
   state.carryHandled[k]=true;
   saveState(); render();
 }
+// ── Weekly helpers ────────────────────────────────────────
+function getWeeks(year, month) {
+  const days = daysInMonth(year, month);
+  const weeks = [];
+  let start = 1, wn = 1;
+  while (start <= days) {
+    const end = Math.min(start + 6, days);
+    weeks.push({ wn, key:`W${wn}`, start, end, label:`Week ${wn}  (${start}–${end} ${SMONTHS[month]})` });
+    start = end + 1; wn++;
+  }
+  return weeks;
+}
+function getWeekEarned(name, startDay, endDay) {
+  const emp = getEmp(name); if(!emp) return 0;
+  const hourly = isHourly(name);
+  let earned = 0;
+  for(let d = startDay; d <= endDay; d++) {
+    const att = getAtt(name, d);
+    if(hourly) { if(att==='P') earned += getHours(name,d) * emp.rate; }
+    else { if(att==='P') earned += emp.rate; else if(att==='H') earned += emp.rate/2; }
+  }
+  return earned;
+}
+function getWeekPays(name, wn) {
+  const k = mKey(name);
+  return (state.payments[k]||[]).filter(p => p.week === `W${wn}`);
+}
+function totalWeekPaid(name, wn) {
+  return getWeekPays(name,wn).reduce((s,p)=>s+parseFloat(p.amount||0),0);
+}
+function openWeekPayModal(emp, wn, weekLabel, suggested) {
+  modal='pay'; modalData={emp, week:`W${wn}`, weekLabel, suggested:suggested.toFixed(2)};
+  render();
+  setTimeout(()=>{ const el=document.getElementById('m-amount'); if(el){el.select();el.focus();} },100);
+}
+// ─────────────────────────────────────────────────────────
 function prevMonth() { if(curMonth===0){curMonth=11;curYear--;}else curMonth--; render(); }
 function nextMonth() { if(curMonth===11){curMonth=0;curYear++;}else curMonth++; render(); }
 function setView(v)  { curView=v; render(); }
