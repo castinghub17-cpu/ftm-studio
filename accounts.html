@@ -62,7 +62,11 @@ const SB_HEAD = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Conten
 const SB_ROW  = 'accounts';
 const STORAGE_KEY = 'ftm_accounts_v1';
 
-const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS   = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS_F = ['w1_Mon','w1_Tue','w1_Wed','w1_Thu','w1_Fri','w1_Sat',
+                 'w2_Mon','w2_Tue','w2_Wed','w2_Thu','w2_Fri','w2_Sat'];
+function getDays(p){ return p.type==='fortnightly' ? DAYS_F : DAYS; }
+function getDayLabel(d){ return (d.startsWith('w1_')||d.startsWith('w2_')) ? d.slice(3) : d; }
 /* Payment columns shown per day. Cash + non-cash methods (modes of "card"). */
 const PAY = [
   { key:'cash',         label:'Cash',   color:'#34d399' },
@@ -78,6 +82,21 @@ const DEFAULT_EXPENSES = ['Photographer','Makeup Artist','Rhys / Daniel','Kerry'
 const SMONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const fmt = n => '£' + (Number(n)||0).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+function getDayDate(p, d) {
+  if (!p.endDate) return '';
+  const end = new Date(p.endDate + 'T00:00:00');
+  let offset;
+  if (p.type === 'fortnightly') {
+    const week = d.startsWith('w1_') ? 1 : 2;
+    const dayName = d.slice(3);
+    const dayIdx = DAYS.indexOf(dayName);
+    offset = (DAYS.length - 1 - dayIdx) + (week === 1 ? 7 : 0);
+  } else {
+    offset = (DAYS.length - 1) - DAYS.indexOf(d);
+  }
+  const dt = new Date(end); dt.setDate(end.getDate() - offset);
+  return `${dt.getDate()} ${SMONTHS[dt.getMonth()]}`;
+}
 const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
 function fmtEnd(iso){ if(!iso) return ''; const d=new Date(iso+'T00:00:00'); return `${d.getDate()} ${SMONTHS[d.getMonth()]} ${d.getFullYear()}`; }
 
@@ -157,13 +176,24 @@ const getPeriod = () => state.periods.find(p => p.id === curId) || null;
 function blankDay(){ const d={}; PAY.forEach(c => d[c.key]=0); return d; }
 
 function blankPeriod(type, endDate){
+  const daysArr = type === 'fortnightly' ? DAYS_F : DAYS;
   const days = {};
-  DAYS.forEach(d => days[d] = blankDay());
+  daysArr.forEach(d => days[d] = blankDay());
   return {
     id: Date.now(),
     type,
     endDate,
-    label: (type==='fortnightly'?'Fortnight':'Week') + ' end ' + fmtEnd(endDate),
+    label: (()=>{
+      const end = new Date(endDate+'T00:00:00');
+      const daysBack = type==='fortnightly' ? 13 : 6;
+      const start = new Date(end); start.setDate(end.getDate() - daysBack);
+      // Find Monday of the week
+      const monOffset = (start.getDay()+6)%7; // days since Monday
+      const mon = new Date(start); mon.setDate(start.getDate() - monOffset + (type==='fortnightly'?0:0));
+      const monLabel = `${mon.getDate()} ${SMONTHS[mon.getMonth()]}`;
+      const endLabel = fmtEnd(endDate);
+      return (type==='fortnightly'?'Fortnight':'Week') + ` ${monLabel} – ${endLabel}`;
+    })(),
     days,
     expenses: DEFAULT_EXPENSES.map((name,i)=>({ id: Date.now()+i+1, name, amount:0 })),
   };
@@ -173,14 +203,25 @@ function blankPeriod(type, endDate){
    legacy period-level methods (Other Income) into Monday so nothing is lost. */
 function migratePeriod(p){
   if(!p.days) p.days = {};
-  DAYS.forEach(d => {
+  // For fortnightly: migrate old plain 'Mon'-'Sat' keys → 'w2_Mon'-'w2_Sat'
+  if(p.type === 'fortnightly'){
+    DAYS.forEach(d => {
+      if(p.days[d] !== undefined){
+        if(!p.days['w2_'+d]) p.days['w2_'+d] = p.days[d];
+        delete p.days[d];
+      }
+    });
+  }
+  const daysArr = getDays(p);
+  daysArr.forEach(d => {
     if(!p.days[d]) p.days[d] = {};
     PAY.forEach(c => { if(typeof p.days[d][c.key] !== 'number') p.days[d][c.key] = num(p.days[d][c.key]); });
   });
   if(p.methods){
+    const monKey = p.type === 'fortnightly' ? 'w1_Mon' : 'Mon';
     LEGACY_METHODS.forEach(k => {
       const v = num(p.methods[k]);
-      if(v) p.days['Mon'][k] = num(p.days['Mon'][k]) + v;
+      if(v) p.days[monKey][k] = num(p.days[monKey][k]) + v;
     });
     delete p.methods;
   }
@@ -191,7 +232,7 @@ function migrateState(){ (state.periods||[]).forEach(migratePeriod); }
 
 function totals(p){
   const sums = {}; PAY.forEach(c => sums[c.key] = 0);
-  DAYS.forEach(d => PAY.forEach(c => sums[c.key] += num(p.days[d][c.key])));
+  getDays(p).forEach(d => PAY.forEach(c => sums[c.key] += num(p.days[d][c.key])));
   const income = PAY.reduce((s,c)=>s+sums[c.key], 0);
   const expenses = p.expenses.reduce((s,e)=>s+num(e.amount), 0);
   return { sums, income, expenses, net: income - expenses };
@@ -269,16 +310,24 @@ function buildBody(){
             </tr>
           </thead>
           <tbody>
-            ${DAYS.map(d=>{
-              const day = p.days[d];
-              const tot = PAY.reduce((s,c)=>s+num(day[c.key]),0);
-              return `
-                <tr>
-                  <td class="grid-day" style="position:sticky;left:0;background:#111827;z-index:1">${d}</td>
+            ${(()=>{
+              const rows = [];
+              const daysArr = getDays(p);
+              const isF = p.type === 'fortnightly';
+              if(isF) rows.push(`<tr><td colspan="${PAY.length+2}" style="padding:6px 0 2px"><div style="font-size:10px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase">Week 1</div></td></tr>`);
+              daysArr.forEach((d,idx)=>{
+                if(isF && d === 'w2_Mon') rows.push(`<tr><td colspan="${PAY.length+2}" style="padding:8px 0 2px"><div style="border-top:1px solid #334155;padding-top:8px;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#475569;text-transform:uppercase">Week 2</div></td></tr>`);
+                const day = p.days[d];
+                const tot = PAY.reduce((s,c)=>s+num(day[c.key]),0);
+                const label = getDayLabel(d);
+                rows.push(`<tr>
+                  <td class="grid-day" style="position:sticky;left:0;background:#111827;z-index:1">${label} <span style="font-size:10px;color:#475569;font-family:'DM Mono',monospace">${getDayDate(p,d)}</span></td>
                   ${PAY.map(c=>`<td style="padding:3px 4px"><input class="num" style="min-width:64px" type="number" inputmode="decimal" step="0.01" value="${day[c.key]||''}" placeholder="0" onchange="setDay(${p.id},'${d}','${c.key}',this.value)"/></td>`).join('')}
                   <td class="mono" style="text-align:right;padding:3px 8px;color:#94a3b8;font-size:13px;white-space:nowrap">${fmt(tot)}</td>
-                </tr>`;
-            }).join('')}
+                </tr>`);
+              });
+              return rows.join('');
+            })()}
             <tr>
               <td class="grid-day" style="border-top:1px solid #1e293b;color:#cbd5e1;font-weight:700;padding-top:8px;position:sticky;left:0;background:#111827;z-index:1">Total</td>
               ${PAY.map(c=>`<td class="mono" style="border-top:1px solid #1e293b;text-align:right;padding:8px 9px 0;color:#34d399;font-size:13px;white-space:nowrap">${fmt(t.sums[c.key])}</td>`).join('')}
@@ -378,7 +427,13 @@ function downloadXlsx(){
   aoa.push([]);
   aoa.push(['DAILY TAKINGS (£)']);
   aoa.push(['Day', ...PAY.map(c=>c.label), 'Total']);
-  DAYS.forEach(d=>{ const day=p.days[d]; const row=PAY.map(c=>num(day[c.key])); aoa.push([d, ...row, row.reduce((s,v)=>s+v,0)]); });
+  const isF = p.type === 'fortnightly';
+  if(isF) aoa.push(['— Week 1 —']);
+  getDays(p).forEach(d=>{
+    if(isF && d === 'w2_Mon') aoa.push(['— Week 2 —']);
+    const day=p.days[d]; const row=PAY.map(c=>num(day[c.key]));
+    aoa.push([getDayLabel(d), ...row, row.reduce((s,v)=>s+v,0)]);
+  });
   aoa.push(['Total', ...PAY.map(c=>t.sums[c.key]), t.income]);
   aoa.push([]);
   aoa.push(['EXPENSES', 'Amount (£)']);
