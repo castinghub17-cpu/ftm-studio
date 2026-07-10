@@ -825,13 +825,25 @@ function bringForward(name, amount) {
 }
 // ── Weekly helpers ────────────────────────────────────────
 function getWeeks(year, month) {
-  const days = daysInMonth(year, month);
+  const totalDays = daysInMonth(year, month);
+  // Find the Monday that starts the first calendar week overlapping this month
+  const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0=Sun..6=Sat
+  const daysSinceMon = (firstDayOfMonth + 6) % 7; // Mon=0, Tue=1...Sun=6
+  const firstMon = 1 - daysSinceMon; // day-of-month for first Monday (may be ≤0 = prev month)
   const weeks = [];
-  let start = 1, wn = 1;
-  while (start <= days) {
-    const end = Math.min(start + 6, days);
-    weeks.push({ wn, key:`W${wn}`, start, end, label:`Week ${wn}  (${start}–${end} ${SMONTHS[month]})` });
-    start = end + 1; wn++;
+  let monDay = firstMon, wn = 1;
+  while (monDay <= totalDays) {
+    const satDay = monDay + 5;
+    // Label uses actual calendar dates (even if they cross into prev/next month)
+    const monDate = new Date(year, month, monDay);
+    const satDate = new Date(year, month, satDay);
+    const monLabel = `${monDate.getDate()} ${SMONTHS[monDate.getMonth()]}`;
+    const satLabel = `${satDate.getDate()} ${SMONTHS[satDate.getMonth()]}`;
+    // Payroll earning is clamped to days within this month
+    const start = Math.max(1, monDay);
+    const end   = Math.min(totalDays, satDay);
+    weeks.push({ wn, key:`W${wn}`, start, end, label:`Week ${wn}  (${monLabel} – ${satLabel})` });
+    monDay += 7; wn++;
   }
   return weeks;
 }
