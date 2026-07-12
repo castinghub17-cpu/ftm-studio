@@ -185,14 +185,11 @@ function blankPeriod(type, endDate){
     endDate,
     label: (()=>{
       const end = new Date(endDate+'T00:00:00');
-      const daysBack = type==='fortnightly' ? 13 : 6;
-      const start = new Date(end); start.setDate(end.getDate() - daysBack);
-      // Find Monday of the week
-      const monOffset = (start.getDay()+6)%7; // days since Monday
-      const mon = new Date(start); mon.setDate(start.getDate() - monOffset + (type==='fortnightly'?0:0));
+      const daysBack = type==='fortnightly' ? 12 : 5;
+      const mon = new Date(end); mon.setDate(end.getDate() - daysBack);
       const monLabel = `${mon.getDate()} ${SMONTHS[mon.getMonth()]}`;
-      const endLabel = fmtEnd(endDate);
-      return (type==='fortnightly'?'Fortnight':'Week') + ` ${monLabel} – ${endLabel}`;
+      const satLabel = `${end.getDate()} ${SMONTHS[end.getMonth()]} ${end.getFullYear()}`;
+      return (type==='fortnightly'?'Fortnight':'Week') + ` ${monLabel} – ${satLabel}`;
     })(),
     days,
     expenses: DEFAULT_EXPENSES.map((name,i)=>({ id: Date.now()+i+1, name, amount:0 })),
@@ -365,7 +362,11 @@ function buildBody(){
 }
 
 function buildModal(){
-  const today = new Date().toISOString().slice(0,10);
+  // Default to Monday of the current week
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun..6=Sat
+  const mon = new Date(now); mon.setDate(now.getDate() - ((day+6)%7));
+  const defaultStart = mon.toISOString().slice(0,10);
   return `
     <div class="modal-overlay" onclick="closeModal()">
       <div class="modal" onclick="event.stopPropagation()">
@@ -375,11 +376,15 @@ function buildModal(){
           <div>
             <label class="label">PERIOD TYPE</label>
             <select class="select" id="m-type" style="width:100%">
-              <option value="weekly">Weekly</option>
-              <option value="fortnightly">Fortnightly</option>
+              <option value="weekly">Weekly (Mon – Sat)</option>
+              <option value="fortnightly">Fortnightly (2 × Mon – Sat)</option>
             </select>
           </div>
-          <div><label class="label">PERIOD END DATE</label><input class="input" id="m-end" type="date" value="${today}"/></div>
+          <div>
+            <label class="label">START DATE (Monday)</label>
+            <input class="input" id="m-start" type="date" value="${defaultStart}"/>
+            <div style="font-size:11px;color:#475569;margin-top:5px">Pick the Monday the week begins</div>
+          </div>
           <div>
             <label class="label" style="display:flex;align-items:center;gap:8px;cursor:pointer">
               <input type="checkbox" id="m-copy" style="width:16px;height:16px"/> Copy expense names from current sheet
@@ -399,9 +404,14 @@ function openNew(){ modal = true; render(); }
 function closeModal(){ modal = null; render(); }
 
 function createPeriod(){
-  const type = document.getElementById('m-type').value;
-  const end  = document.getElementById('m-end').value;
-  if(!end) return;
+  const type  = document.getElementById('m-type').value;
+  const start = document.getElementById('m-start').value;
+  if(!start) return;
+  // Compute Saturday end date from the Monday start date
+  const startDate = new Date(start + 'T00:00:00');
+  const daysToAdd = type === 'fortnightly' ? 12 : 5;
+  const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + daysToAdd);
+  const end = endDate.toISOString().slice(0,10);
   const p = blankPeriod(type, end);
   const copy = document.getElementById('m-copy').checked;
   const cur = getPeriod();
