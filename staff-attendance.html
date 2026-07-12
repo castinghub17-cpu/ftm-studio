@@ -543,6 +543,7 @@ function buildPayroll() {
                 <div style="display:flex;justify-content:space-between;align-items:center;background:${paid?'rgba(15,118,110,0.04)':'var(--paper)'};border:1px solid ${paid?'rgba(15,118,110,0.25)':'var(--line-soft)'};border-radius:10px;padding:9px 13px">
                   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                     <button onclick="toggleCarryStatus('${emp.name}',${c.id})" style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:none;cursor:pointer;background:${paid?'#0F766E':'#C2740A'};color:white;font-family:'Inter',sans-serif">${paid?'✓ Paid':'Owed'}</button>
+                    ${paid&&c.paidDate?`<span style="font-size:11px;color:#0F766E;font-family:'JetBrains Mono',monospace">${fmtDate(c.paidDate)}</span>`:''}
                     <span class="mono" style="font-size:13px;color:#6D4FC2;font-weight:700">${parseFloat(c.amount)>=0?'+':''}${fmt(c.amount)}</span>
                     ${c.note?`<span style="font-size:12px;color:var(--ink-faint)">${c.note}</span>`:''}
                   </div>
@@ -728,6 +729,19 @@ function buildModal() {
         </div>
       </div>
     `;
+  } else if(modal==='carryPay') {
+    const today2 = new Date().toISOString().slice(0,10);
+    inner = `
+      <div class="modal-title">Mark as Paid</div>
+      <div class="modal-sub">When was this paid?</div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><label class="label">Date Paid</label><input class="input" id="m-carry-date" type="date" value="${today2}"/></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" onclick="confirmCarryPaid()">Confirm Paid</button>
+        </div>
+      </div>
+    `;
   }
   return `<div class="modal-overlay" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">${inner}</div></div>`;
 }
@@ -821,8 +835,23 @@ function removeCarry(name,id) {
 function toggleCarryStatus(name,id) {
   const k=mKey(name); if(!state.carryForward[k]) return;
   const c=state.carryForward[k].find(x=>x.id===id); if(!c) return;
-  c.status = c.status==='paid' ? 'owed' : 'paid';
-  saveState(); render();
+  if(c.status==='paid'){
+    // Toggle back to owed — clear date
+    c.status='owed'; delete c.paidDate;
+    saveState(); render();
+  } else {
+    // Ask for paid date before marking paid
+    modal='carryPay'; modalData={emp:name, carryId:id};
+    render();
+    setTimeout(()=>{ const el=document.getElementById('m-carry-date'); if(el) el.focus(); },100);
+  }
+}
+function confirmCarryPaid() {
+  const date=(document.getElementById('m-carry-date').value||'').trim();
+  const k=mKey(modalData.emp); if(!state.carryForward[k]) return;
+  const c=state.carryForward[k].find(x=>x.id===modalData.carryId); if(!c) return;
+  c.status='paid'; c.paidDate=date||null;
+  saveState(); closeModal();
 }
 function bringForward(name, amount) {
   const k=mKey(name);
