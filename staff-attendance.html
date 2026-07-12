@@ -210,7 +210,7 @@ const getPays  = (name,y=curYear,m=curMonth) => state.payments[mKey(name,y,m)] |
 const getCarry = (name,y=curYear,m=curMonth) => state.carryForward[mKey(name,y,m)] || [];
 const totalComm= (name,y=curYear,m=curMonth) => getComms(name,y,m).reduce((s,c)=>s+parseFloat(c.amount||0),0);
 const totalPaid= (name,y=curYear,m=curMonth) => getPays(name,y,m).reduce((s,p)=>s+parseFloat(p.amount||0),0);
-const totalCarry=(name,y=curYear,m=curMonth) => getCarry(name,y,m).reduce((s,c)=>s+parseFloat(c.amount||0),0);
+const totalCarry=(name,y=curYear,m=curMonth) => getCarry(name,y,m).filter(c=>c.status!=='paid').reduce((s,c)=>s+parseFloat(c.amount||0),0);
 function getEmp(name) { return state.employees.find(e=>e.name===name); }
 function isHourly(name) { const e=getEmp(name); return e && e.payType==='hourly'; }
 function prevMonthYM(y,m) { return m===0 ? {y:y-1,m:11} : {y, m:m-1}; }
