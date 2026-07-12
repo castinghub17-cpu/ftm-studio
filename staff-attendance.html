@@ -537,15 +537,18 @@ function buildPayroll() {
           </div>
           ${carries.length===0?`<div style="font-size:12px;color:var(--ink-faint);font-style:italic">Nothing carried forward</div>`:`
             <div style="display:flex;flex-direction:column;gap:7px">
-              ${carries.map(c=>`
-                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;padding:9px 13px">
-                  <div>
+              ${carries.map(c=>{
+                const paid = c.status === 'paid';
+                return `
+                <div style="display:flex;justify-content:space-between;align-items:center;background:${paid?'rgba(15,118,110,0.04)':'var(--paper)'};border:1px solid ${paid?'rgba(15,118,110,0.25)':'var(--line-soft)'};border-radius:10px;padding:9px 13px">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <button onclick="toggleCarryStatus('${emp.name}',${c.id})" style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:none;cursor:pointer;background:${paid?'#0F766E':'#C2740A'};color:white;font-family:'Inter',sans-serif">${paid?'✓ Paid':'Owed'}</button>
                     <span class="mono" style="font-size:13px;color:#6D4FC2;font-weight:700">${parseFloat(c.amount)>=0?'+':''}${fmt(c.amount)}</span>
-                    ${c.note?`<span style="font-size:12px;color:var(--ink-faint);margin-left:8px">${c.note}</span>`:''}
+                    ${c.note?`<span style="font-size:12px;color:var(--ink-faint)">${c.note}</span>`:''}
                   </div>
                   <button class="btn-icon" onclick="removeCarry('${emp.name}',${c.id})">✕</button>
-                </div>
-              `).join('')}
+                </div>`;
+              }).join('')}
               <div style="text-align:right;font-size:12px;color:#6D4FC2;font-family:'JetBrains Mono',monospace;font-weight:700">Total: ${fmt(totCarry)}</div>
             </div>
           `}
@@ -807,12 +810,18 @@ function addCarry() {
   if(isNaN(amt)||amt===0) return;
   const k=mKey(modalData.emp);
   if(!state.carryForward[k]) state.carryForward[k]=[];
-  state.carryForward[k].push({id:Date.now(),amount:amt,note});
+  state.carryForward[k].push({id:Date.now(),amount:amt,note,status:'owed'});
   saveState(); closeModal();
 }
 function removeCarry(name,id) {
   const k=mKey(name); if(!state.carryForward[k]) return;
   state.carryForward[k]=state.carryForward[k].filter(c=>c.id!==id);
+  saveState(); render();
+}
+function toggleCarryStatus(name,id) {
+  const k=mKey(name); if(!state.carryForward[k]) return;
+  const c=state.carryForward[k].find(x=>x.id===id); if(!c) return;
+  c.status = c.status==='paid' ? 'owed' : 'paid';
   saveState(); render();
 }
 function bringForward(name, amount) {
