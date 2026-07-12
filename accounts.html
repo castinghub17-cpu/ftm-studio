@@ -62,9 +62,11 @@ const SB_HEAD = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Conten
 const SB_ROW  = 'accounts';
 const STORAGE_KEY = 'ftm_accounts_v1';
 
-const DAYS   = ['Mon','Tue','Wed','Thu','Fri','Sat'];
-const DAYS_F = ['w1_Mon','w1_Tue','w1_Wed','w1_Thu','w1_Fri','w1_Sat',
-                 'w2_Mon','w2_Tue','w2_Wed','w2_Thu','w2_Fri','w2_Sat'];
+const DAYS   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const DAYS_F = ['w1_Mon','w1_Tue','w1_Wed','w1_Thu','w1_Fri','w1_Sat','w1_Sun',
+                 'w2_Mon','w2_Tue','w2_Wed','w2_Thu','w2_Fri','w2_Sat','w2_Sun'];
+// Format a JS Date to local YYYY-MM-DD without timezone shift
+function toLocalDateStr(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function getDays(p){ return p.type==='fortnightly' ? DAYS_F : DAYS; }
 function getDayLabel(d){ return (d.startsWith('w1_')||d.startsWith('w2_')) ? d.slice(3) : d; }
 /* Payment columns shown per day. Cash + non-cash methods (modes of "card"). */
@@ -185,20 +187,41 @@ function blankPeriod(type, endDate){
     endDate,
     label: (()=>{
       const end = new Date(endDate+'T00:00:00');
-      const daysBack = type==='fortnightly' ? 12 : 5;
+      const daysBack = type==='fortnightly' ? 13 : 6;
       const mon = new Date(end); mon.setDate(end.getDate() - daysBack);
       const monLabel = `${mon.getDate()} ${SMONTHS[mon.getMonth()]}`;
-      const satLabel = `${end.getDate()} ${SMONTHS[end.getMonth()]} ${end.getFullYear()}`;
-      return (type==='fortnightly'?'Fortnight':'Week') + ` ${monLabel} – ${satLabel}`;
+      const endLabel = `${end.getDate()} ${SMONTHS[end.getMonth()]} ${end.getFullYear()}`;
+      return (type==='fortnightly'?'Fortnight':'Week') + ` ${monLabel} – ${endLabel}`;
     })(),
     days,
     expenses: DEFAULT_EXPENSES.map((name,i)=>({ id: Date.now()+i+1, name, amount:0 })),
   };
 }
 
+let _migrationDirty = false;
+
+function snapEndToSunday(p){
+  if(!p.endDate) return;
+  const end = new Date(p.endDate + 'T00:00:00');
+  const day = end.getDay(); // 0=Sun..6=Sat
+  if(day === 0) return; // already Sunday
+  const toNext = (7 - day) % 7 || 7; // days forward to next Sunday
+  const toPrev = 7 - toNext;          // days back to prev Sunday
+  end.setDate(end.getDate() + (toNext <= toPrev ? toNext : -toPrev));
+  p.endDate = toLocalDateStr(end);
+  // Recompute label with corrected end date
+  const daysBack = p.type === 'fortnightly' ? 13 : 6;
+  const mon = new Date(end); mon.setDate(end.getDate() - daysBack);
+  const monLabel = `${mon.getDate()} ${SMONTHS[mon.getMonth()]}`;
+  const endLabel = `${end.getDate()} ${SMONTHS[end.getMonth()]} ${end.getFullYear()}`;
+  p.label = (p.type==='fortnightly'?'Fortnight':'Week') + ` ${monLabel} – ${endLabel}`;
+  _migrationDirty = true;
+}
+
 /* Upgrade old data: make sure every day has all payment keys, and fold any
    legacy period-level methods (Other Income) into Monday so nothing is lost. */
 function migratePeriod(p){
+  snapEndToSunday(p);
   if(!p.days) p.days = {};
   // For fortnightly: migrate old plain 'Mon'-'Sat' keys → 'w2_Mon'-'w2_Sat'
   if(p.type === 'fortnightly'){
@@ -225,7 +248,10 @@ function migratePeriod(p){
   return p;
 }
 
-function migrateState(){ (state.periods||[]).forEach(migratePeriod); }
+function migrateState(){
+  (state.periods||[]).forEach(migratePeriod);
+  if(_migrationDirty){ _migrationDirty = false; saveState(); }
+}
 
 function totals(p){
   const sums = {}; PAY.forEach(c => sums[c.key] = 0);
@@ -376,8 +402,8 @@ function buildModal(){
           <div>
             <label class="label">PERIOD TYPE</label>
             <select class="select" id="m-type" style="width:100%">
-              <option value="weekly">Weekly (Mon – Sat)</option>
-              <option value="fortnightly">Fortnightly (2 × Mon – Sat)</option>
+              <option value="weekly">Weekly (Mon – Sun)</option>
+              <option value="fortnightly">Fortnightly (2 × Mon – Sun)</option>
             </select>
           </div>
           <div>
@@ -407,11 +433,11 @@ function createPeriod(){
   const type  = document.getElementById('m-type').value;
   const start = document.getElementById('m-start').value;
   if(!start) return;
-  // Compute Saturday end date from the Monday start date
+  // Compute Sunday end date from the Monday start date (Mon–Sun week)
   const startDate = new Date(start + 'T00:00:00');
-  const daysToAdd = type === 'fortnightly' ? 12 : 5;
+  const daysToAdd = type === 'fortnightly' ? 13 : 6;
   const endDate = new Date(startDate); endDate.setDate(startDate.getDate() + daysToAdd);
-  const end = endDate.toISOString().slice(0,10);
+  const end = toLocalDateStr(endDate); // timezone-safe
   const p = blankPeriod(type, end);
   const copy = document.getElementById('m-copy').checked;
   const cur = getPeriod();
