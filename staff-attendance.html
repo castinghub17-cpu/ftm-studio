@@ -890,9 +890,13 @@ function getWeekEarned(name, startDay, endDay) {
   const hourly = isHourly(name);
   let earned = 0;
   for(let d = startDay; d <= endDay; d++) {
-    const att = getAtt(name, d);
-    if(hourly) { if(att==='P') earned += getHours(name,d) * emp.rate; }
-    else { if(att==='P') earned += emp.rate; else if(att==='H') earned += emp.rate/2; }
+    if(hourly) {
+      const h = getHours(name, d);
+      if(h > 0) earned += h * emp.rate;
+    } else {
+      const att = getAtt(name, d);
+      if(att==='P') earned += emp.rate; else if(att==='H') earned += emp.rate/2;
+    }
   }
   return earned;
 }
