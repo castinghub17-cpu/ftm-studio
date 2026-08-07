@@ -273,8 +273,19 @@ function getSummary(name) {
   for(let d=1;d<=daysInMonth(curYear,curMonth);d++){const s=getAtt(name,d);if(c[s]!==undefined)c[s]++;}
   return c;
 }
-function getBalance(name,y=curYear,m=curMonth) {
-  return totalCarry(name,y,m) + calcEarned(name,y,m) + totalComm(name,y,m) - totalPaid(name,y,m);
+function getBalance(name,y=curYear,m=curMonth,_depth=0){
+  const carry  = totalCarry(name,y,m);
+  const earned = calcEarned(name,y,m);
+  const comm   = totalComm(name,y,m);
+  const paid   = totalPaid(name,y,m);
+  const handled = !!state.carryHandled[mKey(name,y,m)];
+  let auto = 0;
+  if(!handled && _depth < 24){
+    const {y:py,m:pm} = prevMonthYM(y,m);
+    const prev = getBalance(name,py,pm,_depth+1);
+    if(prev > 0.001) auto = prev;
+  }
+  return carry + earned + comm + auto - paid;
 }
 function getPrevBalance(name) {
   const {y,m} = prevMonthYM(curYear,curMonth);
@@ -456,29 +467,56 @@ function buildAttendance() {
   return html;
 }
 function buildPayroll() {
-  const allEarned   = state.employees.reduce((s,e)=>s+calcEarned(e.name),0);
-  const allComm     = state.employees.reduce((s,e)=>s+totalComm(e.name),0);
-  const allPaid     = state.employees.reduce((s,e)=>s+totalPaid(e.name),0);
-  const allCarry    = state.employees.reduce((s,e)=>s+totalCarry(e.name),0);
-  const allBalance  = allEarned+allComm+allCarry-allPaid;
+  const allComm    = state.employees.reduce((s,e)=>s+totalComm(e.name),0);
+  const allCarry   = state.employees.reduce((s,e)=>s+totalCarry(e.name),0);
+  // Auto-include each employee's previous month outstanding if not yet handled
+  const allAutoPrev = state.employees.reduce((s,e)=>{
+    const prev = getPrevBalance(e.name);
+    const handled = !!state.carryHandled[mKey(e.name)];
+    return s + ((!handled && prev > 0.001) ? prev : 0);
+  },0);
+  const weeks      = getWeeks(curYear, curMonth);
+
+  // Weekly combined totals across all employees
+  const weekRows = weeks.map(w => {
+    const wEarned = state.employees.reduce((s,e)=>s+getWeekEarned(e.name,w.start,w.end),0);
+    const wPaid   = state.employees.reduce((s,e)=>s+totalWeekPaid(e.name,w.wn),0);
+    const wOwed   = wEarned - wPaid;
+    const wPaidOk = wOwed <= 0.001;
+    return { w, wEarned, wPaid, wOwed, wPaidOk };
+  });
+
+  const grandEarned  = weekRows.reduce((s,r)=>s+r.wEarned,0);
+  const grandPaid    = weekRows.reduce((s,r)=>s+r.wPaid,0);
+  const grandBalance = grandEarned + allComm + allCarry + allAutoPrev - grandPaid;
+
   let html = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:20px">
-      ${[
-        {l:'Brought Forward',v:fmt(allCarry),c:'#6D4FC2'},
-        {l:'Total Earned',v:fmt(allEarned),c:'#0F766E'},
-        {l:'Commission',v:fmt(allComm),c:'#2563A8'},
-        {l:'Total Paid',v:fmt(allPaid),c:'#1C2541'},
-      ].map(x=>`
-        <div class="summary-stat">
-          <div class="summary-stat-label">${x.l}</div>
-          <div class="summary-stat-val" style="color:${x.c}">${x.v}</div>
+    <!-- Weekly summary at top -->
+    <div class="section-label" style="margin-bottom:10px">Weekly Summary — All Staff</div>
+    ${weekRows.map(({w,wEarned,wPaid,wOwed,wPaidOk})=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;border:1px solid ${wPaidOk?'rgba(15,118,110,0.25)':'var(--line)'};border-radius:12px;padding:11px 14px;margin-bottom:8px;background:${wPaidOk?'rgba(15,118,110,0.04)':'var(--paper-raised)'}">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--ink)">${w.label}</div>
+          <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">
+            Earned: <span class="mono" style="font-weight:700;color:#0F766E">${fmt(wEarned)}</span>
+            ${wPaid>0?` · Paid: <span class="mono" style="color:var(--ink-soft);font-weight:700">${fmt(wPaid)}</span>`:''}
+          </div>
         </div>
-      `).join('')}
+        ${wPaidOk
+          ? `<span style="font-size:12px;font-weight:700;color:#0F766E">✓ Paid</span>`
+          : `<span class="mono" style="font-size:13px;font-weight:800;color:#C2740A">${fmt(wOwed)} owed</span>`}
+      </div>`).join('')}
+
+    <!-- Grand total including commission + brought forward -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0 8px">
+      ${(allCarry+allAutoPrev)>0?`<div class="summary-stat"><div class="summary-stat-label">Brought Forward</div><div class="summary-stat-val" style="color:#6D4FC2">${fmt(allCarry+allAutoPrev)}</div></div>`:''}
+      ${allComm>0?`<div class="summary-stat"><div class="summary-stat-label">Commission</div><div class="summary-stat-val" style="color:#2563A8">${fmt(allComm)}</div></div>`:''}
     </div>
-    <div class="card" style="padding:17px 19px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;border-color:${allBalance>0?'rgba(194,116,10,0.3)':'rgba(15,118,110,0.25)'}">
+    <div class="card" style="padding:17px 19px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;border-color:${grandBalance>0?'rgba(194,116,10,0.3)':'rgba(15,118,110,0.25)'}">
       <div class="section-label" style="margin-bottom:0">Total Balance Owed</div>
-      <div class="mono" style="font-size:23px;font-weight:800;color:${allBalance>0?'#C2740A':'#0F766E'}">${fmt(allBalance)}</div>
+      <div class="mono" style="font-size:23px;font-weight:800;color:${grandBalance>0?'#C2740A':'#0F766E'}">${fmt(grandBalance)}</div>
     </div>
+    <hr class="divider" style="margin-bottom:20px"/>
   `;
   if(state.employees.length===0) return html+`<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No employees yet</div></div>`;
   state.employees.forEach(emp=>{
@@ -490,11 +528,12 @@ function buildPayroll() {
     const totP    = totalPaid(emp.name);
     const carries = getCarry(emp.name);
     const totCarry= totalCarry(emp.name);
-    const subtotal= totCarry+earned+totC;
-    const balance = subtotal-totP;
-    const s       = getSummary(emp.name);
     const prevBal = getPrevBalance(emp.name);
     const alreadyHandled = !!state.carryHandled[mKey(emp.name)];
+    // Auto-include last month's outstanding if not yet formally brought forward
+    const autoPrev = (!alreadyHandled && prevBal > 0.001) ? prevBal : 0;
+    const subtotal= totCarry+earned+totC+autoPrev;
+    const balance = subtotal-totP;
     const {y:py,m:pm} = prevMonthYM(curYear,curMonth);
     const showCarrySuggestion = !alreadyHandled && Math.abs(prevBal) > 0.001;
     const summaryChips = hourly
