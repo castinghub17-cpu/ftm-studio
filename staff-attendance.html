@@ -538,14 +538,32 @@ function buildPayroll() {
         </div>`;
     }).join('')}
 
-    <!-- Grand total including commission + brought forward -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0 8px">
-      ${(allCarry+allAutoPrev)>0?`<div class="summary-stat"><div class="summary-stat-label">Brought Forward</div><div class="summary-stat-val" style="color:#6D4FC2">${fmt(allCarry+allAutoPrev)}</div></div>`:''}
-      ${allComm>0?`<div class="summary-stat"><div class="summary-stat-label">Commission</div><div class="summary-stat-val" style="color:#2563A8">${fmt(allComm)}</div></div>`:''}
-    </div>
-    <div class="card" style="padding:17px 19px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;border-color:${grandBalance>0?'rgba(194,116,10,0.3)':'rgba(15,118,110,0.25)'}">
-      <div class="section-label" style="margin-bottom:0">Total Balance Owed</div>
-      <div class="mono" style="font-size:23px;font-weight:800;color:${grandBalance>0?'#C2740A':'#0F766E'}">${fmt(grandBalance)}</div>
+    <!-- Per-employee balance summary -->
+    <div class="section-label" style="margin:14px 0 8px">Total Balance — Per Employee</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px">
+      ${state.employees.map((emp,ei)=>{
+        const palette=[
+          {accent:'#0F766E',border:'rgba(15,118,110,0.25)',bg:'rgba(15,118,110,0.07)'},
+          {accent:'#6D4FC2',border:'rgba(109,79,194,0.25)',bg:'rgba(109,79,194,0.06)'},
+          {accent:'#2563A8',border:'rgba(37,99,168,0.25)',bg:'rgba(37,99,168,0.06)'},
+          {accent:'#C2740A',border:'rgba(194,116,10,0.25)',bg:'rgba(194,116,10,0.06)'},
+        ];
+        const p = palette[ei % palette.length];
+        const bal = getBalance(emp.name);
+        const comm = totalComm(emp.name);
+        const carry = totalCarry(emp.name);
+        const prev = getPrevBalance(emp.name);
+        const handled = !!state.carryHandled[mKey(emp.name)];
+        const autoPrev = (!handled && prev > 0.001) ? prev : 0;
+        return `
+          <div style="border:1.5px solid ${bal>0.001?'rgba(194,116,10,0.35)':p.border};border-radius:14px;padding:14px 15px;background:${bal>0.001?'rgba(194,116,10,0.04)':p.bg}">
+            <div style="font-size:11px;font-weight:700;color:${p.accent};letter-spacing:0.05em;text-transform:uppercase;margin-bottom:6px">${emp.name}</div>
+            ${carry>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Brought fwd: <span class="mono" style="color:#6D4FC2;font-weight:700">${fmt(carry)}</span></div>`:''}
+            ${autoPrev>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Prev month: <span class="mono" style="color:#6D4FC2;font-weight:700">${fmt(autoPrev)}</span></div>`:''}
+            ${comm>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Commission: <span class="mono" style="color:#2563A8;font-weight:700">${fmt(comm)}</span></div>`:''}
+            <div class="mono" style="font-size:22px;font-weight:800;color:${bal>0.001?'#C2740A':p.accent};margin-top:4px">${bal>0.001?fmt(bal):'✓ Paid'}</div>
+          </div>`;
+      }).join('')}
     </div>
     <hr class="divider" style="margin-bottom:20px"/>
   `;
