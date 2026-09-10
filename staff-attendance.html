@@ -147,6 +147,7 @@ const today = new Date();
 let curYear    = today.getFullYear();
 let curMonth   = today.getMonth();
 let curWeekIdx = 0; // index into getWeeks(curYear, curMonth)
+let curEmpTab  = 0; // index into state.employees for payroll detail tab
 let curView  = 'attendance';
 let saveTimer = null;
 let syncStatus = 'synced'; // 'synced' | 'saving' | 'error'
@@ -568,7 +569,22 @@ function buildPayroll() {
     <hr class="divider" style="margin-bottom:20px"/>
   `;
   if(state.employees.length===0) return html+`<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">No employees yet</div></div>`;
-  state.employees.forEach(emp=>{
+
+  // Employee tabs
+  const empIdx = Math.min(curEmpTab, state.employees.length-1);
+  html += `
+    <div style="display:flex;gap:0;margin-bottom:18px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden">
+      ${state.employees.map((e,i)=>{
+        const active = i===empIdx;
+        const hourly = e.payType==='hourly';
+        const palette=['#0F766E','#6D4FC2','#2563A8','#C2740A'];
+        const accent = palette[i%palette.length];
+        return `<button onclick="setEmpTab(${i})" style="flex:1;border:none;padding:11px 8px;cursor:pointer;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;background:${active?accent:'var(--paper)'};color:${active?'white':'var(--ink-soft)'};transition:all 0.15s;border-right:${i<state.employees.length-1?'1.5px solid var(--line)':'none'}">${e.name}</button>`;
+      }).join('')}
+    </div>
+  `;
+
+  { const emp = state.employees[empIdx];{
     const hourly  = emp.payType==='hourly';
     const earned  = calcEarned(emp.name);
     const comms   = getComms(emp.name);
@@ -718,7 +734,7 @@ function buildPayroll() {
         </div>
       </div>
     `;
-  });
+  }}
   return html;
 }
 function buildModal() {
@@ -1024,6 +1040,7 @@ function initWeekIdx() {
   wks.forEach((w,i)=>{ if(d>=w.start&&d<=w.end) curWeekIdx=i; });
 }
 function setView(v)  { curView=v; render(); }
+function setEmpTab(i){ curEmpTab=i; render(); }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadState().then(() => { initWeekIdx(); render(); });
