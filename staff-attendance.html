@@ -142,6 +142,7 @@ let state = {
   payments: {},
   carryForward: {},
   carryHandled: {},
+  extras: {},
 };
 const today = new Date();
 let curYear    = today.getFullYear();
@@ -159,11 +160,12 @@ let editPayType = 'daily';
 async function loadState() {
   try {
     const data = await dbLoad();
-    const blank = {employees:DEFAULT_EMPLOYEES,attendance:{},hours:{},commissions:{},payments:{},carryForward:{},carryHandled:{}};
+    const blank = {employees:DEFAULT_EMPLOYEES,attendance:{},hours:{},commissions:{},payments:{},carryForward:{},carryHandled:{},extras:{}};
     if (data) {
       state = Object.assign({}, blank, data);
     }
     if (!state.hours) state.hours = {};
+    if (!state.extras) state.extras = {};
     state.employees = state.employees.map(e => ({ name:e.name, rate:e.rate, payType: e.payType==='hourly' ? 'hourly' : 'daily' }));
     if (!state.employees.find(e => e.name === 'Kerry')) state.employees.unshift({ name: 'Kerry', rate: 55, payType:'daily' });
   } catch(e) {
@@ -213,6 +215,8 @@ const getCarry = (name,y=curYear,m=curMonth) => state.carryForward[mKey(name,y,m
 const totalComm= (name,y=curYear,m=curMonth) => getComms(name,y,m).reduce((s,c)=>s+parseFloat(c.amount||0),0);
 const totalPaid= (name,y=curYear,m=curMonth) => getPays(name,y,m).reduce((s,p)=>s+parseFloat(p.amount||0),0);
 const totalCarry=(name,y=curYear,m=curMonth) => getCarry(name,y,m).filter(c=>c.status!=='paid').reduce((s,c)=>s+parseFloat(c.amount||0),0);
+const getExtras = (name,y=curYear,m=curMonth) => state.extras[mKey(name,y,m)] || {bookings:0,zooms:0};
+const getExtrasTotal = (name,y=curYear,m=curMonth) => { const e=getExtras(name,y,m); return (e.bookings*2.50)+(e.zooms*4.00); };
 function getEmp(name) { return state.employees.find(e=>e.name===name); }
 function isHourly(name) { const e=getEmp(name); return e && e.payType==='hourly'; }
 function prevMonthYM(y,m) { return m===0 ? {y:y-1,m:11} : {y, m:m-1}; }
@@ -287,7 +291,7 @@ function getBalance(name,y=curYear,m=curMonth,_depth=0){
     const prev = getBalance(name,py,pm,_depth+1);
     if(prev > 0.001) auto = prev;
   }
-  return carry + earned + comm + auto - paid;
+  return carry + earned + comm + getExtrasTotal(name,y,m) + auto - paid;
 }
 function getPrevBalance(name) {
   const {y,m} = prevMonthYM(curYear,curMonth);
@@ -384,6 +388,7 @@ function buildAttendance() {
           `).join('')}
           <th style="padding:6px 8px;font-size:11px;color:var(--ink-faint);font-weight:700;background:var(--paper);text-align:center;min-width:50px">QTY</th>
           <th style="padding:6px 8px;font-size:11px;color:var(--teal-deep);font-weight:700;background:var(--paper);text-align:center;min-width:76px">EARNED</th>
+          <th style="padding:6px 8px;font-size:11px;color:#2563A8;font-weight:700;background:var(--paper);text-align:center;min-width:70px">EXTRAS</th>
         </tr>
       </thead>
       <tbody>
@@ -436,6 +441,9 @@ function buildAttendance() {
               <td style="text-align:center;background:${rowBg};padding:4px 8px">
                 <span class="pay-badge">${fmt(earned)}</span>
               </td>
+              <td style="text-align:center;background:${rowBg};padding:4px 8px">
+                ${getExtrasTotal(emp.name)>0?`<span class="mono" style="font-size:12px;font-weight:700;color:#2563A8">${fmt(getExtrasTotal(emp.name))}</span>`:`<span style="font-size:11px;color:var(--ink-faint)">—</span>`}
+              </td>
             </tr>
           `;
         }).join('')}
@@ -446,6 +454,9 @@ function buildAttendance() {
           </td>
           <td style="background:var(--paper);border-top:1px solid var(--line);padding:12px 8px;text-align:center">
             <span class="mono" style="font-size:14px;font-weight:800;color:var(--teal-deep)">${fmt(state.employees.reduce((s,e)=>s+getWeekEarned(e.name,w.start,w.end),0))}</span>
+          </td>
+          <td style="background:var(--paper);border-top:1px solid var(--line);padding:12px 8px;text-align:center">
+            <span class="mono" style="font-size:13px;font-weight:800;color:#2563A8">${fmt(state.employees.reduce((s,e)=>s+getExtrasTotal(e.name),0))}</span>
           </td>
         </tr>
       </tbody>
@@ -502,7 +513,8 @@ function buildPayroll() {
 
   const grandEarned  = weekRows.reduce((s,r)=>s+r.totalEarned,0);
   const grandPaid    = weekRows.reduce((s,r)=>s+r.totalPaidW,0);
-  const grandBalance = grandEarned + allComm + allCarry + allAutoPrev - grandPaid;
+  const allExtras    = state.employees.reduce((s,e)=>s+getExtrasTotal(e.name),0);
+  const grandBalance = grandEarned + allComm + allCarry + allAutoPrev + allExtras - grandPaid;
 
   let html = `
     <!-- Current week summary — per employee -->
@@ -562,6 +574,7 @@ function buildPayroll() {
             ${carry>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Brought fwd: <span class="mono" style="color:#6D4FC2;font-weight:700">${fmt(carry)}</span></div>`:''}
             ${autoPrev>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Prev month: <span class="mono" style="color:#6D4FC2;font-weight:700">${fmt(autoPrev)}</span></div>`:''}
             ${comm>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Commission: <span class="mono" style="color:#2563A8;font-weight:700">${fmt(comm)}</span></div>`:''}
+            ${getExtrasTotal(emp.name)>0?`<div style="font-size:10px;color:var(--ink-faint);margin-bottom:2px">Extras: <span class="mono" style="color:#2563A8;font-weight:700">${fmt(getExtrasTotal(emp.name))}</span></div>`:''}
             <div class="mono" style="font-size:22px;font-weight:800;color:${bal>0.001?'#C2740A':p.accent};margin-top:4px">${bal>0.001?fmt(bal):'✓ Paid'}</div>
           </div>`;
       }).join('')}
@@ -597,7 +610,8 @@ function buildPayroll() {
     const alreadyHandled = !!state.carryHandled[mKey(emp.name)];
     // Auto-include last month's outstanding if not yet formally brought forward
     const autoPrev = (!alreadyHandled && prevBal > 0.001) ? prevBal : 0;
-    const subtotal= totCarry+earned+totC+autoPrev;
+    const extrasTotal = getExtrasTotal(emp.name);
+    const subtotal= totCarry+earned+totC+autoPrev+extrasTotal;
     const balance = subtotal-totP;
     const {y:py,m:pm} = prevMonthYM(curYear,curMonth);
     const showCarrySuggestion = !alreadyHandled && Math.abs(prevBal) > 0.001;
@@ -724,6 +738,37 @@ function buildPayroll() {
           `}
         </div>
         <button class="btn-action" style="margin-bottom:16px" onclick="openModal('comm','${emp.name}')">+ Add Commission</button>
+        <hr class="divider"/>
+        <div style="margin-bottom:16px">
+          <div class="section-label" style="color:#2563A8;margin-bottom:10px">Extras</div>
+          <div style="background:var(--blue-bg);border:1px solid rgba(37,99,168,0.2);border-radius:12px;padding:14px">
+            <div style="margin-bottom:12px">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">📋 Candidate Booking / Interview — £2.50 each</div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <button onclick="removeExtra('${emp.name}','bookings')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
+                <div style="text-align:center;min-width:44px">
+                  <div class="mono" style="font-size:22px;font-weight:800;color:#2563A8">${getExtras(emp.name).bookings}</div>
+                  <div style="font-size:10px;color:var(--ink-faint)">× £2.50</div>
+                </div>
+                <button onclick="addExtra('${emp.name}','bookings')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
+                <span class="mono" style="font-size:14px;font-weight:700;color:#2563A8;margin-left:6px">= ${fmt(getExtras(emp.name).bookings * 2.50)}</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">💻 Zoom Meetings — £4.00 each</div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <button onclick="removeExtra('${emp.name}','zooms')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
+                <div style="text-align:center;min-width:44px">
+                  <div class="mono" style="font-size:22px;font-weight:800;color:#2563A8">${getExtras(emp.name).zooms}</div>
+                  <div style="font-size:10px;color:var(--ink-faint)">× £4.00</div>
+                </div>
+                <button onclick="addExtra('${emp.name}','zooms')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
+                <span class="mono" style="font-size:14px;font-weight:700;color:#2563A8;margin-left:6px">= ${fmt(getExtras(emp.name).zooms * 4.00)}</span>
+              </div>
+            </div>
+            ${extrasTotal>0?`<div style="border-top:1px solid rgba(37,99,168,0.2);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:var(--ink-soft);font-weight:700">Total Extras</span><span class="mono" style="font-size:14px;font-weight:800;color:#2563A8">${fmt(extrasTotal)}</span></div>`:''}
+          </div>
+        </div>
         <hr class="divider"/>
         <div class="${balance<=0?'balance-paid':'balance-owed'}">
           <div>
@@ -885,13 +930,14 @@ function saveEdit() {
     state.payments=migrate(state.payments);
     state.carryForward=migrate(state.carryForward);
     state.carryHandled=migrate(state.carryHandled);
+    state.extras=migrate(state.extras);
   }
   saveState(); closeModal();
 }
 function removeEmp(name) {
   if(!confirm(`Remove "${name}"? All data deleted.`)) return;
   state.employees=state.employees.filter(e=>e.name!==name);
-  [state.attendance,state.hours,state.commissions,state.payments,state.carryForward,state.carryHandled].forEach(obj=>{ Object.keys(obj).forEach(k=>{ if(k.startsWith(name+'__')) delete obj[k]; }); });
+  [state.attendance,state.hours,state.commissions,state.payments,state.carryForward,state.carryHandled,state.extras].forEach(obj=>{ Object.keys(obj).forEach(k=>{ if(k.startsWith(name+'__')) delete obj[k]; }); });
   saveState(); render();
 }
 function addComm() {
@@ -966,6 +1012,18 @@ function bringForward(name, amount) {
   const {y:py,m:pm} = prevMonthYM(curYear,curMonth);
   state.carryForward[k].push({id:Date.now(),amount:amount,note:`From ${SMONTHS[pm]} ${py}`});
   state.carryHandled[k]=true;
+  saveState(); render();
+}
+function addExtra(name, type) {
+  const k=mKey(name);
+  if(!state.extras[k]) state.extras[k]={bookings:0,zooms:0};
+  state.extras[k][type]=(state.extras[k][type]||0)+1;
+  saveState(); render();
+}
+function removeExtra(name, type) {
+  const k=mKey(name);
+  if(!state.extras[k]) return;
+  if((state.extras[k][type]||0)>0) state.extras[k][type]--;
   saveState(); render();
 }
 // ── Weekly helpers ────────────────────────────────────────
