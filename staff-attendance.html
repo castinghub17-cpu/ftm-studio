@@ -215,8 +215,13 @@ const getCarry = (name,y=curYear,m=curMonth) => state.carryForward[mKey(name,y,m
 const totalComm= (name,y=curYear,m=curMonth) => getComms(name,y,m).reduce((s,c)=>s+parseFloat(c.amount||0),0);
 const totalPaid= (name,y=curYear,m=curMonth) => getPays(name,y,m).reduce((s,p)=>s+parseFloat(p.amount||0),0);
 const totalCarry=(name,y=curYear,m=curMonth) => getCarry(name,y,m).filter(c=>c.status!=='paid').reduce((s,c)=>s+parseFloat(c.amount||0),0);
-const getExtras = (name,y=curYear,m=curMonth) => state.extras[mKey(name,y,m)] || {bookings:0,zooms:0};
-const getExtrasTotal = (name,y=curYear,m=curMonth) => { const e=getExtras(name,y,m); return (e.bookings*2.50)+(e.zooms*3.50); };
+const getExtrasDay = (name,d,y=curYear,m=curMonth) => state.extras[`${name}__${y}-${m}-${d}`] || {bookings:0,zooms:0};
+const getExtrasMonthSummary = (name,y=curYear,m=curMonth) => {
+  const days=daysInMonth(y,m); let b=0,z=0;
+  for(let d=1;d<=days;d++){const e=state.extras[`${name}__${y}-${m}-${d}`]||{bookings:0,zooms:0};b+=e.bookings||0;z+=e.zooms||0;}
+  return {bookings:b,zooms:z};
+};
+const getExtrasTotal = (name,y=curYear,m=curMonth) => { const s=getExtrasMonthSummary(name,y,m); return (s.bookings*2.50)+(s.zooms*3.50); };
 function getEmp(name) { return state.employees.find(e=>e.name===name); }
 function isHourly(name) { const e=getEmp(name); return e && e.payType==='hourly'; }
 function prevMonthYM(y,m) { return m===0 ? {y:y-1,m:11} : {y, m:m-1}; }
@@ -226,24 +231,27 @@ function cycleAtt(name,d) {
   state.attendance[aKey(name,d)] = next;
   saveState(); render();
 }
-function promptHours(name,d) {
-  modal='hours'; modalData={emp:name, day:d};
+function promptDayEntry(name,d) {
+  modal='dayEntry'; modalData={emp:name, day:d};
   render();
   setTimeout(()=>{ const el=document.getElementById('m-hours'); if(el){ el.focus(); el.select(); } },100);
 }
-function saveHours() {
-  const el = document.getElementById('m-hours');
-  const val = el.value;
+function saveDayEntry() {
   const name = modalData.emp, d = modalData.day;
-  if (val === '' || val === null) { delete state.hours[aKey(name,d)]; saveState(); closeModal(); return; }
-  const num = parseFloat(val);
-  if (isNaN(num) || num < 0) return;
-  state.hours[aKey(name,d)] = num;
+  const hEl = document.getElementById('m-hours');
+  const hVal = hEl ? hEl.value : '';
+  if (hVal===''||hVal===null) { delete state.hours[aKey(name,d)]; }
+  else { const num=parseFloat(hVal); if(!isNaN(num)&&num>=0) state.hours[aKey(name,d)]=num; else delete state.hours[aKey(name,d)]; }
+  const b = parseInt(document.getElementById('m-bookings').value)||0;
+  const z = parseInt(document.getElementById('m-zooms').value)||0;
+  const ek = `${name}__${curYear}-${curMonth}-${d}`;
+  if(b===0&&z===0) { delete state.extras[ek]; } else { state.extras[ek]={bookings:b,zooms:z}; }
   saveState(); closeModal();
 }
-function clearHours() {
-  const name = modalData.emp, d = modalData.day;
+function clearDayEntry() {
+  const name=modalData.emp, d=modalData.day;
   delete state.hours[aKey(name,d)];
+  delete state.extras[`${name}__${curYear}-${curMonth}-${d}`];
   saveState(); closeModal();
 }
 function calcEarned(name,y=curYear,m=curMonth) {
@@ -416,11 +424,17 @@ function buildAttendance() {
               ${dayNums.map(d=>{
                 if (hourly) {
                   const h = getHours(emp.name,d);
+                  const ex = getExtrasDay(emp.name,d);
+                  const hasEx = ex.bookings>0||ex.zooms>0;
+                  const cellLabel = h>0 ? h : (hasEx ? `${ex.bookings+ex.zooms}` : '—');
+                  const cellBg = h>0 ? 'var(--violet-bg)' : (hasEx ? 'var(--blue-bg)' : 'transparent');
+                  const cellColor = h>0 ? '#6D4FC2' : (hasEx ? '#2563A8' : '#D8D2C2');
                   return `
                     <td style="text-align:center;padding:4px 1px;background:${rowBg}">
-                      <div class="hr-cell" onclick="promptHours('${emp.name}',${d})"
-                        style="background:${h>0?'var(--violet-bg)':'transparent'};color:${h>0?'#6D4FC2':'#D8D2C2'};border-color:${h>0?'transparent':'var(--line)'};outline:${isToday(d)?'2px solid rgba(15,118,110,0.25)':'none'}">
-                        ${h>0?h:'—'}
+                      <div class="hr-cell" onclick="promptDayEntry('${emp.name}',${d})"
+                        style="background:${cellBg};color:${cellColor};border-color:${(h>0||hasEx)?'transparent':'var(--line)'};outline:${isToday(d)?'2px solid rgba(15,118,110,0.25)':'none'};position:relative">
+                        ${cellLabel}
+                        ${h>0&&hasEx?`<span style="position:absolute;top:1px;right:1px;width:5px;height:5px;border-radius:50%;background:#2563A8;display:block"></span>`:''}
                       </div>
                     </td>
                   `;
@@ -611,6 +625,9 @@ function buildPayroll() {
     // Auto-include last month's outstanding if not yet formally brought forward
     const autoPrev = (!alreadyHandled && prevBal > 0.001) ? prevBal : 0;
     const extrasTotal = getExtrasTotal(emp.name);
+    const monthSummary = getExtrasMonthSummary(emp.name);
+    const daysWithExtras = [];
+    for(let d=1;d<=daysInMonth(curYear,curMonth);d++){const e=getExtrasDay(emp.name,d);if(e.bookings>0||e.zooms>0)daysWithExtras.push({d,...e});}
     const subtotal= totCarry+earned+totC+autoPrev+extrasTotal;
     const balance = subtotal-totP;
     const {y:py,m:pm} = prevMonthYM(curYear,curMonth);
@@ -740,33 +757,27 @@ function buildPayroll() {
         <button class="btn-action" style="margin-bottom:16px" onclick="openModal('comm','${emp.name}')">+ Add Commission</button>
         <hr class="divider"/>
         <div style="margin-bottom:16px">
-          <div class="section-label" style="color:#2563A8;margin-bottom:10px">Extras</div>
+          <div class="section-label" style="color:#2563A8;margin-bottom:10px">Extras <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-faint);font-size:10px">— tap any day in Attendance to log</span></div>
           <div style="background:var(--blue-bg);border:1px solid rgba(37,99,168,0.2);border-radius:12px;padding:14px">
-            <div style="margin-bottom:12px">
-              <div style="font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">📋 Candidate Booking / Interview — £2.50 each</div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <button onclick="removeExtra('${emp.name}','bookings')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
-                <div style="text-align:center;min-width:44px">
-                  <div class="mono" style="font-size:22px;font-weight:800;color:#2563A8">${getExtras(emp.name).bookings}</div>
-                  <div style="font-size:10px;color:var(--ink-faint)">× £2.50</div>
-                </div>
-                <button onclick="addExtra('${emp.name}','bookings')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
-                <span class="mono" style="font-size:14px;font-weight:700;color:#2563A8;margin-left:6px">= ${fmt(getExtras(emp.name).bookings * 2.50)}</span>
-              </div>
-            </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">💻 Zoom Meetings — £3.50 each</div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <button onclick="removeExtra('${emp.name}','zooms')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">−</button>
-                <div style="text-align:center;min-width:44px">
-                  <div class="mono" style="font-size:22px;font-weight:800;color:#2563A8">${getExtras(emp.name).zooms}</div>
-                  <div style="font-size:10px;color:var(--ink-faint)">× £3.50</div>
-                </div>
-                <button onclick="addExtra('${emp.name}','zooms')" style="width:34px;height:34px;border-radius:9px;border:1.5px solid rgba(37,99,168,0.3);background:white;font-size:20px;cursor:pointer;color:#2563A8;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center">+</button>
-                <span class="mono" style="font-size:14px;font-weight:700;color:#2563A8;margin-left:6px">= ${fmt(getExtras(emp.name).zooms * 3.50)}</span>
-              </div>
-            </div>
-            ${extrasTotal>0?`<div style="border-top:1px solid rgba(37,99,168,0.2);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:var(--ink-soft);font-weight:700">Total Extras</span><span class="mono" style="font-size:14px;font-weight:800;color:#2563A8">${fmt(extrasTotal)}</span></div>`:''}
+            ${daysWithExtras.length===0
+              ? `<div style="font-size:12px;color:var(--ink-faint);font-style:italic">No extras logged this month — go to Attendance tab and tap any day cell to add bookings or zooms</div>`
+              : `<div style="display:flex;flex-direction:column;gap:7px">
+                  ${daysWithExtras.map(de=>{
+                    const dt=(de.bookings*2.50)+(de.zooms*3.50);
+                    return `<div style="display:flex;justify-content:space-between;align-items:center;background:white;border:1px solid rgba(37,99,168,0.15);border-radius:9px;padding:9px 13px">
+                      <div>
+                        <div style="font-size:13px;font-weight:700;color:var(--ink)">${de.d} ${SMONTHS[curMonth]}</div>
+                        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px">${de.bookings>0?`📋 ${de.bookings} booking${de.bookings!==1?'s':''}`:''} ${de.bookings>0&&de.zooms>0?'·':''} ${de.zooms>0?`💻 ${de.zooms} zoom${de.zooms!==1?'s':''}`:''}</div>
+                      </div>
+                      <span class="mono" style="font-size:13px;font-weight:700;color:#2563A8">${fmt(dt)}</span>
+                    </div>`;
+                  }).join('')}
+                  <div style="border-top:1px solid rgba(37,99,168,0.2);padding-top:10px;display:flex;justify-content:space-between;align-items:center">
+                    <span style="font-size:11px;color:var(--ink-soft)">📋 ${monthSummary.bookings} bookings &nbsp;·&nbsp; 💻 ${monthSummary.zooms} zooms</span>
+                    <span class="mono" style="font-size:14px;font-weight:800;color:#2563A8">${fmt(extrasTotal)}</span>
+                  </div>
+                </div>`
+            }
           </div>
         </div>
         <hr class="divider"/>
@@ -855,16 +866,33 @@ function buildModal() {
         </div>
       </div>
     `;
-  } else if(modal==='hours') {
-    const cur = getHours(modalData.emp, modalData.day);
+  } else if(modal==='dayEntry') {
+    const curH = getHours(modalData.emp, modalData.day);
+    const curE = getExtrasDay(modalData.emp, modalData.day);
     inner = `
-      <div class="modal-title">Hours Worked</div>
+      <div class="modal-title">Day Entry</div>
       <div class="modal-sub">${modalData.emp} · ${MONTHS[curMonth]} ${modalData.day}, ${curYear}</div>
       <div style="display:flex;flex-direction:column;gap:13px">
-        <div><label class="label">Hours</label><input class="input" id="m-hours" type="number" min="0" step="0.5" inputmode="decimal" value="${cur||''}" placeholder="e.g. 6.5" onkeydown="if(event.key==='Enter')saveHours()"/></div>
+        <div>
+          <label class="label">🏢 Hours Worked (Office)</label>
+          <input class="input" id="m-hours" type="number" min="0" step="0.5" inputmode="decimal" value="${curH||''}" placeholder="e.g. 6.5 — leave blank for home day"/>
+        </div>
+        <div style="border-top:1px solid var(--line-soft);padding-top:13px">
+          <div class="section-label" style="color:#2563A8;margin-bottom:10px">🏠 Home Day Extras</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <label class="label">📋 Candidate Bookings / Interviews (× £2.50)</label>
+              <input class="input" id="m-bookings" type="number" min="0" step="1" inputmode="numeric" value="${curE.bookings||''}" placeholder="0"/>
+            </div>
+            <div>
+              <label class="label">💻 Zoom Meetings (× £3.50)</label>
+              <input class="input" id="m-zooms" type="number" min="0" step="1" inputmode="numeric" value="${curE.zooms||''}" placeholder="0"/>
+            </div>
+          </div>
+        </div>
         <div style="display:flex;gap:10px;margin-top:6px">
-          <button class="btn-ghost" onclick="clearHours()">Clear</button>
-          <button class="btn-primary" onclick="saveHours()">Save</button>
+          <button class="btn-ghost" onclick="clearDayEntry()">Clear All</button>
+          <button class="btn-primary" onclick="saveDayEntry()">Save</button>
         </div>
       </div>
     `;
@@ -1012,18 +1040,6 @@ function bringForward(name, amount) {
   const {y:py,m:pm} = prevMonthYM(curYear,curMonth);
   state.carryForward[k].push({id:Date.now(),amount:amount,note:`From ${SMONTHS[pm]} ${py}`});
   state.carryHandled[k]=true;
-  saveState(); render();
-}
-function addExtra(name, type) {
-  const k=mKey(name);
-  if(!state.extras[k]) state.extras[k]={bookings:0,zooms:0};
-  state.extras[k][type]=(state.extras[k][type]||0)+1;
-  saveState(); render();
-}
-function removeExtra(name, type) {
-  const k=mKey(name);
-  if(!state.extras[k]) return;
-  if((state.extras[k][type]||0)>0) state.extras[k][type]--;
   saveState(); render();
 }
 // ── Weekly helpers ────────────────────────────────────────
