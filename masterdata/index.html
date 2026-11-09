@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Master Leads — FTM</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#18181a;--ink60:#5c5c62;--ink40:#97979c;--b100:#f8f5f0;--b200:#f0ebe2;--line:#e8e3dc;--white:#fff;
+--nst:#2f5d8a;--cw:#8a4b2f;--ok:#3a7d44;--warn:#b07a12;--bad:#b23b3b}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--b100);color:var(--ink);font-size:14px;min-height:100vh}
+h1,h2{font-family:'Syne',sans-serif;letter-spacing:-.02em}
+button,select,input{font:inherit;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.top h1{font-size:24px;font-weight:800}
+.muted{color:var(--ink40)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--white);padding:9px 16px;cursor:pointer;font-size:13px;font-weight:500;border-radius:2px}
+.btn:hover{opacity:.85}.btn:disabled{opacity:.4;cursor:default}
+.btn.sec{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.nst{background:var(--nst);border-color:var(--nst)}.btn.cw{background:var(--cw);border-color:var(--cw)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--line);padding:14px 16px}
+.stat b{display:block;font-family:'Syne',sans-serif;font-size:24px;font-weight:800}
+.stat span{font-size:12px;color:var(--ink60)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+.tab{background:none;border:none;padding:10px 14px;cursor:pointer;color:var(--ink60);border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:600}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--white);border:1px solid var(--line);padding:18px;margin-bottom:16px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink60)}
+.field input,.field select,select.inp,input.inp{border:1px solid var(--line);background:var(--white);padding:8px 10px;font-size:14px;color:var(--ink);border-radius:2px;min-width:0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:500;color:var(--ink60);font-size:12px;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 6px;border-bottom:1px solid var(--b200);vertical-align:top}
+.tbl{overflow-x:auto}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;background:var(--b200);color:var(--ink60);white-space:nowrap}
+.pill.Yes{background:#fbe3e3;color:var(--bad)}.pill.No{background:#e5f2e7;color:var(--ok)}
+.pill.NST{background:#e3ecf5;color:var(--nst)}.pill.Castworth{background:#f5e9e3;color:var(--cw)}
+.hist{font-size:11px;color:var(--ink60)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--white);padding:10px 18px;font-size:13px;display:none;z-index:9;max-width:90vw}
+.login{max-width:360px;margin:12vh auto;background:var(--white);border:1px solid var(--line);padding:32px}
+.login h1{font-size:22px;margin-bottom:6px}.login .field{margin-top:14px}.login .btn{width:100%;margin-top:18px}
+.err{color:var(--bad);font-size:12px;margin-top:10px;min-height:16px}
+.note{font-size:12px;color:var(--ink60);margin-top:8px;line-height:1.5}
+.seg{display:inline-flex;border:1px solid var(--line)}
+.seg button{background:var(--white);border:none;padding:8px 14px;cursor:pointer}
+.seg button.on.nst{background:var(--nst);color:#fff}.seg button.on.cw{background:var(--cw);color:#fff}
+.dup{border-left:3px solid var(--warn)}
+@media(max-width:640px){.hide-sm{display:none}}
+</style>
+</head>
+<body>
+
+<div id="loginView" class="login" style="display:none">
+  <h1>Master Leads</h1>
+  <p class="muted">Sign in with your Castworth admin login.</p>
+  <form id="loginForm">
+    <label class="field">Email<input id="lEmail" type="email" autocomplete="username" required/></label>
+    <label class="field">Password<input id="lPass" type="password" autocomplete="current-password" required/></label>
+    <button class="btn" type="submit">Sign in</button>
+    <div class="err" id="lErr"></div>
+  </form>
+</div>
+
+<div id="appView" class="wrap" style="display:none">
+  <div class="top">
+    <h1>Master Leads</h1>
+    <div class="row"><span class="muted" id="who"></span><button class="btn sec sm" id="logout">Sign out</button></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="sTotal">–</b><span>Leads in master</span></div>
+    <div class="stat"><b id="sNst">–</b><span>Available for NST</span></div>
+    <div class="stat"><b id="sCw">–</b><span>Available for Castworth</span></div>
+    <div class="stat"><b id="sToday">–</b><span>Sent today</span></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-p="send">Today's batch</button>
+    <button class="tab" data-p="results">Update results</button>
+    <button class="tab" data-p="import">Import leads</button>
+    <button class="tab" data-p="search">Search</button>
+  </div>
+
+  <!-- SEND -->
+  <section class="panel on" id="p-send">
+    <div class="card">
+      <div class="row">
+        <div class="seg" id="coSeg">
+          <button data-co="NST" class="on nst">NST</button>
+          <button data-co="Castworth">Castworth</button>
+        </div>
+        <label class="field" style="flex-direction:row;align-items:center;gap:8px">How many
+          <input id="batchN" class="inp" type="number" min="1" max="500" value="20" style="width:80px"/></label>
+        <button class="btn sec" id="loadBatch">Refresh list</button>
+      </div>
+      <p class="note">Shows leads never sent to this company, not marked as attended, and only tried elsewhere with <b>No answer</b>. Known no-shows come first.</p>
+    </div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <label class="row" style="gap:6px"><input type="checkbox" id="selAll" checked/> Select all</label>
+        <button class="btn nst" id="sendBtn">Send to NST</button>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Name</th><th>Phone</th><th class="hide-sm">Email</th><th>Year</th><th>Attended</th><th class="hide-sm">History</th></tr></thead>
+        <tbody id="batchBody"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="panel" id="p-results">
+    <div class="card row">
+      <select id="rCo" class="inp"><option value="">All companies</option><option>NST</option><option>Castworth</option></select>
+      <select id="rRes" class="inp"><option value="Sent">Waiting for result</option><option value="">All results</option><option>Contacted</option><option>No answer</option><option>Not interested</option><option>Booked</option></select>
+      <button class="btn sec" id="rLoad">Refresh</button>
+      <span class="muted" id="rCount"></span>
+    </div>
+    <div class="card">
+      <p class="note" style="margin:0 0 10px">Mark <b>No answer</b> and the lead becomes available to the other company.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Name</th><th>Phone</th><th>Company</th><th>Sent</th><th>Result</th></tr></thead>
+        <tbody id="rBody"></tbody>
+      </table></div>
+      <div class="row" style="margin-top:12px"><button class="btn sec sm" id="rMore">Load more</button></div>
+    </div>
+  </section>
+
+  <!-- IMPORT -->
+  <section class="panel" id="p-import">
+    <div class="card">
+      <h2 style="font-size:16px;margin-bottom:10px">1. Choose a file</h2>
+      <div class="row">
+        <input type="file" id="impFile" accept=".csv,.xlsx,.xls"/>
+        <label class="field">Source (optional)<input id="impSource" class="inp" placeholder="e.g. Facebook ad Nov"/></label>
+        <label class="field">Year (optional)<input id="impYear" class="inp" type="number" placeholder="2026" style="width:90px"/></label>
+      </div>
+      <p class="note">CSV or Excel. I'll find the name, phone and email columns automatically — check them below.</p>
+    </div>
+    <div class="card" id="mapCard" style="display:none">
+      <h2 style="font-size:16px;margin-bottom:10px">2. Check columns</h2>
+      <div class="row" id="mapRow"></div>
+      <div class="row" style="margin-top:14px"><button class="btn" id="checkBtn">Check for duplicates</button><span class="muted" id="impInfo"></span></div>
+    </div>
+    <div class="card" id="dupCard" style="display:none">
+      <h2 style="font-size:16px;margin-bottom:4px">3. Review</h2>
+      <p id="dupSummary" class="note" style="margin-bottom:12px"></p>
+      <div id="dupWrap" class="tbl"><table>
+        <thead><tr><th>New lead</th><th>Already in master</th><th>Decision</th></tr></thead>
+        <tbody id="dupBody"></tbody>
+      </table></div>
+      <div class="row" style="margin-top:14px"><button class="btn" id="importBtn">Import</button><span class="muted" id="impProg"></span></div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="panel" id="p-search">
+    <div class="card row">
+      <input id="qInp" class="inp" placeholder="Name, phone or email" style="flex:1;min-width:200px"/>
+      <button class="btn" id="qBtn">Search</button>
+    </div>
+    <div class="card">
+      <div class="tbl"><table>
+        <thead><tr><th>Name</th><th>Phone</th><th class="hide-sm">Email</th><th>Year</th><th>Attended</th><th>History</th><th></th></tr></thead>
+        <tbody id="qBody"></tbody>
+      </table></div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB_URL = 'https://qibdsiirzhfkpkyznfys.supabase.co';
+const SB_KEY = 'sb_publishable_2kYikvy29rc9845zr8J26A_jYNUyM4t';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate = d => d ? new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'}) : '';
+function toast(msg, ms=3000){const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',ms);}
+function normPhone(p){let d=String(p??'').replace(/\D/g,'');if(!d)return null;if(d.startsWith('44'))return d;if(d.startsWith('0'))return '44'+d.slice(1);if(d.length===10&&d.startsWith('7'))return '44'+d;return d;}
+function normEmail(e){e=String(e??'').trim().toLowerCase();return e||null;}
+
+// ── AUTH ──
+async function boot(){
+  const {data:{session}} = await sb.auth.getSession();
+  if(!session){ $('loginView').style.display='block'; $('appView').style.display='none'; return; }
+  const {data:isAdmin} = await sb.rpc('castworth_is_admin');
+  if(!isAdmin){ await sb.auth.signOut(); $('lErr').textContent='This account is not an admin.'; $('loginView').style.display='block'; return; }
+  $('who').textContent = session.user.email;
+  $('loginView').style.display='none'; $('appView').style.display='block';
+  refreshStats(); loadBatch();
+}
+$('loginForm').onsubmit = async e => {
+  e.preventDefault(); $('lErr').textContent='';
+  const {error} = await sb.auth.signInWithPassword({email:$('lEmail').value.trim(), password:$('lPass').value});
+  if(error){ $('lErr').textContent = error.message; return; }
+  boot();
+};
+$('logout').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+
+// ── TABS ──
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on', x===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on', p.id==='p-'+t.dataset.p));
+  if(t.dataset.p==='results') loadResults(true);
+});
+
+// ── STATS ──
+async function refreshStats(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const [tot, nst, cw, td] = await Promise.all([
+    sb.from('master_leads').select('id',{count:'exact',head:true}),
+    sb.rpc('master_count_available',{p_company:'NST'}),
+    sb.rpc('master_count_available',{p_company:'Castworth'}),
+    sb.from('master_lead_sends').select('id',{count:'exact',head:true}).gte('sent_at', today.toISOString()),
+  ]);
+  $('sTotal').textContent = (tot.count??0).toLocaleString();
+  $('sNst').textContent = (nst.data??0).toLocaleString();
+  $('sCw').textContent = (cw.data??0).toLocaleString();
+  $('sToday').textContent = (td.count??0).toLocaleString();
+}
+
+async function historyFor(ids){
+  if(!ids.length) return {};
+  const {data} = await sb.from('master_lead_sends').select('lead_id,company,result,sent_at').in('lead_id', ids).order('sent_at');
+  const m = {}; (data||[]).forEach(s => (m[s.lead_id] ||= []).push(s)); return m;
+}
+const histHtml = arr => (arr||[]).map(s=>`<span class="pill ${s.company}">${s.company}: ${esc(s.result)} · ${fmtDate(s.sent_at)}</span>`).join(' ') || '<span class="muted">—</span>';
+
+// ── SEND BATCH ──
+let company = 'NST', batch = [];
+document.querySelectorAll('#coSeg button').forEach(b => b.onclick = () => {
+  company = b.dataset.co;
+  document.querySelectorAll('#coSeg button').forEach(x => { x.className = x===b ? 'on '+(company==='NST'?'nst':'cw') : ''; });
+  $('sendBtn').className = 'btn ' + (company==='NST'?'nst':'cw'); $('sendBtn').textContent = 'Send to ' + company;
+  loadBatch();
+});
+$('loadBatch').onclick = loadBatch;
+async function loadBatch(){
+  $('batchBody').innerHTML = '<tr><td colspan="7" class="muted">Loading…</td></tr>';
+  const {data, error} = await sb.rpc('master_available', {p_company:company, p_limit:+$('batchN').value||20});
+  if(error){ $('batchBody').innerHTML = `<tr><td colspan="7" class="err">${esc(error.message)}</td></tr>`; return; }
+  batch = data || [];
+  const h = await historyFor(batch.map(l=>l.id));
+  $('batchBody').innerHTML = batch.length ? batch.map(l => `<tr>
+    <td><input type="checkbox" class="bchk" value="${l.id}" checked/></td>
+    <td>${esc(l.full_name)}</td><td>${esc(l.phone)}</td><td class="hide-sm">${esc(l.email)}</td>
+    <td>${l.lead_year??''}</td><td><span class="pill ${l.attended}">${l.attended}</span></td>
+    <td class="hide-sm">${histHtml(h[l.id])}</td></tr>`).join('')
+    : '<tr><td colspan="7" class="muted">No leads available for '+company+'.</td></tr>';
+  $('selAll').checked = true;
+}
+$('selAll').onchange = e => document.querySelectorAll('.bchk').forEach(c => c.checked = e.target.checked);
+$('sendBtn').onclick = async () => {
+  const ids = [...document.querySelectorAll('.bchk:checked')].map(c => +c.value);
+  if(!ids.length) return toast('Tick at least one lead');
+  if(!confirm(`Send ${ids.length} lead(s) to ${company}?` + (company==='Castworth' ? '\nThey will be added to the Castworth leads list.' : '\nA CSV will download for NST.'))) return;
+  $('sendBtn').disabled = true;
+  const {data, error} = await sb.rpc('master_send', {p_company:company, p_ids:ids});
+  $('sendBtn').disabled = false;
+  if(error) return toast('Error: '+error.message, 5000);
+  const sent = batch.filter(l => ids.includes(l.id));
+  downloadCsv(sent, `${company}_leads_${new Date().toISOString().slice(0,10)}.csv`);
+  try { await navigator.clipboard.writeText(sent.map(l=>[l.full_name,l.phone,l.email].join('\t')).join('\n')); } catch(_){}
+  toast(`${data} lead(s) sent to ${company}` + (company==='Castworth' ? ' and added to Castworth leads' : '') + ' · CSV downloaded, also copied');
+  refreshStats(); loadBatch();
+};
+function downloadCsv(rows, name){
+  const q = v => `"${String(v??'').replace(/"/g,'""')}"`;
+  // Headers match the NST admin's own leads export, so the file drops straight into NST's bulk import
+  const csv = ['Full Name,Email,Phone,Source,Year Applied', ...rows.map(l => [l.full_name,l.email,l.phone,l.source||'Master database',l.lead_year].map(q).join(','))].join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = name; a.click();
+}
+
+// ── RESULTS ──
+let rOffset = 0;
+$('rLoad').onclick = () => loadResults(true); $('rCo').onchange = () => loadResults(true); $('rRes').onchange = () => loadResults(true);
+$('rMore').onclick = () => loadResults(false);
+async function loadResults(reset){
+  if(reset){ rOffset = 0; $('rBody').innerHTML = ''; }
+  let q = sb.from('master_lead_sends').select('id,company,result,sent_at,master_leads(full_name,phone)',{count:'exact'}).order('sent_at',{ascending:false}).range(rOffset, rOffset+49);
+  if($('rCo').value) q = q.eq('company', $('rCo').value);
+  if($('rRes').value) q = q.eq('result', $('rRes').value);
+  const {data, count, error} = await q;
+  if(error) return toast(error.message, 5000);
+  rOffset += (data||[]).length; $('rCount').textContent = `${count??0} found`;
+  const opts = ['Sent','Contacted','No answer','Not interested','Booked'];
+  $('rBody').insertAdjacentHTML('beforeend', (data||[]).map(s => `<tr>
+    <td>${esc(s.master_leads?.full_name)}</td><td>${esc(s.master_leads?.phone)}</td>
+    <td><span class="pill ${s.company}">${s.company}</span></td><td>${fmtDate(s.sent_at)}</td>
+    <td><select class="inp rsel" data-id="${s.id}">${opts.map(o=>`<option ${o===s.result?'selected':''}>${o}</option>`).join('')}</select></td></tr>`).join(''));
+  $('rMore').style.display = rOffset < (count??0) ? '' : 'none';
+}
+$('rBody').addEventListener('change', async e => {
+  if(!e.target.classList.contains('rsel')) return;
+  const {error} = await sb.from('master_lead_sends').update({result:e.target.value, updated_at:new Date().toISOString()}).eq('id', +e.target.dataset.id);
+  if(error) return toast(error.message, 5000);
+  toast('Saved: ' + e.target.value); refreshStats();
+});
+
+// ── IMPORT ──
+let impRows = [], impCols = [], decisions = [];
+const FIELDS = [['full_name','Name',/^(full ?name|name|candidate|talent|first ?name)/i],['phone','Phone',/(phone|mobile|tel|number|contact)/i],['email','Email',/e-?mail/i],['attended','Attended (optional)',/(attend|show)/i]];
+$('impFile').onchange = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  const wb = XLSX.read(await f.arrayBuffer(), {type:'array'});
+  impRows = [];
+  wb.SheetNames.forEach(n => XLSX.utils.sheet_to_json(wb.Sheets[n], {defval:'', raw:false}).forEach(r => impRows.push(r)));
+  impCols = [...new Set(impRows.flatMap(r => Object.keys(r)))];
+  // last-name helper
+  $('mapRow').innerHTML = FIELDS.map(([k,label,re]) => {
+    let guess = impCols.find(c => re.test(c)) || '';
+    if(k==='phone') guess = impCols.find(c => /(phone|mobile|tel)/i.test(c)) || guess;
+    return `<label class="field">${label}<select class="inp mapSel" data-k="${k}"><option value="">— none —</option>${impCols.map(c=>`<option ${c===guess?'selected':''}>${esc(c)}</option>`).join('')}</select></label>`;
+  }).join('');
+  $('impInfo').textContent = `${impRows.length.toLocaleString()} rows in ${wb.SheetNames.length} sheet(s)`;
+  $('mapCard').style.display = ''; $('dupCard').style.display = 'none';
+};
+function mapped(){
+  const m = {}; document.querySelectorAll('.mapSel').forEach(s => m[s.dataset.k] = s.value);
+  const last = impCols.find(c => /last ?name|surname/i.test(c));
+  const src = $('impSource').value.trim() || null, yr = +$('impYear').value || null;
+  return impRows.map(r => {
+    let name = m.full_name ? String(r[m.full_name]).trim() : '';
+    if(last && /first/i.test(m.full_name||'') && r[last]) name = (name+' '+String(r[last]).trim()).trim();
+    let att = 'Unknown'; if(m.attended){ const v = String(r[m.attended]).trim().toLowerCase(); if(/^(y|yes|true|1|came|attended|show(ed)?)$/.test(v)) att='Yes'; else if(/^(n|no|false|0|no ?show|did ?not)/.test(v)) att='No'; }
+    return {full_name:name||null, phone:m.phone ? String(r[m.phone]).trim()||null : null, email:m.email ? String(r[m.email]).trim()||null : null, source:src, lead_year:yr, attended:att};
+  }).filter(r => r.phone || r.email);
+}
+let toImport = [];
+$('checkBtn').onclick = async () => {
+  const rows = mapped(); if(!rows.length) return toast('No rows with a phone or email — check the columns');
+  // collapse duplicates inside the file
+  const seen = new Set(); toImport = []; let inFile = 0;
+  rows.forEach(r => { const k1 = normPhone(r.phone), k2 = normEmail(r.email);
+    if((k1 && seen.has('p'+k1)) || (k2 && seen.has('e'+k2))){ inFile++; return; }
+    if(k1) seen.add('p'+k1); if(k2) seen.add('e'+k2); toImport.push(r); });
+  $('checkBtn').disabled = true; $('impInfo').textContent = 'Checking…';
+  const matches = {};
+  for(let i=0;i<toImport.length;i+=500){
+    const chunk = toImport.slice(i,i+500).map((r,j)=>({i:i+j, phone:r.phone, email:r.email}));
+    const {data, error} = await sb.rpc('master_find_dupes', {p_rows:chunk});
+    if(error){ $('checkBtn').disabled=false; return toast(error.message, 5000); }
+    (data||[]).forEach(d => (matches[d.i] ||= []).push(d));
+    $('impInfo').textContent = `Checking… ${Math.min(i+500,toImport.length)}/${toImport.length}`;
+  }
+  $('checkBtn').disabled = false; $('impInfo').textContent = '';
+  decisions = toImport.map((r,i) => {
+    const m = matches[i]; if(!m) return {i, dec:'new'};
+    return {i, m, dec: m.some(x => x.attended==='Yes') ? 'skip' : 'keep'};
+  });
+  const dups = decisions.filter(d => d.m);
+  $('dupSummary').innerHTML = `<b>${(toImport.length-dups.length).toLocaleString()}</b> new leads · <b>${dups.length.toLocaleString()}</b> already in master` + (inFile ? ` · ${inFile} repeated inside the file (merged)` : '') +
+    (dups.length ? `<br>For each duplicate: <b>Keep</b> adds it as a fresh lead (e.g. they never showed up); <b>Skip</b> leaves it out and marks the old lead as attended (they came before). Leads already marked attended default to Skip.` : '');
+  $('dupBody').innerHTML = dups.map(d => { const r = toImport[d.i]; return `<tr class="dup">
+    <td>${esc(r.full_name)}<br><span class="muted">${esc(r.phone)} ${esc(r.email)}</span></td>
+    <td>${d.m.map(x=>`${esc(x.full_name)} <span class="muted">${x.lead_year??fmtDate(x.created_at)}</span> <span class="pill ${x.attended}">Attended: ${x.attended}</span><div class="hist">${esc(x.history||'Never sent')}</div>`).join('<hr style="border:none;border-top:1px dashed var(--line);margin:4px 0">')}</td>
+    <td><select class="inp decSel" data-i="${d.i}"><option value="keep" ${d.dec==='keep'?'selected':''}>Keep (didn't show)</option><option value="skip" ${d.dec==='skip'?'selected':''}>Skip (came before)</option></select></td></tr>`; }).join('');
+  $('dupWrap').style.display = dups.length ? '' : 'none';
+  $('dupCard').style.display = '';
+};
+$('dupBody').addEventListener('change', e => { if(e.target.classList.contains('decSel')) decisions[+e.target.dataset.i].dec = e.target.value; });
+$('importBtn').onclick = async () => {
+  const add = decisions.filter(d => d.dec!=='skip').map(d => toImport[d.i]);
+  const skipIds = decisions.filter(d => d.dec==='skip' && d.m).flatMap(d => d.m.map(x=>x.lead_id));
+  if(!confirm(`Import ${add.length} lead(s)?` + (skipIds.length ? ` ${skipIds.length} old lead(s) will be marked as attended.` : ''))) return;
+  $('importBtn').disabled = true;
+  for(let i=0;i<add.length;i+=500){
+    const {error} = await sb.from('master_leads').insert(add.slice(i,i+500));
+    if(error){ $('importBtn').disabled=false; return toast('Error: '+error.message, 6000); }
+    $('impProg').textContent = `${Math.min(i+500,add.length)}/${add.length}`;
+  }
+  for(let i=0;i<skipIds.length;i+=500){
+    await sb.from('master_leads').update({attended:'Yes'}).in('id', skipIds.slice(i,i+500));
+  }
+  $('importBtn').disabled = false; $('impProg').textContent = '';
+  toast(`Imported ${add.length} lead(s)`); $('dupCard').style.display='none'; $('mapCard').style.display='none'; $('impFile').value='';
+  refreshStats(); loadBatch();
+};
+
+// ── SEARCH ──
+$('qBtn').onclick = search; $('qInp').onkeydown = e => { if(e.key==='Enter') search(); };
+async function search(){
+  const q = $('qInp').value.trim(); if(!q) return;
+  const digits = q.replace(/\D/g,'');
+  let ors = [`full_name.ilike.%${q.replace(/[,()]/g,' ')}%`, `email_norm.ilike.%${q.toLowerCase().replace(/[,()]/g,' ')}%`];
+  if(digits.length >= 4) ors.push(`phone_norm.like.%${(normPhone(digits)||digits).slice(-10)}%`);
+  const {data, error} = await sb.from('master_leads').select('*').or(ors.join(',')).limit(100);
+  if(error) return toast(error.message, 5000);
+  const h = await historyFor((data||[]).map(l=>l.id));
+  $('qBody').innerHTML = (data||[]).length ? data.map(l => `<tr>
+    <td>${esc(l.full_name)}</td><td>${esc(l.phone)}</td><td class="hide-sm">${esc(l.email)}</td><td>${l.lead_year??fmtDate(l.created_at)}</td>
+    <td><select class="inp attSel" data-id="${l.id}">${['Unknown','Yes','No'].map(o=>`<option ${o===l.attended?'selected':''}>${o}</option>`).join('')}</select></td>
+    <td>${histHtml(h[l.id])}</td>
+    <td><button class="btn sec sm delBtn" data-id="${l.id}">Delete</button></td></tr>`).join('')
+    : '<tr><td colspan="7" class="muted">No matches.</td></tr>';
+}
+$('qBody').addEventListener('change', async e => {
+  if(!e.target.classList.contains('attSel')) return;
+  const {error} = await sb.from('master_leads').update({attended:e.target.value}).eq('id', +e.target.dataset.id);
+  if(error) return toast(error.message, 5000); toast('Saved'); refreshStats();
+});
+$('qBody').addEventListener('click', async e => {
+  if(!e.target.classList.contains('delBtn')) return;
+  if(!confirm('Delete this lead from the master database?')) return;
+  const {error} = await sb.from('master_leads').delete().eq('id', +e.target.dataset.id);
+  if(error) return toast(error.message, 5000); e.target.closest('tr').remove(); toast('Deleted'); refreshStats();
+});
+
+boot();
+</script>
+</body>
+</html>
