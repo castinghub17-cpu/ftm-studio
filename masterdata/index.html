@@ -366,15 +366,19 @@ $('selAll').onchange = e => document.querySelectorAll('.bchk').forEach(c => c.ch
 $('sendBtn').onclick = async () => {
   const ids = [...document.querySelectorAll('.bchk:checked')].map(c => +c.value);
   if(!ids.length) return toast('Tick at least one lead');
-  if(!confirm(`Send ${ids.length} lead(s) to ${company}?` + (company==='Castworth' ? '\nThey will be added to the Castworth leads list.' : '\nA CSV will download for NST.'))) return;
+  if(!confirm(`Send ${ids.length} lead(s) to ${company}?\nThey will be added straight into the ${company} leads list.`)) return;
   $('sendBtn').disabled = true;
-  const {data, error} = await sb.rpc('master_send', {p_company:company, p_ids:ids});
-  $('sendBtn').disabled = false;
-  if(error) return toast('Error: '+error.message, 5000);
-  const sent = batch.filter(l => ids.includes(l.id));
-  downloadCsv(sent, `${company}_leads_${new Date().toISOString().slice(0,10)}.csv`);
-  try { await navigator.clipboard.writeText(sent.map(l=>[l.full_name,l.phone,l.email].join('\t')).join('\n')); } catch(_){}
-  toast(`${data} lead(s) sent to ${company}` + (company==='Castworth' ? ' and added to Castworth leads' : '') + ' · CSV downloaded, also copied');
+  if(company==='NST'){
+    const {data, error} = await sb.functions.invoke('nst-push', {body:{ids}});
+    $('sendBtn').disabled = false;
+    if(error){ let m = error.message; try { m = (await error.context.json()).error || m; } catch(_){} return toast('Error: '+m, 6000); }
+    toast(`${data.inserted} lead(s) added to NST` + (data.skipped ? ` · ${data.skipped} already in NST (skipped)` : ''), 5000);
+  } else {
+    const {data, error} = await sb.rpc('master_send', {p_company:company, p_ids:ids});
+    $('sendBtn').disabled = false;
+    if(error) return toast('Error: '+error.message, 5000);
+    toast(`${data} lead(s) sent to Castworth and added to Castworth leads`);
+  }
   refreshStats(); loadBatch();
 };
 function downloadCsv(rows, name){
