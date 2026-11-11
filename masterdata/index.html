@@ -380,7 +380,7 @@ $('sendBtn').onclick = async () => {
 function downloadCsv(rows, name){
   const q = v => `"${String(v??'').replace(/"/g,'""')}"`;
   // Headers match the NST admin's own leads export, so the file drops straight into NST's bulk import
-  const csv = ['Full Name,Email,Phone,Source,Year Applied', ...rows.map(l => [l.full_name,l.email,l.phone,l.source||'Master database',l.lead_year].map(q).join(','))].join('\n');
+  const csv = ['Full Name,Email,Phone,Source,Year Applied', ...rows.map(l => [l.full_name,l.email,l.phone,(/^diamond4jobs/i.test(l.source||'') ? 'Diamond4Jobs' : (l.source||'Master database')),l.lead_year].map(q).join(','))].join('\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = name; a.click();
 }
 
